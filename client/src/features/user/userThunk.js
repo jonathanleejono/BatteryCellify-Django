@@ -1,6 +1,6 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
-import { clearAllJobsState } from "../allJobs/allJobsSlice";
-import { clearValues } from "../job/jobSlice";
+import { clearAllBatteryCellsState } from "../allBatteryCells/allBatteryCellsSlice";
+import { clearValues } from "../batteryCell/batteryCellSlice";
 import { logoutUser } from "./userSlice";
 import { addUserToLocalStorage } from "../../utils/localStorage";
 
@@ -54,7 +54,7 @@ export const updateUserThunk = async (url, updatedUser, thunkAPI) => {
 export const clearStoreThunk = async (message, thunkAPI) => {
   try {
     thunkAPI.dispatch(logoutUser(message));
-    thunkAPI.dispatch(clearAllJobsState());
+    thunkAPI.dispatch(clearAllBatteryCellsState());
     thunkAPI.dispatch(clearValues());
     return Promise.resolve();
   } catch (error) {

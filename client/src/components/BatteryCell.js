@@ -1,16 +1,19 @@
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Wrapper from "../assets/wrappers/Job";
+import Wrapper from "../assets/wrappers/BatteryCell";
 import { useDispatch } from "react-redux";
-import JobInfo from "./JobInfo";
+import BatteryCellInfo from "./BatteryCellInfo";
 import moment from "moment";
-import { deleteJob, setEditJob } from "../features/job/jobSlice";
-const Job = ({
+import {
+  deleteBatteryCell,
+  setEditBatteryCell,
+} from "../features/batteryCell/batteryCellSlice";
+const BatteryCell = ({
   id,
   position,
   company,
-  jobLocation,
-  jobType,
+  batteryCellLocation,
+  batteryCellType,
   createdAt,
   status,
 }) => {
@@ -29,24 +32,27 @@ const Job = ({
       </header>
       <div className="content">
         <div className="content-center">
-          <JobInfo icon={<FaLocationArrow />} text={jobLocation} />
-          <JobInfo icon={<FaCalendarAlt />} text={date} />
-          <JobInfo icon={<FaBriefcase />} text={jobType} />
+          <BatteryCellInfo
+            icon={<FaLocationArrow />}
+            text={batteryCellLocation}
+          />
+          <BatteryCellInfo icon={<FaCalendarAlt />} text={date} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={batteryCellType} />
           <div className={`status ${status}`}>{status}</div>
         </div>
         <footer>
           <div className="actions">
             <Link
-              to="/edit-job"
+              to="/edit-batteryCell"
               className="btn edit-btn"
               onClick={() =>
                 dispatch(
-                  setEditJob({
-                    editJobId: id,
+                  setEditBatteryCell({
+                    editBatteryCellId: id,
                     position,
                     company,
-                    jobLocation,
-                    jobType,
+                    batteryCellLocation,
+                    batteryCellType,
                     status,
                   })
                 )
@@ -57,7 +63,7 @@ const Job = ({
             <button
               type="button"
               className="btn delete-btn"
-              onClick={() => dispatch(deleteJob(id))}
+              onClick={() => dispatch(deleteBatteryCell(id))}
             >
               delete
             </button>
@@ -67,4 +73,4 @@ const Job = ({
     </Wrapper>
   );
 };
-export default Job;
+export default BatteryCell;

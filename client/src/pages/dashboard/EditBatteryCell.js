@@ -5,41 +5,47 @@ import { toast } from "react-toastify";
 import {
   handleChange,
   clearValues,
-  editJob,
-} from "../../features/job/jobSlice";
+  editBatteryCell,
+} from "../../features/batteryCell/batteryCellSlice";
 
-const EditJob = () => {
+const EditBatteryCell = () => {
   const {
     id,
     isLoading,
     position,
     company,
-    jobLocation,
-    jobType,
-    jobTypeOptions,
+    batteryCellLocation,
+    batteryCellType,
+    batteryCellTypeOptions,
     status,
     statusOptions,
-    editJobId,
-  } = useSelector((store) => store.job);
+    editBatteryCellId,
+  } = useSelector((store) => store.batteryCell);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!position || !company || !jobLocation) {
+    if (!position || !company || !batteryCellLocation) {
       toast.error("Please fill out all fields");
       return;
     }
 
     dispatch(
-      editJob({
-        jobId: editJobId,
-        job: { position, company, jobLocation, jobType, status },
+      editBatteryCell({
+        batteryCellId: editBatteryCellId,
+        batteryCell: {
+          position,
+          company,
+          batteryCellLocation,
+          batteryCellType,
+          status,
+        },
       })
     );
   };
 
-  const handleJobInput = (e) => {
+  const handleBatteryCellInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     dispatch(handleChange({ name, value }));
@@ -48,44 +54,44 @@ const EditJob = () => {
   return (
     <Wrapper>
       <form className="form">
-        <h3>Edit Job</h3>
+        <h3>Edit BatteryCell</h3>
         <div className="form-center">
           {/* position */}
           <FormRow
             type="text"
             name="position"
             value={position}
-            handleChange={handleJobInput}
+            handleChange={handleBatteryCellInput}
           />
           {/* company */}
           <FormRow
             type="text"
             name="company"
             value={company}
-            handleChange={handleJobInput}
+            handleChange={handleBatteryCellInput}
           />
-          {/* jobLocation */}
+          {/* batteryCellLocation */}
           <FormRow
             type="text"
-            name="jobLocation"
-            labelText="job location"
-            value={jobLocation}
-            handleChange={handleJobInput}
+            name="batteryCellLocation"
+            labelText="batteryCell location"
+            value={batteryCellLocation}
+            handleChange={handleBatteryCellInput}
           />
           {/* status */}
           <FormRowSelect
             name="status"
             value={status}
-            handleChange={handleJobInput}
+            handleChange={handleBatteryCellInput}
             list={statusOptions}
           />
-          {/* job type*/}
+          {/* batteryCell type*/}
           <FormRowSelect
-            name="jobType"
-            labelText="job type"
-            value={jobType}
-            handleChange={handleJobInput}
-            list={jobTypeOptions}
+            name="batteryCellType"
+            labelText="batteryCell type"
+            value={batteryCellType}
+            handleChange={handleBatteryCellInput}
+            list={batteryCellTypeOptions}
           />
           <div className="btn-container">
             <button
@@ -109,4 +115,4 @@ const EditJob = () => {
     </Wrapper>
   );
 };
-export default EditJob;
+export default EditBatteryCell;

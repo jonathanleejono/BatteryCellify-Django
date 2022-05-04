@@ -3,7 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import Logo from "./Logo";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSidebar } from "../features/user/userSlice";
-import { setCreateJob } from "../features/job/jobSlice";
+import { setCreateBatteryCell } from "../features/batteryCell/batteryCellSlice";
 import NavLinks from "./NavLinks";
 const SmallSidebar = () => {
   const { user, isSidebarOpen } = useSelector((store) => store.user);
@@ -13,11 +13,11 @@ const SmallSidebar = () => {
     dispatch(toggleSidebar());
     console.log("el pololoco does this work9");
     dispatch(
-      setCreateJob({
+      setCreateBatteryCell({
         position: "",
         company: "",
-        jobLocation: user.location,
-        jobType: "full-time",
+        batteryCellLocation: user.location,
+        batteryCellType: "full-time",
         status: "pending",
       })
     );

@@ -28,21 +28,21 @@ users = Table(
 )
 
 
-# class JobStatus(enum.Enum):
+# class BatteryCellStatus(enum.Enum):
 #     interview = 1
 #     pending = 2
 #     denied = 3
 
 
-# class JobType(enum.Enum):
+# class BatteryCellType(enum.Enum):
 #     full_time = 1
 #     part_time = 2
 #     remote = 3
 #     internship = 4
 
 
-jobs = Table(
-    "jobs",
+batteryCells = Table(
+    "batteryCells",
     metadata,
     Column("id", Integer,
            primary_key=True, nullable=False),
@@ -50,9 +50,10 @@ jobs = Table(
     Column("position", String, nullable=False),
     Column("status", Enum('interview', 'denied', 'pending', name="status_enum"),
            nullable=False, default="pending", server_default="pending"),
-    Column("jobType", Enum('full-time', 'part-time', 'remote', 'internship', name="jobType_enum"),
+    Column("batteryCellType", Enum('full-time', 'part-time', 'remote', 'internship', name="batteryCellType_enum"),
            nullable=False, default="full-time", server_default="full-time"),
-    Column("jobLocation", String, nullable=False, server_default="my city"),
+    Column("batteryCellLocation", String,
+           nullable=False, server_default="my city"),
     Column("created_at", TIMESTAMP(
         timezone=True), nullable=False, server_default=text('now()')),
     Column("owner_id", Integer, ForeignKey(
@@ -75,17 +76,17 @@ metadata.create_all(engine)
 #     created_at = Column(TIMESTAMP(timezone=True),
 #                         nullable=False, server_default=text('now()'))
 
-# class Jobs(Base):
-#     __tablename__ = "jobs"
+# class batteryCells(Base):
+#     __tablename__ = "batteryCells"
 
 #     id = Column(Integer, primary_key=True, nullable=False)
 #     company = Column(String, nullable=False)
 #     position = Column(String, nullable=False)
 #     status = Column(Enum('interview', 'pending', 'remote',
 #                     name="status_enum"), server_default='pending', nullable=False)
-#     jobType = Column(Enum('full-time', 'part-time', 'remote', 'internship',
-#                           name="jobType_enum"), server_default='pending', nullable=False)
-#     jobLocation = Column(String, nullable=False, server_default="my city")
+#     batteryCellType = Column(Enum('full-time', 'part-time', 'remote', 'internship',
+#                           name="batteryCellType_enum"), server_default='pending', nullable=False)
+#     batteryCellLocation = Column(String, nullable=False, server_default="my city")
 #     created_at = Column(TIMESTAMP(timezone=True),
 #                         nullable=False, server_default=text('now()'))
 #     owner_id = Column(Integer, ForeignKey(

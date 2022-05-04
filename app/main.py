@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import database
-from .controllers import authController, jobsController
+from .controllers import authController, batteryCellController
 from slowapi.errors import RateLimitExceeded
 from slowapi import _rate_limit_exceeded_handler
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 app.state.limiter = authController.limiter
-app.state.limiter = jobsController.limiter
+app.state.limiter = batteryCellController.limiter
 
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -35,4 +35,4 @@ async def shutdown():
 
 
 app.include_router(authController.router)
-app.include_router(jobsController.router)
+app.include_router(batteryCellController.router)

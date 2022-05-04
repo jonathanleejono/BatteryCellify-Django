@@ -1,11 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit';
-import jobSlice from './features/job/jobSlice';
-import userSlice from './features/user/userSlice';
-import allJobsSlice from './features/allJobs/allJobsSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import batteryCellSlice from "./features/batteryCell/batteryCellSlice";
+import userSlice from "./features/user/userSlice";
+import allBatteryCellsSlice from "./features/allBatteryCells/allBatteryCellsSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
-    job: jobSlice,
-    allJobs: allJobsSlice,
+    batteryCell: batteryCellSlice,
+    allBatteryCells: allBatteryCellsSlice,
   },
 });

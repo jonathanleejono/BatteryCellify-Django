@@ -23,11 +23,11 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
 import { useEffect } from "react";
-import Job from "./Job";
-import Wrapper from "../assets/wrappers/JobsContainer";
+import BatteryCell from "./BatteryCell";
+import Wrapper from "../assets/wrappers/BatteryCellsContainer";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
-import { getAllJobs } from "../features/allJobs/allJobsSlice";
+import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
 import PageBtnContainer from "./PageBtnContainer";
 
 function createData(name, testing1, fat, carbs, protein, testing2) {
@@ -113,16 +113,16 @@ const headCells = [
     label: "Status",
   },
   {
-    id: "jobType",
+    id: "batteryCellType",
     numeric: false,
     disablePadding: false,
-    label: "Job Type",
+    label: "BatteryCell Type",
   },
   {
-    id: "jobLocation",
+    id: "batteryCellLocation",
     numeric: false,
     disablePadding: false,
-    label: "Job Location",
+    label: "BatteryCell Location",
   },
 ];
 
@@ -249,20 +249,20 @@ EnhancedTableToolbar.propTypes = {
 
 const EnhancedTable = () => {
   const {
-    jobs,
+    batteryCells,
     isLoading,
     // page,
-    totalJobs,
+    totalBatteryCells,
     numOfPages,
     search,
     searchStatus,
     searchType,
     sort,
-  } = useSelector((store) => store.allJobs);
+  } = useSelector((store) => store.allBatteryCells);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllJobs());
+    dispatch(getAllBatteryCells());
   }, [dispatch, search, searchStatus, searchType, sort]);
 
   const [order, setOrder] = React.useState("asc");
@@ -280,7 +280,7 @@ const EnhancedTable = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = jobs.map((n) => n.id);
+      const newSelecteds = batteryCells.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -324,7 +324,7 @@ const EnhancedTable = () => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - jobs.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - batteryCells.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -342,25 +342,25 @@ const EnhancedTable = () => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={jobs.length}
+              rowCount={batteryCells.length}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(jobs, getComparator(order, orderBy))
+              {stableSort(batteryCells, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((job, index) => {
-                  const isItemSelected = isSelected(job.id);
+                .map((batteryCell, index) => {
+                  const isItemSelected = isSelected(batteryCell.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, job.id)}
+                      onClick={(event) => handleClick(event, batteryCell.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={job.id}
+                      key={batteryCell.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -378,13 +378,21 @@ const EnhancedTable = () => {
                         scope="row"
                         padding="none"
                       >
-                        {job.id}
+                        {batteryCell.id}
                       </TableCell>
-                      <TableCell align="center">{job.company}</TableCell>
-                      <TableCell align="center">{job.position}</TableCell>
-                      <TableCell align="center">{job.status}</TableCell>
-                      <TableCell align="center">{job.jobType}</TableCell>
-                      <TableCell align="center">{job.jobLocation}</TableCell>
+                      <TableCell align="center">
+                        {batteryCell.company}
+                      </TableCell>
+                      <TableCell align="center">
+                        {batteryCell.position}
+                      </TableCell>
+                      <TableCell align="center">{batteryCell.status}</TableCell>
+                      <TableCell align="center">
+                        {batteryCell.batteryCellType}
+                      </TableCell>
+                      <TableCell align="center">
+                        {batteryCell.batteryCellLocation}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -403,7 +411,7 @@ const EnhancedTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={jobs.length}
+          count={batteryCells.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

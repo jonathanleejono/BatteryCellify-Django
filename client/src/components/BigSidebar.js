@@ -2,18 +2,18 @@ import NavLinks from "./NavLinks";
 import Logo from "../components/Logo";
 import Wrapper from "../assets/wrappers/BigSidebar";
 import { useSelector, useDispatch } from "react-redux";
-import { setCreateJob } from "../features/job/jobSlice";
+import { setCreateBatteryCell } from "../features/batteryCell/batteryCellSlice";
 
 const BigSidebar = () => {
   const { user, isSidebarOpen } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const toggle = () => {
     dispatch(
-      setCreateJob({
+      setCreateBatteryCell({
         position: "",
         company: "",
-        jobLocation: user.location,
-        jobType: "full-time",
+        batteryCellLocation: user.location,
+        batteryCellType: "full-time",
         status: "pending",
       })
     );

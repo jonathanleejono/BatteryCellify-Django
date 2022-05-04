@@ -1,17 +1,21 @@
-import { showLoading, hideLoading, getAllJobs } from "../allJobs/allJobsSlice";
+import {
+  showLoading,
+  hideLoading,
+  getAllBatteryCells,
+} from "../allBatteryCells/allBatteryCellsSlice";
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
-import { clearValues } from "./jobSlice";
+import { clearValues } from "./batteryCellSlice";
 
-export const createJobThunk = async (
-  { position, company, jobLocation, jobType, status },
+export const createBatteryCellThunk = async (
+  { position, company, batteryCellLocation, batteryCellType, status },
   thunkAPI
 ) => {
   try {
-    const resp = await customFetch.post("/jobs", {
+    const resp = await customFetch.post("/battery-cells", {
       position,
       company,
-      jobLocation,
-      jobType,
+      batteryCellLocation,
+      batteryCellType,
       status,
     });
     thunkAPI.dispatch(clearValues());
@@ -27,11 +31,11 @@ export const createJobThunk = async (
     );
   }
 };
-export const deleteJobThunk = async (jobId, thunkAPI) => {
+export const deleteBatteryCellThunk = async (batteryCellId, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/jobs/${jobId}`);
-    thunkAPI.dispatch(getAllJobs());
+    const resp = await customFetch.delete(`/battery-cells/${batteryCellId}`);
+    thunkAPI.dispatch(getAllBatteryCells());
     return resp.data.msg;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
@@ -43,9 +47,15 @@ export const deleteJobThunk = async (jobId, thunkAPI) => {
     );
   }
 };
-export const editJobThunk = async ({ jobId, job }, thunkAPI) => {
+export const editBatteryCellThunk = async (
+  { batteryCellId, batteryCell },
+  thunkAPI
+) => {
   try {
-    const resp = await customFetch.patch(`/jobs/${jobId}`, job);
+    const resp = await customFetch.patch(
+      `/battery-cells/${batteryCellId}`,
+      batteryCell
+    );
     thunkAPI.dispatch(clearValues());
     return resp.data;
   } catch (err) {

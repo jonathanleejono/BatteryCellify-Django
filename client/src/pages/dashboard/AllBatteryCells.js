@@ -1,5 +1,5 @@
 import {
-  JobsContainer,
+  BatteryCellsContainer,
   SearchContainer,
   EnhancedTable,
 } from "../../components";
@@ -8,27 +8,27 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   handleChange,
   clearValues,
-  createJob,
-  editJob,
-  setEditJob,
-} from "../../features/job/jobSlice";
+  createBatteryCell,
+  editBatteryCell,
+  setEditBatteryCell,
+} from "../../features/batteryCell/batteryCellSlice";
 
-const AllJobs = () => {
+const AllBatteryCells = () => {
   const dispatch = useDispatch();
   return (
     <>
       <SearchContainer />
       {/* <Link
-        to="/add-job"
+        to="/add-batteryCell"
         className="btn btn-hero"
         onClick={() => dispatch(clearValues())}
       >
-        Create Job
+        Create BatteryCell
       </Link> */}
       {/* its here */}
       <EnhancedTable />
-      <JobsContainer />
+      <BatteryCellsContainer />
     </>
   );
 };
-export default AllJobs;
+export default AllBatteryCells;

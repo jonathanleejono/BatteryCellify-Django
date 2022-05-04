@@ -3,7 +3,7 @@ import { clearStore } from "../features/user/userSlice";
 import { getTokenFromLocalStorage } from "./localStorage";
 
 const customFetch = axios.create({
-  // baseURL: "https://jobify-prod.herokuapp.com/api/v1/toolkit",
+  // baseURL: "https://batteryCellify-prod.herokuapp.com/api/v1/toolkit",
   baseURL: "http://localhost:3000",
   // baseURL: "https://cryptic-harbor-02513.herokuapp.com/",
   // headers: {

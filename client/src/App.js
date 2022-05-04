@@ -5,9 +5,9 @@ import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Profile,
-  AddJob,
-  EditJob,
-  AllJobs,
+  AddBatteryCell,
+  EditBatteryCell,
+  AllBatteryCells,
   Stats,
   SharedLayout,
   Graphs,
@@ -26,10 +26,10 @@ function App() {
           }
         >
           <Route index element={<Stats />} />
-          <Route path="all-jobs" element={<AllJobs />} />
-          <Route path="add-job" element={<AddJob />} />
+          <Route path="all-battery-cells" element={<AllBatteryCells />} />
+          <Route path="add-battery-cell" element={<AddBatteryCell />} />
           <Route path="graphs" element={<Graphs />} />
-          <Route path="edit-job" element={<EditJob />} />
+          <Route path="edit-battery-cell" element={<EditBatteryCell />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="landing" element={<Landing />} />

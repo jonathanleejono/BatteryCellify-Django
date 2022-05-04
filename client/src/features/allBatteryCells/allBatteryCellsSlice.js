@@ -1,19 +1,22 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
-import { getAllJobsThunk, showStatsThunk } from './allJobsThunk';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+import {
+  getAllBatteryCellsThunk,
+  showStatsThunk,
+} from "./allBatteryCellsThunk";
 
 const initialFiltersState = {
-  search: '',
-  searchStatus: 'all',
-  searchType: 'all',
-  sort: 'latest',
-  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
 
 const initialState = {
   isLoading: true,
-  jobs: [],
-  totalJobs: 0,
+  batteryCells: [],
+  totalBatteryCells: 0,
   numOfPages: 1,
   page: 1,
   stats: {},
@@ -21,12 +24,18 @@ const initialState = {
   ...initialFiltersState,
 };
 
-export const getAllJobs = createAsyncThunk('allJobs/getJobs', getAllJobsThunk);
+export const getAllBatteryCells = createAsyncThunk(
+  "allBatteryCells/getBatteryCells",
+  getAllBatteryCellsThunk
+);
 
-export const showStats = createAsyncThunk('allJobs/showStats', showStatsThunk);
+export const showStats = createAsyncThunk(
+  "allBatteryCells/showStats",
+  showStatsThunk
+);
 
-const allJobsSlice = createSlice({
-  name: 'allJobs',
+const allBatteryCellsSlice = createSlice({
+  name: "allBatteryCells",
   initialState,
   reducers: {
     showLoading: (state) => {
@@ -45,19 +54,19 @@ const allJobsSlice = createSlice({
     changePage: (state, { payload }) => {
       state.page = payload;
     },
-    clearAllJobsState: (state) => initialState,
+    clearAllBatteryCellsState: (state) => initialState,
   },
   extraReducers: {
-    [getAllJobs.pending]: (state) => {
+    [getAllBatteryCells.pending]: (state) => {
       state.isLoading = true;
     },
-    [getAllJobs.fulfilled]: (state, { payload }) => {
+    [getAllBatteryCells.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.jobs = payload.jobs;
+      state.batteryCells = payload.batteryCells;
       state.numOfPages = payload.numOfPages;
-      state.totalJobs = payload.totalJobs;
+      state.totalBatteryCells = payload.totalBatteryCells;
     },
-    [getAllJobs.rejected]: (state, { payload }) => {
+    [getAllBatteryCells.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload);
     },
@@ -82,7 +91,7 @@ export const {
   handleChange,
   clearFilters,
   changePage,
-  clearAllJobsState,
-} = allJobsSlice.actions;
+  clearAllBatteryCellsState,
+} = allBatteryCellsSlice.actions;
 
-export default allJobsSlice.reducer;
+export default allBatteryCellsSlice.reducer;

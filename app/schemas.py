@@ -5,39 +5,39 @@ from typing import Optional, List
 from pydantic.types import conint, constr
 
 
-class JobBase(BaseModel):
+class BatteryCellBase(BaseModel):
     company: constr(max_length=50)
     position: constr(max_length=50)
     status: str
-    jobType: str
-    jobLocation: str
+    batteryCellType: str
+    batteryCellLocation: str
 
 
-class JobCreate(JobBase):
+class BatteryCellCreate(BatteryCellBase):
     pass
 
 
-class JobUpdate(JobBase):
+class BatteryCellUpdate(BatteryCellBase):
     pass
 
 
-class JobOut(JobBase):
+class BatteryCellOut(BatteryCellBase):
     id: int
 
     class Config:
         orm_mode = True
 
 
-class JobsOut(JobBase):
+class BatteryCellsOut(BatteryCellBase):
     id: int
 
     class Config:
         orm_mode = True
 
 
-class JobsManyOut(BaseModel):
-    jobs: List[JobOut]
-    totalJobs: int
+class BatteryCellsManyOut(BaseModel):
+    batteryCells: List[BatteryCellOut]
+    totalBatteryCells: int
     numOfPages: int
 
     class Config:
