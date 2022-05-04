@@ -9,13 +9,14 @@ const Graphs = () => {
   );
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(showStats());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(showStats());
+  // }, [dispatch]);
   return (
     <>
-      <StatsContainer />
-      {monthlyApplications.length > 0 && <ChartsContainer />}
+      <h2>Graphs</h2>
+      {/* <StatsContainer />
+      {monthlyApplications.length > 0 && <ChartsContainer />} */}
     </>
   );
 };
