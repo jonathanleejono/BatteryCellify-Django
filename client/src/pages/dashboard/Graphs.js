@@ -1,5 +1,11 @@
 import { useEffect } from "react";
-import { StatsContainer, Loading, ChartsContainer } from "../../components";
+import {
+  StatsContainer,
+  Loading,
+  ChartsContainer,
+  PlotlyComponent,
+  PlotTest,
+} from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { showStats } from "../../features/allJobs/allJobsSlice";
 
@@ -15,6 +21,8 @@ const Graphs = () => {
   return (
     <>
       <h2>Graphs</h2>
+      <PlotlyComponent />
+      <PlotTest />
       {/* <StatsContainer />
       {monthlyApplications.length > 0 && <ChartsContainer />} */}
     </>
