@@ -10,6 +10,7 @@ import {
   AllJobs,
   Stats,
   SharedLayout,
+  Graphs,
 } from "./pages/dashboard";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route index element={<Stats />} />
           <Route path="all-jobs" element={<AllJobs />} />
           <Route path="add-job" element={<AddJob />} />
+          <Route path="graphs" element={<Graphs />} />
           <Route path="edit-job" element={<EditJob />} />
           <Route path="profile" element={<Profile />} />
         </Route>
