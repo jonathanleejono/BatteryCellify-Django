@@ -54,7 +54,7 @@ const EditBatteryCell = () => {
   return (
     <Wrapper>
       <form className="form">
-        <h3>Edit BatteryCell</h3>
+        <h3>Edit Battery Cell</h3>
         <div className="form-center">
           {/* position */}
           <FormRow
@@ -74,7 +74,7 @@ const EditBatteryCell = () => {
           <FormRow
             type="text"
             name="batteryCellLocation"
-            labelText="batteryCell location"
+            labelText="battery cell location"
             value={batteryCellLocation}
             handleChange={handleBatteryCellInput}
           />
@@ -88,7 +88,7 @@ const EditBatteryCell = () => {
           {/* batteryCell type*/}
           <FormRowSelect
             name="batteryCellType"
-            labelText="batteryCell type"
+            labelText="battery cell type"
             value={batteryCellType}
             handleChange={handleBatteryCellInput}
             list={batteryCellTypeOptions}

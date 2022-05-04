@@ -11,7 +11,7 @@ const SmallSidebar = () => {
 
   const toggle = () => {
     dispatch(toggleSidebar());
-    console.log("el pololoco does this work9");
+
     dispatch(
       setCreateBatteryCell({
         position: "",

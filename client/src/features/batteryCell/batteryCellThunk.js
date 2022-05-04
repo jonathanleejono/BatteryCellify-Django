@@ -19,8 +19,6 @@ export const createBatteryCellThunk = async (
       status,
     });
     thunkAPI.dispatch(clearValues());
-    console.log("resp.data: ", resp.data);
-    console.log("resp.data.msg: ", resp.data.msg);
     return resp.data;
   } catch (err) {
     return (

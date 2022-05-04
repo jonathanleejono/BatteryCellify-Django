@@ -28,19 +28,6 @@ users = Table(
 )
 
 
-# class BatteryCellStatus(enum.Enum):
-#     interview = 1
-#     pending = 2
-#     denied = 3
-
-
-# class BatteryCellType(enum.Enum):
-#     full_time = 1
-#     part_time = 2
-#     remote = 3
-#     internship = 4
-
-
 batteryCells = Table(
     "batteryCells",
     metadata,
@@ -64,31 +51,3 @@ batteryCells = Table(
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URL)
 
 metadata.create_all(engine)
-
-# class Users(Base):
-#     __tablename__ = "users"
-#     id = Column(Integer, primary_key=True, nullable=False)
-#     name = Column(String, nullable=False)
-#     email = Column(String, nullable=False, unique=True)
-#     password = Column(String, nullable=False)
-#     lastName = Column(String, nullable=False, server_default="lastName")
-#     location = Column(String, nullable=False, server_default="my city")
-#     created_at = Column(TIMESTAMP(timezone=True),
-#                         nullable=False, server_default=text('now()'))
-
-# class batteryCells(Base):
-#     __tablename__ = "batteryCells"
-
-#     id = Column(Integer, primary_key=True, nullable=False)
-#     company = Column(String, nullable=False)
-#     position = Column(String, nullable=False)
-#     status = Column(Enum('interview', 'pending', 'remote',
-#                     name="status_enum"), server_default='pending', nullable=False)
-#     batteryCellType = Column(Enum('full-time', 'part-time', 'remote', 'internship',
-#                           name="batteryCellType_enum"), server_default='pending', nullable=False)
-#     batteryCellLocation = Column(String, nullable=False, server_default="my city")
-#     created_at = Column(TIMESTAMP(timezone=True),
-#                         nullable=False, server_default=text('now()'))
-#     owner_id = Column(Integer, ForeignKey(
-#         "users.id", ondelete="CASCADE"), nullable=False)
-# #     owner = relationship("User")

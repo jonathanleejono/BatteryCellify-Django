@@ -30,7 +30,7 @@ const BatteryCellsContainer = () => {
   if (batteryCells.length === 0) {
     return (
       <Wrapper>
-        <h2>No batteryCells to display...</h2>
+        <h2>No battery cells to display...</h2>
       </Wrapper>
     );
   }
@@ -38,7 +38,7 @@ const BatteryCellsContainer = () => {
   return (
     <Wrapper>
       <h5>
-        {totalBatteryCells} batteryCell{batteryCells.length > 1 && "s"} found
+        {totalBatteryCells} battery cell{batteryCells.length > 1 && "s"} found
       </h5>
       <div className="battery-cells">
         {batteryCells.map((batteryCell) => {

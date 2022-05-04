@@ -42,7 +42,6 @@ const AddBatteryCell = () => {
         status: status ? status : "pending",
       })
     );
-    console.log("does submit work?");
   };
 
   const handleBatteryCellInput = (e) => {
@@ -54,7 +53,7 @@ const AddBatteryCell = () => {
   return (
     <Wrapper>
       <form className="form">
-        <h3>Add BatteryCell</h3>
+        <h3>Add Battery Cell</h3>
         <div className="form-center">
           {/* position */}
           <FormRow
@@ -74,7 +73,7 @@ const AddBatteryCell = () => {
           <FormRow
             type="text"
             name="batteryCellLocation"
-            labelText="batteryCell location"
+            labelText="battery cell location"
             value={batteryCellLocation}
             handleChange={handleBatteryCellInput}
           />
@@ -88,7 +87,7 @@ const AddBatteryCell = () => {
           {/* batteryCell type*/}
           <FormRowSelect
             name="batteryCellType"
-            labelText="batteryCell type"
+            labelText="battery cell type"
             value={batteryCellType}
             handleChange={handleBatteryCellInput}
             list={batteryCellTypeOptions}

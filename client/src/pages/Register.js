@@ -50,7 +50,6 @@ function Register() {
       }, 2000);
     }
   }, [user, navigate]);
-  console.log("test");
   return (
     <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>

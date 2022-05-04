@@ -43,7 +43,7 @@ const BatteryCell = ({
         <footer>
           <div className="actions">
             <Link
-              to="/edit-batteryCell"
+              to="/edit-battery-cell"
               className="btn edit-btn"
               onClick={() =>
                 dispatch(

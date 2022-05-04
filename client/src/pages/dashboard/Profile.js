@@ -22,7 +22,6 @@ const Profile = () => {
       toast.error("please fill out all fields");
       return;
     }
-    console.log("does profile submit work?");
     dispatch(updateUser(userData));
   };
 

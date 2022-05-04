@@ -116,13 +116,13 @@ const headCells = [
     id: "batteryCellType",
     numeric: false,
     disablePadding: false,
-    label: "BatteryCell Type",
+    label: "Battery Cell Type",
   },
   {
     id: "batteryCellLocation",
     numeric: false,
     disablePadding: false,
-    label: "BatteryCell Location",
+    label: "Battery Cell Location",
   },
 ];
 
@@ -222,7 +222,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Battery Cell List
         </Typography>
       )}
 
@@ -377,6 +377,7 @@ const EnhancedTable = () => {
                         id={labelId}
                         scope="row"
                         padding="none"
+                        align="center"
                       >
                         {batteryCell.id}
                       </TableCell>
