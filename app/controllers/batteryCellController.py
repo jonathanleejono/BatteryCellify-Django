@@ -21,12 +21,21 @@ limiter = Limiter(key_func=get_remote_address)
 async def get_batteryCells(
         current_user: int = Depends(oauth2.get_current_user),
         limit: int = 10,
-        skip: int = 0,
         search: Optional[str] = "",
-        status: Optional[str] = "",
-        sort: Optional[str] = "",
-        batteryCellType: Optional[str] = "",
-        page: int = 1):
+        battery_cycles: Optional[int] = "",
+        cathode: Optional[str] = "",
+        anode: Optional[str] = "",
+        capacity_ah: Optional[int] = "",
+        battery_type: Optional[str] = "",
+        battery_source: Optional[str] = "",
+        temperature_c: Optional[int] = "",
+        max_state_of_charge_soc: Optional[int] = "",
+        min_state_of_charge_soc: Optional[int] = "",
+        depth_of_discharge_dod: Optional[int] = "",
+        charge_capacity_rate: Optional[int] = "",
+        discharge_capacity_rate: Optional[int] = "",
+        page: int = 1,
+        skip: int = 0):
 
     batteryCells_query = batteryCells.select().where(
         batteryCells.c.owner_id == current_user.id)
@@ -37,29 +46,58 @@ async def get_batteryCells(
 
     all_batteryCells = await database.fetch_all(result)
 
-    if status and status != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells if batteryCell['status'] == status]
-    if batteryCellType and batteryCellType != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells if batteryCell['batteryCellType'] == batteryCellType]
-
     if search:
         all_batteryCells = list(filter(lambda x: re.search(
-            search, x["position"]), all_batteryCells))
+            search, x["cell_id"]), all_batteryCells))
 
-    if sort and sort == "latest":
-        all_batteryCells = sorted(
-            all_batteryCells, key=lambda dict: dict['created_at'], reverse=True)
-    if sort and sort == "oldest":
-        all_batteryCells = sorted(
-            all_batteryCells, key=lambda dict: dict['created_at'])
-    if sort and sort == "a-z":
-        all_batteryCells = sorted(
-            all_batteryCells, key=lambda dict: dict['position'])
-    if sort and sort == "z-a":
-        all_batteryCells = sorted(
-            all_batteryCells, key=lambda dict: dict['position'], reverse=True)
+    if battery_cycles and battery_cycles != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['battery_cycles'] == battery_cycles]
+    if cathode and cathode != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['cathode'] == cathode]
+    if anode and anode != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['anode'] == anode]
+    if capacity_ah and capacity_ah != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['capacity_ah'] == capacity_ah]
+    if battery_type and battery_type != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['battery_type'] == battery_type]
+    if battery_source and battery_source != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['battery_source'] == battery_source]
+    if temperature_c and temperature_c != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['temperature_c'] == temperature_c]
+    if max_state_of_charge_soc and max_state_of_charge_soc != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['max_state_of_charge_soc'] == max_state_of_charge_soc]
+    if min_state_of_charge_soc and min_state_of_charge_soc != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['min_state_of_charge_soc'] == min_state_of_charge_soc]
+    if depth_of_discharge_dod and depth_of_discharge_dod != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['depth_of_discharge_dod'] == depth_of_discharge_dod]
+    if charge_capacity_rate and charge_capacity_rate != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['charge_capacity_rate'] == charge_capacity_rate]
+    if discharge_capacity_rate and discharge_capacity_rate != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['discharge_capacity_rate'] == discharge_capacity_rate]
 
     totalBatteryCells = len(all_batteryCells)
 
@@ -75,10 +113,6 @@ async def get_batteryCells(
 async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Request, current_user: int = Depends(oauth2.get_current_user)):
 
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
-
-    if not batteryCell.position or not batteryCell.company:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Please provide all values")
 
     query = batteryCells.insert(
         values={**batteryCell.dict(), "owner_id": current_user.id})
@@ -137,4 +171,4 @@ async def delete_batteryCell(request: Request, id: int, current_user: int = Depe
 
     await database.execute(deleted_batteryCell)
 
-    return {"msg": "Success! BatteryCell removed", "id": id}
+    return {"msg": "Success! Battery cell removed", "id": id}

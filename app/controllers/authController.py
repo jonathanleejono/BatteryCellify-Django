@@ -36,10 +36,10 @@ async def create_user(user: schemas.UserCreate, request: Request):
     access_token = oauth2.create_access_token(
         data={"user_id": registered_user_id})
 
-    registered_user = {"email": user.email, "name": user.name,
-                       "lastName": "lastName", "location": "my city"}
+    registered_user = {"email": user.email,
+                       "name": user.name, "lastName": "lastName"}
 
-    return {"user": registered_user, "location": registered_user["location"], "token": access_token}
+    return {"user": registered_user, "token": access_token}
 
 
 @router.post('/login', response_model=schemas.UserOut)
@@ -68,9 +68,9 @@ async def login_user(request: Request, logging_in_user: schemas.UserLogin):
     access_token = oauth2.create_access_token(data={"user_id": user.id})
 
     logged_in_user = {"email": user.email, "name": user.name,
-                      "lastName": user.lastName, "location": user.location}
+                      "lastName": user.lastName}
 
-    return {"user": logged_in_user, "location": logged_in_user["location"], "token": access_token}
+    return {"user": logged_in_user, "token": access_token}
 
 
 @router.patch('/updateUser', response_model=schemas.UserOut)
@@ -99,4 +99,4 @@ async def update_user(request: Request, updated_user: schemas.UserUpdate, curren
     access_token = oauth2.create_access_token(
         data={"user_id": current_user.id})
 
-    return {"user": updated_user, "location": updated_user.location, "token": access_token}
+    return {"user": updated_user, "token": access_token}
