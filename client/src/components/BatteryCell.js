@@ -10,12 +10,19 @@ import {
 } from "../features/batteryCell/batteryCellSlice";
 const BatteryCell = ({
   id,
-  position,
-  company,
-  batteryCellLocation,
-  batteryCellType,
-  createdAt,
-  status,
+  cellNameId,
+  cycles,
+  cathode,
+  anode,
+  capacityAh,
+  type,
+  source,
+  temperatureC,
+  maxStateOfCharge,
+  minStateOfCharge,
+  depthOfDischarge,
+  chargeCapacityRate,
+  dischargeCapacityRate,
 }) => {
   const dispatch = useDispatch();
 
@@ -24,21 +31,31 @@ const BatteryCell = ({
   return (
     <Wrapper>
       <header>
-        <div className="main-icon">{company.charAt(0)}</div>
+        <div className="main-icon">{cellNameId.charAt(0)}</div>
         <div className="info">
-          <h5>{position}</h5>
-          <p>{company}</p>
+          <h5>{cellNameId}</h5>
+          <p>{type}</p>
         </div>
       </header>
       <div className="content">
         <div className="content-center">
-          <BatteryCellInfo
-            icon={<FaLocationArrow />}
-            text={batteryCellLocation}
-          />
+          <BatteryCellInfo icon={<FaLocationArrow />} text={cycles} />
           <BatteryCellInfo icon={<FaCalendarAlt />} text={date} />
-          <BatteryCellInfo icon={<FaBriefcase />} text={batteryCellType} />
-          <div className={`status ${status}`}>{status}</div>
+          <BatteryCellInfo icon={<FaBriefcase />} text={cathode} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={anode} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={capacityAh} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={type} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={source} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={temperatureC} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={maxStateOfCharge} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={minStateOfCharge} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={depthOfDischarge} />
+          <BatteryCellInfo icon={<FaBriefcase />} text={chargeCapacityRate} />
+          <BatteryCellInfo
+            icon={<FaBriefcase />}
+            text={dischargeCapacityRate}
+          />
+          <div className={`type ${type}`}>{type}</div>
         </div>
         <footer>
           <div className="actions">
@@ -49,11 +66,19 @@ const BatteryCell = ({
                 dispatch(
                   setEditBatteryCell({
                     editBatteryCellId: id,
-                    position,
-                    company,
-                    batteryCellLocation,
-                    batteryCellType,
-                    status,
+                    cellNameId,
+                    cycles,
+                    cathode,
+                    anode,
+                    capacityAh,
+                    type,
+                    source,
+                    temperatureC,
+                    maxStateOfCharge,
+                    minStateOfCharge,
+                    depthOfDischarge,
+                    chargeCapacityRate,
+                    dischargeCapacityRate,
                   })
                 )
               }

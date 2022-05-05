@@ -22,18 +22,18 @@ async def get_batteryCells(
         current_user: int = Depends(oauth2.get_current_user),
         limit: int = 10,
         search: Optional[str] = "",
-        battery_cycles: Optional[int] = "",
+        cycles: Optional[int] = "",
         cathode: Optional[str] = "",
         anode: Optional[str] = "",
-        capacity_ah: Optional[int] = "",
-        battery_type: Optional[str] = "",
-        battery_source: Optional[str] = "",
-        temperature_c: Optional[int] = "",
-        max_state_of_charge_soc: Optional[int] = "",
-        min_state_of_charge_soc: Optional[int] = "",
-        depth_of_discharge_dod: Optional[int] = "",
-        charge_capacity_rate: Optional[int] = "",
-        discharge_capacity_rate: Optional[int] = "",
+        capacityAh: Optional[int] = "",
+        type: Optional[str] = "",
+        source: Optional[str] = "",
+        temperatureC: Optional[int] = "",
+        maxStateOfCharge: Optional[int] = "",
+        minStateOfCharge: Optional[int] = "",
+        depthOfDischarge: Optional[int] = "",
+        chargeCapacityRate: Optional[int] = "",
+        dischargeCapacityRate: Optional[int] = "",
         page: int = 1,
         skip: int = 0):
 
@@ -48,12 +48,12 @@ async def get_batteryCells(
 
     if search:
         all_batteryCells = list(filter(lambda x: re.search(
-            search, x["cell_id"]), all_batteryCells))
+            search, x["cellNameId"]), all_batteryCells))
 
-    if battery_cycles and battery_cycles != "all":
+    if cycles and cycles != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['battery_cycles'] == battery_cycles]
+            if batteryCell['cycles'] == cycles]
     if cathode and cathode != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
@@ -62,42 +62,42 @@ async def get_batteryCells(
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
             if batteryCell['anode'] == anode]
-    if capacity_ah and capacity_ah != "all":
+    if capacityAh and capacityAh != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['capacity_ah'] == capacity_ah]
-    if battery_type and battery_type != "all":
+            if batteryCell['capacityAh'] == capacityAh]
+    if type and type != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['battery_type'] == battery_type]
-    if battery_source and battery_source != "all":
+            if batteryCell['type'] == type]
+    if source and source != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['battery_source'] == battery_source]
-    if temperature_c and temperature_c != "all":
+            if batteryCell['source'] == source]
+    if temperatureC and temperatureC != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['temperature_c'] == temperature_c]
-    if max_state_of_charge_soc and max_state_of_charge_soc != "all":
+            if batteryCell['temperatureC'] == temperatureC]
+    if maxStateOfCharge and maxStateOfCharge != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['max_state_of_charge_soc'] == max_state_of_charge_soc]
-    if min_state_of_charge_soc and min_state_of_charge_soc != "all":
+            if batteryCell['maxStateOfCharge'] == maxStateOfCharge]
+    if minStateOfCharge and minStateOfCharge != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['min_state_of_charge_soc'] == min_state_of_charge_soc]
-    if depth_of_discharge_dod and depth_of_discharge_dod != "all":
+            if batteryCell['minStateOfCharge'] == minStateOfCharge]
+    if depthOfDischarge and depthOfDischarge != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['depth_of_discharge_dod'] == depth_of_discharge_dod]
-    if charge_capacity_rate and charge_capacity_rate != "all":
+            if batteryCell['depthOfDischarge'] == depthOfDischarge]
+    if chargeCapacityRate and chargeCapacityRate != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['charge_capacity_rate'] == charge_capacity_rate]
-    if discharge_capacity_rate and discharge_capacity_rate != "all":
+            if batteryCell['chargeCapacityRate'] == chargeCapacityRate]
+    if dischargeCapacityRate and dischargeCapacityRate != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
-            if batteryCell['discharge_capacity_rate'] == discharge_capacity_rate]
+            if batteryCell['dischargeCapacityRate'] == dischargeCapacityRate]
 
     totalBatteryCells = len(all_batteryCells)
 
@@ -118,9 +118,10 @@ async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Re
         values={**batteryCell.dict(), "owner_id": current_user.id})
 
     # the database.execute(query) is what inserts the object into the db, while also retrieving the id at the same time
-    created_batteryCell_id = await database.execute(query)
+    created_batteryCellId = await database.execute(query)
 
-    created_batteryCell = {**batteryCell.dict(), "id": created_batteryCell_id}
+    created_batteryCell = {
+        **batteryCell.dict(), "id": created_batteryCellId}
 
     return created_batteryCell
 

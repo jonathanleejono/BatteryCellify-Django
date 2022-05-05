@@ -12,13 +12,12 @@ const Profile = () => {
     name: user?.name || "",
     email: user?.email || "",
     lastName: user?.lastName || "",
-    location: user?.location || "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email, lastName, location } = userData;
-    if (!name || !email || !lastName || !location) {
+    const { name, email, lastName } = userData;
+    if (!name || !email || !lastName) {
       toast.error("please fill out all fields");
       return;
     }
@@ -53,12 +52,6 @@ const Profile = () => {
             type="email"
             name="email"
             value={userData.email}
-            handleChange={handleChange}
-          />
-          <FormRow
-            type="text"
-            name="location"
-            value={userData.location}
             handleChange={handleChange}
           />
           <button type="submit" className="btn btn-block" disabled={isLoading}>

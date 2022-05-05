@@ -95,34 +95,82 @@ const headCells = [
     label: "Id",
   },
   {
-    id: "company",
+    id: "cellNameId",
     numeric: false,
     disablePadding: false,
-    label: "Company",
+    label: "Cell Name Id",
   },
   {
-    id: "position",
+    id: "cycles",
     numeric: false,
     disablePadding: false,
-    label: "Position",
+    label: "Cycles",
   },
   {
-    id: "status",
+    id: "cathode",
     numeric: false,
     disablePadding: false,
-    label: "Status",
+    label: "Cathode",
   },
   {
-    id: "batteryCellType",
+    id: "anode",
     numeric: false,
     disablePadding: false,
-    label: "Battery Cell Type",
+    label: "Anode",
   },
   {
-    id: "batteryCellLocation",
+    id: "capacityAh",
     numeric: false,
     disablePadding: false,
-    label: "Battery Cell Location",
+    label: "Capacity (Ah)",
+  },
+  {
+    id: "type",
+    numeric: false,
+    disablePadding: false,
+    label: "Type",
+  },
+  {
+    id: "source",
+    numeric: false,
+    disablePadding: false,
+    label: "Source",
+  },
+  {
+    id: "temperatureC",
+    numeric: false,
+    disablePadding: false,
+    label: "Temp (C)",
+  },
+  {
+    id: "maxStateOfCharge",
+    numeric: false,
+    disablePadding: false,
+    label: "Max SoC",
+  },
+  {
+    id: "minStateOfCharge",
+    numeric: false,
+    disablePadding: false,
+    label: "Min SoC",
+  },
+  {
+    id: "depthOfDischarge",
+    numeric: false,
+    disablePadding: false,
+    label: "DoD",
+  },
+  {
+    id: "chargeCapacityRate",
+    numeric: false,
+    disablePadding: false,
+    label: "Charge C Rate",
+  },
+  {
+    id: "dischargeCapacityRate",
+    numeric: false,
+    disablePadding: false,
+    label: "Discharge C Rate",
   },
 ];
 
@@ -382,17 +430,35 @@ const EnhancedTable = () => {
                         {batteryCell.id}
                       </TableCell>
                       <TableCell align="center">
-                        {batteryCell.company}
+                        {batteryCell.cellNameId}
+                      </TableCell>
+                      <TableCell align="center">{batteryCell.cycles}</TableCell>
+                      <TableCell align="center">
+                        {batteryCell.cathode}
+                      </TableCell>
+                      <TableCell align="center">{batteryCell.anode}</TableCell>
+                      <TableCell align="center">
+                        {batteryCell.capacityAh}
+                      </TableCell>
+                      <TableCell align="center">{batteryCell.type}</TableCell>
+                      <TableCell align="center">{batteryCell.source}</TableCell>
+                      <TableCell align="center">
+                        {batteryCell.temperatureC}
                       </TableCell>
                       <TableCell align="center">
-                        {batteryCell.position}
-                      </TableCell>
-                      <TableCell align="center">{batteryCell.status}</TableCell>
-                      <TableCell align="center">
-                        {batteryCell.batteryCellType}
+                        {batteryCell.maxStateOfCharge}
                       </TableCell>
                       <TableCell align="center">
-                        {batteryCell.batteryCellLocation}
+                        {batteryCell.minStateOfCharge}
+                      </TableCell>
+                      <TableCell align="center">
+                        {batteryCell.depthOfDischarge}
+                      </TableCell>
+                      <TableCell align="center">
+                        {batteryCell.chargeCapacityRate}
+                      </TableCell>
+                      <TableCell align="center">
+                        {batteryCell.dischargeCapacityRate}
                       </TableCell>
                     </TableRow>
                   );

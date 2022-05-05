@@ -1,12 +1,18 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 
 export const getAllBatteryCellsThunk = async (_, thunkAPI) => {
-  const { page, search, searchStatus, searchType, sort } =
+  const { page, search, searchCathode, searchAnode, searchtype, searchSource } =
     thunkAPI.getState().allBatteryCells;
-  let url = `/battery-cells?status=${searchStatus}&batteryCellType=${searchType}&sort=${sort}&page=${page}`;
+
+  let url = `/battery-cells?cathode=${searchCathode}
+  &anode=${searchAnode}
+  &type=${searchtype}
+  &source=${searchSource}`;
+
   if (search) {
     url = url + `&search=${search}`;
   }
+
   try {
     const resp = await customFetch.get(url);
     return resp.data;

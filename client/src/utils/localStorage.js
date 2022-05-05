@@ -1,13 +1,11 @@
-export const addUserToLocalStorage = ({ user, token, location }) => {
+export const addUserToLocalStorage = ({ user, token }) => {
   localStorage.setItem("user", JSON.stringify(user));
   localStorage.setItem("token", token);
-  localStorage.setItem("location", location);
 };
 
 export const removeUserFromLocalStorage = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
-  localStorage.removeItem("location");
 };
 
 export const getUserFromLocalStorage = () => {

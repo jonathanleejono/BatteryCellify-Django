@@ -7,12 +7,17 @@ import {
 } from "../features/allBatteryCells/allBatteryCellsSlice";
 
 const SearchContainer = () => {
-  const { isLoading, search, searchStatus, searchType, sort, sortOptions } =
-    useSelector((store) => store.allBatteryCells);
+  const {
+    isLoading,
+    search,
+    searchCathode,
+    searchAnode,
+    searchtype,
+    searchSource,
+  } = useSelector((store) => store.allBatteryCells);
 
-  const { batteryCellTypeOptions, statusOptions } = useSelector(
-    (store) => store.batteryCell
-  );
+  const { cathodeOptions, anodeOptions, typeOptions, sourceOptions } =
+    useSelector((store) => store.batteryCell);
 
   const dispatch = useDispatch();
 
@@ -30,36 +35,46 @@ const SearchContainer = () => {
       <form className="form">
         <h4>search form</h4>
         <div className="form-center">
-          {/* search position */}
+          {/* search for cell id */}
           <FormRow
+            labelText="Search Cell ID"
             type="text"
             name="search"
             value={search}
             handleChange={handleSearch}
           />
-          {/* search by status */}
+          {/* search by cathode */}
           <FormRowSelect
-            labelText="status"
-            name="searchStatus"
-            value={searchStatus}
+            labelText="cathode"
+            name="searchCathode"
+            value={searchCathode}
             handleChange={handleSearch}
-            list={["all", ...statusOptions]}
+            list={["all", ...cathodeOptions]}
           />
 
+          {/* search by anode*/}
+          <FormRowSelect
+            labelText="anode"
+            name="searchAnode"
+            value={searchAnode}
+            handleChange={handleSearch}
+            list={["all", ...anodeOptions]}
+          />
           {/* search by type*/}
           <FormRowSelect
             labelText="type"
-            name="searchType"
-            value={searchType}
+            name="searchtype"
+            value={searchtype}
             handleChange={handleSearch}
-            list={["all", ...batteryCellTypeOptions]}
+            list={["all", ...type]}
           />
-          {/* sort */}
+          {/* search by source*/}
           <FormRowSelect
-            name="sort"
-            value={sort}
+            labelText="source"
+            name="searchSource"
+            value={searchSource}
             handleChange={handleSearch}
-            list={sortOptions}
+            list={["all", ...sourceOptions]}
           />
           <button
             className="btn btn-block btn-danger"

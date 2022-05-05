@@ -14,11 +14,19 @@ const SmallSidebar = () => {
 
     dispatch(
       setCreateBatteryCell({
-        position: "",
-        company: "",
-        batteryCellLocation: user.location,
-        batteryCellType: "full-time",
-        status: "pending",
+        cellNameId: "",
+        cycles: "",
+        cathode: "LCO",
+        anode: "graphite",
+        capacityAh: "",
+        type: "18650",
+        source: "HNEI",
+        temperatureC: "",
+        maxStateOfCharge: "",
+        minStateOfCharge: "",
+        depthOfDischarge: "",
+        chargeCapacityRate: "",
+        dischargeCapacityRate: "",
       })
     );
   };

@@ -85,7 +85,7 @@ async def update_user(request: Request, updated_user: schemas.UserUpdate, curren
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid Credentials")
 
-    if not updated_user.email or not updated_user.name or not updated_user.lastName or not updated_user.location:
+    if not updated_user.email or not updated_user.name or not updated_user.lastName:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Please provide all values")
 

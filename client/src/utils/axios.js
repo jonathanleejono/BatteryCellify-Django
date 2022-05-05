@@ -3,17 +3,11 @@ import { clearStore } from "../features/user/userSlice";
 import { getTokenFromLocalStorage } from "./localStorage";
 
 const customFetch = axios.create({
-  // baseURL: "https://batteryCellify-prod.herokuapp.com/api/v1/toolkit",
+  // baseURL: "https://batteryCellify-prod.herokuapp.com/",
   baseURL: "http://localhost:3000",
-  // baseURL: "https://cryptic-harbor-02513.herokuapp.com/",
-  // headers: {
-  //   "Content-type": "application/json",
-  // },
 });
 
 customFetch.interceptors.request.use((config) => {
-  // const result = localStorage.getItem("user");
-  // const user = result ? JSON.parse(result) : null;
   const token = getTokenFromLocalStorage();
   if (token) {
     config.headers.common["Authorization"] = `Bearer ${token}`;

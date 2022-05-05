@@ -17,7 +17,6 @@ const initialState = {
   isSidebarOpen: false,
   user: getUserFromLocalStorage(),
   token: getTokenFromLocalStorage(),
-  location: getUserFromLocalStorage()?.location || "",
 };
 
 export const registerUser = createAsyncThunk(
@@ -51,7 +50,6 @@ const userSlice = createSlice({
     logoutUser: (state, { payload }) => {
       state.user = null;
       state.token = null;
-      state.location = null;
       state.isSidebarOpen = false;
       removeUserFromLocalStorage();
       if (payload) {
@@ -64,11 +62,10 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [registerUser.fulfilled]: (state, { payload }) => {
-      const { user, token, location } = payload;
+      const { user, token } = payload;
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      state.location = location;
       toast.success(`Hello There ${user.name}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
@@ -80,11 +77,10 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [loginUser.fulfilled]: (state, { payload }) => {
-      const { user, token, location } = payload;
+      const { user, token } = payload;
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      state.location = location;
       toast.success(`Welcome Back ${user.name}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
@@ -96,11 +92,10 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [updateUser.fulfilled]: (state, { payload }) => {
-      const { user, token, location } = payload;
+      const { user, token } = payload;
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      state.location = location;
       toast.success(`User Updated!`);
     },
     [updateUser.rejected]: (state, { payload }) => {

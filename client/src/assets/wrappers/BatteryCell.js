@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Wrapper = styled.article`
   background: var(--white);
@@ -41,11 +41,11 @@ const Wrapper = styled.article`
       letter-spacing: var(--letterSpacing);
     }
   }
-  .pending {
+  .18650 {
     background: #fcefc7;
     color: #e9b949;
   }
-  .interview {
+  .pouch {
     background: #e0e8f9;
     color: #647acb;
   }
@@ -53,7 +53,7 @@ const Wrapper = styled.article`
     color: #d66a6a;
     background: #ffeeee;
   }
-  .content {
+  .prismatic {
     padding: 1rem 1.5rem;
   }
   .content-center {
@@ -71,7 +71,7 @@ const Wrapper = styled.article`
     }
   }
 
-  .status {
+  .type {
     border-radius: var(--borderRadius);
     text-transform: capitalize;
     letter-spacing: var(--letterSpacing);

@@ -8,13 +8,23 @@ import {
 } from "./batteryCellThunk";
 const initialState = {
   isLoading: false,
-  position: "",
-  company: "",
-  batteryCellLocation: "",
-  batteryCellTypeOptions: ["full-time", "part-time", "remote", "internship"],
-  batteryCellType: "full-time",
-  statusOptions: ["interview", "denied", "pending"],
-  status: "pending",
+  cellNameId: "",
+  cycles: "",
+  cathodeOptions: ["LCO", "LFP", "NCA", "NMC", "NMC-LCO"],
+  cathode: "LCO",
+  anodeOptions: ["graphite"],
+  anode: "graphite",
+  capacityAh: "",
+  typeOptions: ["18650", "pouch", "prismatic"],
+  type: "18650",
+  sourceOptions: ["HNEI", "UL-PUR", "calce", "oxford", "snl"],
+  source: "HNEI",
+  temperatureC: "",
+  maxStateOfCharge: "",
+  minStateOfCharge: "",
+  depthOfDischarge: "",
+  chargeCapacityRate: "",
+  dischargeCapacityRate: "",
   editBatteryCellId: "",
 };
 
@@ -43,7 +53,6 @@ const batteryCellSlice = createSlice({
     clearValues: () => {
       return {
         ...initialState,
-        batteryCellLocation: getUserFromLocalStorage()?.location || "",
       };
     },
     setEditBatteryCell: (state, { payload }) => {
@@ -59,7 +68,7 @@ const batteryCellSlice = createSlice({
     },
     [createBatteryCell.fulfilled]: (state) => {
       state.isLoading = false;
-      toast.success("BatteryCell Created");
+      toast.success("Battery Cell Created");
     },
     [createBatteryCell.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -76,7 +85,7 @@ const batteryCellSlice = createSlice({
     },
     [editBatteryCell.fulfilled]: (state) => {
       state.isLoading = false;
-      toast.success("BatteryCell Modified...");
+      toast.success("Battery Cell Modified...");
     },
     [editBatteryCell.rejected]: (state, { payload }) => {
       state.isLoading = false;
