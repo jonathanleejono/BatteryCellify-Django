@@ -7,18 +7,18 @@ from pydantic.types import conint, constr
 
 class BatteryCellBase(BaseModel):
     cellNameId: str
-    cycles: int
+    cycles: str
     cathode: str
     anode: str
-    capacityAh: int
+    capacityAh: str
     type: str
     source: str
-    temperatureC: int
-    maxStateOfCharge: int
-    minStateOfCharge: int
-    depthOfDischarge: int
-    chargeCapacityRate: int
-    dischargeCapacityRate: int
+    temperatureC: str
+    maxStateOfCharge: str
+    minStateOfCharge: str
+    depthOfDischarge: str
+    chargeCapacityRate: str
+    dischargeCapacityRate: str
 
 
 class BatteryCellCreate(BatteryCellBase):

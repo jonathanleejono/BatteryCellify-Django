@@ -9,7 +9,7 @@ const initialFiltersState = {
   search: "",
   searchCathode: "all",
   searchAnode: "all",
-  searchtype: "all",
+  searchType: "all",
   searchSource: "all",
 };
 

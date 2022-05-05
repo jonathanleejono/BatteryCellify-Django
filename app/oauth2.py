@@ -57,8 +57,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
     user = await database.fetch_one(user_query)
 
-    print("user: ", user)
-
     # user = db.query(models.User).filter(models.User.id == token.id).first()
 
     return user

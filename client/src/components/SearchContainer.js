@@ -12,7 +12,7 @@ const SearchContainer = () => {
     search,
     searchCathode,
     searchAnode,
-    searchtype,
+    searchType,
     searchSource,
   } = useSelector((store) => store.allBatteryCells);
 
@@ -63,10 +63,10 @@ const SearchContainer = () => {
           {/* search by type*/}
           <FormRowSelect
             labelText="type"
-            name="searchtype"
-            value={searchtype}
+            name="searchType"
+            value={searchType}
             handleChange={handleSearch}
-            list={["all", ...type]}
+            list={["all", ...typeOptions]}
           />
           {/* search by source*/}
           <FormRowSelect

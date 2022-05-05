@@ -18,13 +18,13 @@ const AllBatteryCells = () => {
   return (
     <>
       <SearchContainer />
-      {/* <Link
-        to="/add-batteryCell"
+      <Link
+        to="/add-battery-cell"
         className="btn btn-hero"
         onClick={() => dispatch(clearValues())}
       >
         Create BatteryCell
-      </Link> */}
+      </Link>
       {/* its here */}
       <EnhancedTable />
       <BatteryCellsContainer />

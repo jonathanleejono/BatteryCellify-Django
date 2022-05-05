@@ -13,15 +13,24 @@ const BatteryCellsContainer = () => {
     totalBatteryCells,
     numOfPages,
     search,
-    searchStatus,
+    searchCathode,
+    searchAnode,
     searchType,
-    sort,
+    searchSource,
   } = useSelector((store) => store.allBatteryCells);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllBatteryCells());
-  }, [dispatch, page, search, searchStatus, searchType, sort]);
+  }, [
+    dispatch,
+    page,
+    search,
+    searchCathode,
+    searchAnode,
+    searchType,
+    searchSource,
+  ]);
 
   if (isLoading) {
     return <Loading />;

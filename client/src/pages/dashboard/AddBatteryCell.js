@@ -35,25 +35,35 @@ const AddBatteryCell = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!position || !company || !batteryCellLocation) {
+    if (
+      !cellNameId ||
+      !cycles ||
+      !capacityAh ||
+      !temperatureC ||
+      !maxStateOfCharge ||
+      !minStateOfCharge ||
+      !depthOfDischarge ||
+      !chargeCapacityRate ||
+      !dischargeCapacityRate
+    ) {
       toast.error("Please fill out all fields");
       return;
     }
     dispatch(
       createBatteryCell({
-        cellNameId,
-        cycles,
+        cellNameId: cellNameId,
+        cycles: cycles,
         cathode: cathode ? cathode : "LCO",
         anode: anode ? anode : "graphite",
-        capacityAh,
+        capacityAh: capacityAh,
         type: type ? type : "18650",
         source: source ? source : "HNEI",
-        temperatureC,
-        maxStateOfCharge,
-        minStateOfCharge,
-        depthOfDischarge,
-        chargeCapacityRate,
-        dischargeCapacityRate,
+        temperatureC: temperatureC,
+        maxStateOfCharge: maxStateOfCharge,
+        minStateOfCharge: minStateOfCharge,
+        depthOfDischarge: depthOfDischarge,
+        chargeCapacityRate: chargeCapacityRate,
+        dischargeCapacityRate: dischargeCapacityRate,
       })
     );
   };
@@ -83,8 +93,7 @@ const AddBatteryCell = () => {
             value={cycles}
             handleChange={handleBatteryCellInput}
           />
-          <FormRow
-            type="text"
+          <FormRowSelect
             name="cathode"
             labelText="Cathode"
             value={cathode}
@@ -98,7 +107,8 @@ const AddBatteryCell = () => {
             handleChange={handleBatteryCellInput}
             list={anodeOptions}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="capacityAh"
             labelText="Capacity (Ah)"
             value={capacityAh}
@@ -118,37 +128,43 @@ const AddBatteryCell = () => {
             handleChange={handleBatteryCellInput}
             list={sourceOptions}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="temperatureC"
             labelText="Temperature (C)"
             value={temperatureC}
             handleChange={handleBatteryCellInput}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="maxStateOfCharge"
             labelText="Max State of Charge"
             value={maxStateOfCharge}
             handleChange={handleBatteryCellInput}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="minStateOfCharge"
             labelText="Min State of Charge"
             value={minStateOfCharge}
             handleChange={handleBatteryCellInput}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="depthOfDischarge"
             labelText="Depth of Discharge"
             value={depthOfDischarge}
             handleChange={handleBatteryCellInput}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="chargeCapacityRate"
             labelText="Charge Capacity Rate"
             value={chargeCapacityRate}
             handleChange={handleBatteryCellInput}
           />
-          <FormRowSelect
+          <FormRow
+            type="text"
             name="dischargeCapacityRate"
             labelText="Discharge Capacity Rate"
             value={dischargeCapacityRate}

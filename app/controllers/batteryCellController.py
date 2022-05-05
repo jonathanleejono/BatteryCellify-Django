@@ -22,18 +22,10 @@ async def get_batteryCells(
         current_user: int = Depends(oauth2.get_current_user),
         limit: int = 10,
         search: Optional[str] = "",
-        cycles: Optional[int] = "",
         cathode: Optional[str] = "",
         anode: Optional[str] = "",
-        capacityAh: Optional[int] = "",
         type: Optional[str] = "",
         source: Optional[str] = "",
-        temperatureC: Optional[int] = "",
-        maxStateOfCharge: Optional[int] = "",
-        minStateOfCharge: Optional[int] = "",
-        depthOfDischarge: Optional[int] = "",
-        chargeCapacityRate: Optional[int] = "",
-        dischargeCapacityRate: Optional[int] = "",
         page: int = 1,
         skip: int = 0):
 
@@ -46,14 +38,10 @@ async def get_batteryCells(
 
     all_batteryCells = await database.fetch_all(result)
 
-    if search:
+    if search and search != None:
         all_batteryCells = list(filter(lambda x: re.search(
             search, x["cellNameId"]), all_batteryCells))
 
-    if cycles and cycles != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['cycles'] == cycles]
     if cathode and cathode != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
@@ -62,10 +50,6 @@ async def get_batteryCells(
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
             if batteryCell['anode'] == anode]
-    if capacityAh and capacityAh != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['capacityAh'] == capacityAh]
     if type and type != "all":
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
@@ -74,30 +58,6 @@ async def get_batteryCells(
         all_batteryCells = [
             batteryCell for batteryCell in all_batteryCells
             if batteryCell['source'] == source]
-    if temperatureC and temperatureC != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['temperatureC'] == temperatureC]
-    if maxStateOfCharge and maxStateOfCharge != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['maxStateOfCharge'] == maxStateOfCharge]
-    if minStateOfCharge and minStateOfCharge != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['minStateOfCharge'] == minStateOfCharge]
-    if depthOfDischarge and depthOfDischarge != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['depthOfDischarge'] == depthOfDischarge]
-    if chargeCapacityRate and chargeCapacityRate != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['chargeCapacityRate'] == chargeCapacityRate]
-    if dischargeCapacityRate and dischargeCapacityRate != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['dischargeCapacityRate'] == dischargeCapacityRate]
 
     totalBatteryCells = len(all_batteryCells)
 

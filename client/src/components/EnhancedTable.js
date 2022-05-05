@@ -299,19 +299,19 @@ const EnhancedTable = () => {
   const {
     batteryCells,
     isLoading,
-    // page,
     totalBatteryCells,
     numOfPages,
     search,
-    searchStatus,
+    searchCathode,
+    searchAnode,
     searchType,
-    sort,
+    searchSource,
   } = useSelector((store) => store.allBatteryCells);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllBatteryCells());
-  }, [dispatch, search, searchStatus, searchType, sort]);
+  }, [dispatch, search, searchCathode, searchAnode, searchType, searchSource]);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");

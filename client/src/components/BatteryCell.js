@@ -23,6 +23,7 @@ const BatteryCell = ({
   depthOfDischarge,
   chargeCapacityRate,
   dischargeCapacityRate,
+  createdAt,
 }) => {
   const dispatch = useDispatch();
 
