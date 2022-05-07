@@ -19,12 +19,9 @@ import EnhancedTableHeader from "./EnhancedTableHeader";
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
 
 import { useEffect, useState } from "react";
-import BatteryCell from "./BatteryCell";
-import Wrapper from "../assets/wrappers/BatteryCellsContainer";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
-import PageBtnContainer from "./PageBtnContainer";
 import {
   deleteBatteryCell,
   setEditBatteryCell,
@@ -164,19 +161,8 @@ const EnhancedTable = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Button
-        onClick={() => {
-          selected.length > 0
-            ? setOpenDialog(true)
-            : toast.error("Please select battery cell(s)");
-        }}
-        style={{ margin: "20px", background: "white", color: "black" }}
-        className="btn"
-      >
-        Delete
-      </Button>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -392,10 +378,23 @@ const EnhancedTable = () => {
           }}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+      <div>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
+        />
+        <Button
+          onClick={() => {
+            selected.length > 0
+              ? setOpenDialog(true)
+              : toast.error("Please select battery cell(s)");
+          }}
+          style={{ margin: "20px", background: "white", color: "black" }}
+          className="btn"
+        >
+          Delete Selected
+        </Button>
+      </div>
     </Box>
   );
 };
