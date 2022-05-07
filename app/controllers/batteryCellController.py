@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter, Request
-from typing import Optional
+from typing import Optional, List
 from .. import models, schemas, oauth2
 from ..database import database
 from ..models import batteryCells
@@ -96,7 +96,7 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: sc
 
     if not batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"BatteryCell with id: {id} does not exist")
+                            detail=f"Battery cell with id: {id} does not exist")
 
     if batteryCell.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
@@ -122,7 +122,7 @@ async def delete_batteryCell(request: Request, id: int, current_user: int = Depe
 
     if not batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"BatteryCell with id: {id} does not exist")
+                            detail=f"Battery cell with id: {id} does not exist")
 
     if batteryCell.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,

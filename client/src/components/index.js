@@ -9,6 +9,7 @@ import SearchContainer from "./SearchContainer";
 import SmallSidebar from "./SmallSidebar";
 import StatsContainer from "./StatsContainer";
 import EnhancedTable from "./EnhancedTable";
+import DataGridTable from "./DataGridTable";
 import PlotlyComponent from "./HelixPlot";
 import PlotTest from "./PlotTest";
 
@@ -24,6 +25,7 @@ export {
   StatsContainer,
   ChartsContainer,
   EnhancedTable,
+  DataGridTable,
   PlotlyComponent,
   PlotTest,
 };

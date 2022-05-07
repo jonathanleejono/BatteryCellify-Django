@@ -66,7 +66,7 @@ const BatteryCell = ({
               onClick={() =>
                 dispatch(
                   setEditBatteryCell({
-                    editBatteryCellId: id,
+                    id,
                     cellNameId,
                     cycles,
                     cathode,

@@ -28,7 +28,7 @@ const EditBatteryCell = () => {
     depthOfDischarge,
     chargeCapacityRate,
     dischargeCapacityRate,
-    editJobId,
+    id,
   } = useSelector((store) => store.batteryCell);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const EditBatteryCell = () => {
     }
     dispatch(
       editBatteryCell({
-        editJobId,
+        id,
         batteryCell: {
           cellNameId,
           cycles,
@@ -70,6 +70,8 @@ const EditBatteryCell = () => {
         },
       })
     );
+    console.log("id: ", id);
+    console.log("cellNameId, cycles: ", cellNameId, cycles);
   };
 
   const handleBatteryCellInput = (e) => {

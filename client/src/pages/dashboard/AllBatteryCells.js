@@ -2,6 +2,7 @@ import {
   BatteryCellsContainer,
   SearchContainer,
   EnhancedTable,
+  DataGridTable,
 } from "../../components";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,6 +28,7 @@ const AllBatteryCells = () => {
       </Link>
       {/* its here */}
       <EnhancedTable />
+      <DataGridTable />
       <BatteryCellsContainer />
     </>
   );

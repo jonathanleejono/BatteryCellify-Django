@@ -51,6 +51,10 @@ class BatteryCellsManyOut(BaseModel):
     class Config:
         orm_mode = True
 
+
+class BatteryCellsDeleteTest(BaseModel):
+    arrIds: List[int]
+
 # -----------------------------------------
 
 

@@ -29,33 +29,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
 import PageBtnContainer from "./PageBtnContainer";
-
-function createData(name, testing1, fat, carbs, protein, testing2) {
-  return {
-    name,
-    testing1,
-    fat,
-    carbs,
-    protein,
-    testing2,
-  };
-}
-
-const rows = [
-  createData("Cupcake", 305, 3.7, 67, 4.3, 5.6),
-  createData("Donut", 452, 25.0, 51, 4.9, 5.6),
-  createData("Eclair", 262, 16.0, 24, 6.0, 5.6),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0, 8.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9, 8.3),
-  createData("Honeycomb", 408, 3.2, 87, 6.5, 8.3),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3, 5.6),
-  createData("Jelly Bean", 375, 0.0, 94, 0.0, 5.6),
-  createData("KitKat", 518, 26.0, 65, 7.0, 2.7),
-  createData("Lollipop", 392, 0.2, 98, 0.0, 2.7),
-  createData("Marshmallow", 318, 0, 81, 2.0, 5.6),
-  createData("Nougat", 360, 19.0, 9, 37.0, 5.6),
-  createData("Oreo", 437, 18.0, 63, 4.0, 5.6),
-];
+import { deleteBatteryCell } from "../features/batteryCell/batteryCellSlice";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -238,7 +212,9 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
+  // useSelector((store) => store.allBatteryCells);
   const { numSelected } = props;
+  const dispatch = useDispatch();
 
   return (
     <Toolbar
@@ -273,10 +249,9 @@ const EnhancedTableToolbar = (props) => {
           Battery Cell List
         </Typography>
       )}
-
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={() => console.log("delete test")}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
