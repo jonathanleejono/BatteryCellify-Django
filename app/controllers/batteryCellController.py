@@ -116,6 +116,8 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: sc
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def delete_batteryCell(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
 
+    # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
+
     batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
     batteryCell = await database.fetch_one(batteryCell_query)
