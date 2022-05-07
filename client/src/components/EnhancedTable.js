@@ -1,35 +1,44 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
+import { alpha } from "@mui/material/styles";
+import { toast } from "react-toastify";
 
-import { useEffect } from "react";
+import EnhancedTableHeader from "./EnhancedTableHeader";
+import EnhancedTableToolbar from "./EnhancedTableToolbar";
+
+import { useEffect, useState } from "react";
 import BatteryCell from "./BatteryCell";
 import Wrapper from "../assets/wrappers/BatteryCellsContainer";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
 import PageBtnContainer from "./PageBtnContainer";
-import { deleteBatteryCell } from "../features/batteryCell/batteryCellSlice";
+import {
+  deleteBatteryCell,
+  setEditBatteryCell,
+} from "../features/batteryCell/batteryCellSlice";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,215 +70,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: "id",
-    numeric: false,
-    disablePadding: false,
-    label: "Id",
-  },
-  {
-    id: "cellNameId",
-    numeric: false,
-    disablePadding: false,
-    label: "Cell Name Id",
-  },
-  {
-    id: "cycles",
-    numeric: false,
-    disablePadding: false,
-    label: "Cycles",
-  },
-  {
-    id: "cathode",
-    numeric: false,
-    disablePadding: false,
-    label: "Cathode",
-  },
-  {
-    id: "anode",
-    numeric: false,
-    disablePadding: false,
-    label: "Anode",
-  },
-  {
-    id: "capacityAh",
-    numeric: false,
-    disablePadding: false,
-    label: "Capacity (Ah)",
-  },
-  {
-    id: "type",
-    numeric: false,
-    disablePadding: false,
-    label: "Type",
-  },
-  {
-    id: "source",
-    numeric: false,
-    disablePadding: false,
-    label: "Source",
-  },
-  {
-    id: "temperatureC",
-    numeric: false,
-    disablePadding: false,
-    label: "Temp (C)",
-  },
-  {
-    id: "maxStateOfCharge",
-    numeric: false,
-    disablePadding: false,
-    label: "Max SoC",
-  },
-  {
-    id: "minStateOfCharge",
-    numeric: false,
-    disablePadding: false,
-    label: "Min SoC",
-  },
-  {
-    id: "depthOfDischarge",
-    numeric: false,
-    disablePadding: false,
-    label: "DoD",
-  },
-  {
-    id: "chargeCapacityRate",
-    numeric: false,
-    disablePadding: false,
-    label: "Charge C Rate",
-  },
-  {
-    id: "dischargeCapacityRate",
-    numeric: false,
-    disablePadding: false,
-    label: "Discharge C Rate",
-  },
-];
-
-function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            // align={headCell.numeric ? "right" : "left"}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const EnhancedTableToolbar = (props) => {
-  // useSelector((store) => store.allBatteryCells);
-  const { numSelected } = props;
-  const dispatch = useDispatch();
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Battery Cell List
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={() => console.log("delete test")}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const EnhancedTable = () => {
   const {
     batteryCells,
@@ -289,7 +89,7 @@ const EnhancedTable = () => {
   }, [dispatch, search, searchCathode, searchAnode, searchType, searchSource]);
 
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("id");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -343,6 +143,19 @@ const EnhancedTable = () => {
     setDense(event.target.checked);
   };
 
+  const handleDeleteMany = () => {
+    console.log(selected);
+    for (let id in selected) {
+      dispatch(deleteBatteryCell(selected[id]));
+    }
+  };
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -351,15 +164,26 @@ const EnhancedTable = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
+      <Button
+        onClick={() => {
+          selected.length > 0
+            ? setOpenDialog(true)
+            : toast.error("Please select battery cell(s)");
+        }}
+        style={{ margin: "20px", background: "white", color: "black" }}
+        className="btn"
+      >
+        Delete
+      </Button>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
           >
-            <EnhancedTableHead
+            <EnhancedTableHeader
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -379,7 +203,13 @@ const EnhancedTable = () => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, batteryCell.id)}
+                      onClick={(event) =>
+                        handleClick(
+                          event,
+                          batteryCell.id,
+                          batteryCell.cellNameId
+                        )
+                      }
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -399,40 +229,136 @@ const EnhancedTable = () => {
                         component="th"
                         id={labelId}
                         scope="row"
-                        padding="none"
-                        align="center"
+                        padding="normal"
+                        align="left"
+                      >
+                        {" "}
+                        <Box
+                          sx={{
+                            // backgroundColor: "whitesmoke",
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            alignItems: "left",
+                          }}
+                        >
+                          {" "}
+                          <Link to="/edit-battery-cell">
+                            <IconButton
+                              onClick={() => {
+                                dispatch(
+                                  setEditBatteryCell({
+                                    id: batteryCell.id,
+                                    cellNameId: batteryCell.cellNameId,
+                                    cycles: batteryCell.cycles,
+                                    cathode: batteryCell.cathode,
+                                    anode: batteryCell.anode,
+                                    capacityAh: batteryCell.capacityAh,
+                                    type: batteryCell.type,
+                                    source: batteryCell.source,
+                                    temperatureC: batteryCell.temperatureC,
+                                    maxStateOfCharge:
+                                      batteryCell.maxStateOfCharge,
+                                    minStateOfCharge:
+                                      batteryCell.minStateOfCharge,
+                                    depthOfDischarge:
+                                      batteryCell.depthOfDischarge,
+                                    chargeCapacityRate:
+                                      batteryCell.chargeCapacityRate,
+                                    dischargeCapacityRate:
+                                      batteryCell.dischargeCapacityRate,
+                                  })
+                                );
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Link>
+                          <IconButton
+                            onClick={() => {
+                              setOpenDialog(true);
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                          <Dialog
+                            open={openDialog}
+                            onClose={handleClose}
+                            aria-labelledby="form-dialog-title"
+                            PaperProps={{
+                              elevation: 0,
+                            }}
+                            BackdropProps={{
+                              style: {
+                                backgroundColor: alpha("#080808", 0.25),
+                                boxShadow: "none",
+                                opacity: 50,
+                              },
+                            }}
+                          >
+                            <DialogTitle id="form-dialog-title">
+                              {" "}
+                              Delete the selected battery cell(s)?{" "}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                {JSON.stringify(selected)}
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={handleClose} color="primary">
+                                Cancel
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  handleClose();
+                                  handleDeleteMany();
+                                }}
+                                color="primary"
+                              >
+                                Confirm
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </Box>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        // padding="none"
+                        align="left"
                       >
                         {batteryCell.id}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         {batteryCell.cellNameId}
                       </TableCell>
-                      <TableCell align="center">{batteryCell.cycles}</TableCell>
-                      <TableCell align="center">
-                        {batteryCell.cathode}
-                      </TableCell>
-                      <TableCell align="center">{batteryCell.anode}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">{batteryCell.cycles}</TableCell>
+                      <TableCell align="left">{batteryCell.cathode}</TableCell>
+                      <TableCell align="left">{batteryCell.anode}</TableCell>
+                      <TableCell align="left">
                         {batteryCell.capacityAh}
                       </TableCell>
-                      <TableCell align="center">{batteryCell.type}</TableCell>
-                      <TableCell align="center">{batteryCell.source}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">{batteryCell.type}</TableCell>
+                      <TableCell align="left">{batteryCell.source}</TableCell>
+                      <TableCell align="left">
                         {batteryCell.temperatureC}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         {batteryCell.maxStateOfCharge}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         {batteryCell.minStateOfCharge}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         {batteryCell.depthOfDischarge}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         {batteryCell.chargeCapacityRate}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         {batteryCell.dischargeCapacityRate}
                       </TableCell>
                     </TableRow>
@@ -458,6 +384,12 @@ const EnhancedTable = () => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            //   backgroundColor: "primary.main",
+            "& .MuiTablePagination-spacer": {
+              flex: "0 0 0%",
+            },
+          }}
         />
       </Paper>
       <FormControlLabel

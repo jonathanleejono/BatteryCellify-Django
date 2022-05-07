@@ -2,14 +2,10 @@ import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { useEffect, useState } from "react";
-import BatteryCell from "./BatteryCell";
-import Wrapper from "../assets/wrappers/BatteryCellsContainer";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
-import PageBtnContainer from "./PageBtnContainer";
 import {
-  editBatteryCell,
   deleteBatteryCell,
   setEditBatteryCell,
 } from "../features/batteryCell/batteryCellSlice";
@@ -37,70 +33,6 @@ const DataGridTable = () => {
   useEffect(() => {
     dispatch(getAllBatteryCells());
   }, [dispatch, search, searchCathode, searchAnode, searchType, searchSource]);
-
-  const handleEditTest = (params) => {
-    dispatch(
-      setEditBatteryCell({
-        editBatteryCellId: params.id,
-        cellNameId: params.row.cellNameId,
-        cycles: params.row.cycles,
-        cathode: params.row.cathode,
-        anode: params.row.anode,
-        capacityAh: params.row.capacityAh,
-        type: params.row.type,
-        source: params.row.source,
-        temperatureC: params.row.temperatureC,
-        maxStateOfCharge: params.row.maxStateOfCharge,
-        minStateOfCharge: params.row.minStateOfCharge,
-        depthOfDischarge: params.row.depthOfDischarge,
-        chargeCapacityRate: params.row.chargeCapacityRate,
-        dischargeCapacityRate: params.row.dischargeCapacityRate,
-      })
-    );
-  };
-
-  const handleEdit = () => {
-    return (
-      <Link
-        to="/edit-battery-cell"
-        className="btn edit-btn"
-        onClick={() => {
-          dispatch(
-            setEditBatteryCell({
-              editBatteryCellId: selectedRow.id,
-              cellNameId: selectedRow.row.cellNameId,
-              cycles: selectedRow.row.cycles,
-              cathode: selectedRow.row.cathode,
-              anode: selectedRow.row.anode,
-              capacityAh: selectedRow.row.capacityAh,
-              type: selectedRow.row.type,
-              source: selectedRow.row.source,
-              temperatureC: selectedRow.row.temperatureC,
-              maxStateOfCharge: selectedRow.row.maxStateOfCharge,
-              minStateOfCharge: selectedRow.row.minStateOfCharge,
-              depthOfDischarge: selectedRow.row.depthOfDischarge,
-              chargeCapacityRate: selectedRow.row.chargeCapacityRate,
-              dischargeCapacityRate: selectedRow.row.dischargeCapacityRate,
-            })
-          );
-        }}
-      >
-        Edit
-      </Link>
-    );
-  };
-
-  // const handleDelete = () => {
-  //   console.log(arrSingleId);
-  //   return (
-  //     <Button
-  //       className="btn edit-btn"
-  //       onClick={() => dispatch(deleteBatteryCell(arrSingleId))}
-  //     >
-  //       Delete
-  //     </Button>
-  //   );
-  // };
 
   const handleDeleteMany = () => {
     console.log(arrIds);
@@ -146,16 +78,18 @@ const DataGridTable = () => {
                       depthOfDischarge: params.row.depthOfDischarge,
                       chargeCapacityRate: params.row.chargeCapacityRate,
                       dischargeCapacityRate: params.row.dischargeCapacityRate,
-                    }),
-                    console.log("params.id99999: ", params.id),
-                    console.log("params.row.id99999: ", params.row.id)
+                    })
                   );
                 }}
               >
                 <EditIcon />
               </IconButton>
             </Link>
-            <IconButton onClick={() => console.log("PARAMS ID: ", params.id)}>
+            <IconButton
+              onClick={() => {
+                dispatch(deleteBatteryCell(params.row.id));
+              }}
+            >
               <DeleteIcon />
             </IconButton>
           </Box>
@@ -167,21 +101,18 @@ const DataGridTable = () => {
     {
       field: "cellNameId",
       headerName: "cellNameId",
-      width: 150,
-      editable: true,
+      width: 400,
     },
     {
       field: "cycles",
       headerName: "cycles",
       width: 150,
-      editable: true,
     },
     {
       field: "cathode",
       headerName: "cathode",
       type: "number",
       width: 110,
-      editable: true,
     },
     {
       field: "anode",
@@ -204,13 +135,7 @@ const DataGridTable = () => {
     },
   ];
 
-  const [arrSingleId, setArrSingleId] = useState([]);
-
   const [arrIds, setArrIds] = useState([]);
-
-  const [selectedRow, setSelectedRow] = useState([]);
-
-  let testRow = [];
 
   return (
     <div style={{ height: 400, width: "100%" }}>
@@ -226,17 +151,14 @@ const DataGridTable = () => {
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection
-        // disableSelectionOnClick
+        disableSelectionOnClick
         getRowId={(row) => row.id}
         onSelectionModelChange={(ids) => {
           setArrIds(ids);
-          setArrSingleId(ids);
         }}
         onRowClick={(data) => {
           console.log("row prop click: ", data);
           console.log("row prop click _ data.row: ", data.row);
-          setSelectedRow(data);
-          testRow = data;
         }}
         sx={{
           //   backgroundColor: "primary.main",
