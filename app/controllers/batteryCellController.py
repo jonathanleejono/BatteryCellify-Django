@@ -2,7 +2,7 @@ from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from typing import Optional, List
 from .. import models, schemas, oauth2
 from ..database import database
-from ..models import batteryCells
+from ..models import batteryCells, csvData
 from ..database import database
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -116,8 +116,6 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: sc
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def delete_batteryCell(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
 
-    # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
-
     batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
     batteryCell = await database.fetch_one(batteryCell_query)
@@ -130,8 +128,15 @@ async def delete_batteryCell(request: Request, id: int, current_user: int = Depe
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    deleted_batteryCell = batteryCells.delete().where(batteryCells.c.id == id)
+    delete_batteryCell = batteryCells.delete().where(batteryCells.c.id == id)
 
-    await database.execute(deleted_batteryCell)
+    await database.execute(delete_batteryCell)
+
+    # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
+
+    delete_csvData_batteryCell = csvData.delete().where(
+        csvData.c.batteryCell_id == id)
+
+    await database.execute(delete_csvData_batteryCell)
 
     return {"msg": "Success! Battery cell removed", "id": id}

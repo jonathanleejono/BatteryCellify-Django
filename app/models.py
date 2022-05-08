@@ -1,7 +1,7 @@
 import enum
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table, Enum
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table, Enum, Float
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.orm import relationship
@@ -54,6 +54,56 @@ batteryCells = Table(
     Column("owner_id", Integer, ForeignKey(
         "users.id", ondelete="CASCADE"), nullable=False)
 )
+
+csvData = Table(
+    "csvData",
+    metadata,
+    Column("id", Integer,
+           primary_key=True, nullable=False),
+    Column("cycleIndex", Integer, nullable=False),
+    Column("startTime", Float, nullable=False),
+    Column("endTime", Float, nullable=False),
+    Column("testTimeSeconds", Float, nullable=False),
+    Column("minCurrentA", Float, nullable=False),
+    Column("maxCurrentA", Float, nullable=False),
+    Column("minVoltageV", Float, nullable=False),
+    Column("maxVoltageV", Float, nullable=False),
+    Column("chargeCapacityAh", Float, nullable=False),
+    Column("dischargeCapacityAh", Float, nullable=False),
+    Column("chargeEnergyWh", Float, nullable=False),
+    Column("dischargeEnergyWh", Float, nullable=False),
+    Column("created_at", TIMESTAMP(
+        timezone=True), nullable=False, server_default=text('now()')),
+    Column("batteryCell_id", Integer, ForeignKey(
+        "batteryCells.id", ondelete="CASCADE"), nullable=False),
+    Column("owner_id", Integer, ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
+)
+
+# csvData2 = Table(
+#     "csvData",
+#     metadata,
+#     Column("id", Integer,
+#            primary_key=True, nullable=False),
+#     Column("cycleIndex", Integer, nullable=False),
+#     Column("startTime", String, nullable=False),
+#     Column("endTime", String, nullable=False),
+#     Column("testTimeSeconds", Float, nullable=False),
+#     Column("minCurrentA", Float, nullable=False),
+#     Column("maxCurrentA", Float, nullable=False),
+#     Column("minVoltageV", Float, nullable=False),
+#     Column("maxVoltageV", Float, nullable=False),
+#     Column("chargeCapacityAh", Float, nullable=False),
+#     Column("dischargeCapacityAh", Float, nullable=False),
+#     Column("chargeEnergyWh", Float, nullable=False),
+#     Column("dischargeEnergyWh", Float, nullable=False),
+#     Column("created_at", TIMESTAMP(
+#         timezone=True), nullable=False, server_default=text('now()')),
+#     Column("batteryCell_id", Integer, ForeignKey(
+#         "batteryCells.id", ondelete="CASCADE"), nullable=False),
+#     Column("owner_id", Integer, ForeignKey(
+#         "users.id", ondelete="CASCADE"), nullable=False)
+# )
 
 # the order matters
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URL)
