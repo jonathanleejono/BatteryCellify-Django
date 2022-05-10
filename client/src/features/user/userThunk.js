@@ -1,13 +1,13 @@
-import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
-import { clearAllBatteryCellsState } from "../allBatteryCells/allBatteryCellsSlice";
-import { clearValues } from "../batteryCell/batteryCellSlice";
-import { logoutUser } from "./userSlice";
-import { addUserToLocalStorage } from "../../utils/localStorage";
+import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
+import { clearAllBatteryCellsState } from '../allBatteryCells/allBatteryCellsSlice';
+import { clearValues } from '../batteryCell/batteryCellSlice';
+import { logoutUser } from './userSlice';
+import { addUserToLocalStorage } from '../../utils/localStorage';
 
 export const registerUserThunk = async (url, newUser, thunkAPI) => {
   try {
     const resp = await customFetch.post(url, newUser);
-    // console.log("registerUserThunk: ", resp.data);
+    console.log('registerUserThunk2: ', resp.data);
     const { user, token } = resp.data;
     addUserToLocalStorage({ user, token });
     return resp.data;
@@ -15,9 +15,7 @@ export const registerUserThunk = async (url, newUser, thunkAPI) => {
     // the "error.response.data.detail" needs to have the word "detail" in it to make the
     // HTTPException message work (because 'detail' is destructured from it)
     // the "err.response.data.error" is for the slowapi rate limiting error message
-    return thunkAPI.rejectWithValue(
-      err.response.data.detail || err.response.data.error
-    );
+    return thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error);
   }
 };
 
@@ -29,9 +27,7 @@ export const loginUserThunk = async (url, loginUser, thunkAPI) => {
     addUserToLocalStorage({ user, token });
     return resp.data;
   } catch (err) {
-    return thunkAPI.rejectWithValue(
-      err.response.data.detail || err.response.data.error
-    );
+    return thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error);
   }
 };
 
@@ -44,9 +40,7 @@ export const updateUserThunk = async (url, updatedUser, thunkAPI) => {
   } catch (err) {
     return (
       checkForUnauthorizedResponse(err, thunkAPI),
-      thunkAPI.rejectWithValue(
-        err.response.data.detail || err.response.data.error
-      )
+      thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error)
     );
   }
 };

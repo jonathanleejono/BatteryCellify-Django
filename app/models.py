@@ -18,10 +18,10 @@ users = Table(
     metadata,
     Column("id", Integer,
            primary_key=True, nullable=False),
-    Column("name", String, nullable=False),
+    Column("firstName", String, nullable=False),
+    Column("lastName", String, nullable=True, server_default="lastName"),
     Column("email", String, nullable=False, unique=True),
     Column("password", String, nullable=False),
-    Column("lastName", String, nullable=True, server_default="lastName"),
     Column("created_at", TIMESTAMP(
         timezone=True), nullable=False, server_default=text('now()')),
 )

@@ -16,7 +16,7 @@ limiter = Limiter(key_func=get_remote_address)
 @limiter.limit("5/minute", error_message="Too many requests, please try again later")
 async def create_user(user: schemas.UserCreate, request: Request):
 
-    if not user.email or not user.name or not user.password:
+    if not user.email or not user.firstName or not user.password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Please provide all values")
 
@@ -37,7 +37,7 @@ async def create_user(user: schemas.UserCreate, request: Request):
         data={"user_id": registered_user_id})
 
     registered_user = {"email": user.email,
-                       "name": user.name, "lastName": "lastName"}
+                       "firstName": user.firstName, "lastName": "lastName"}
 
     return {"user": registered_user, "token": access_token}
 
@@ -67,7 +67,7 @@ async def login_user(request: Request, logging_in_user: schemas.UserLogin):
 
     access_token = oauth2.create_access_token(data={"user_id": user.id})
 
-    logged_in_user = {"email": user.email, "name": user.name,
+    logged_in_user = {"email": user.email, "firstName": user.firstName,
                       "lastName": user.lastName}
 
     return {"user": logged_in_user, "token": access_token}
@@ -85,7 +85,7 @@ async def update_user(request: Request, updated_user: schemas.UserUpdate, curren
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid Credentials")
 
-    if not updated_user.email or not updated_user.name or not updated_user.lastName:
+    if not updated_user.email or not updated_user.firstName or not updated_user.lastName:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Please provide all values")
 

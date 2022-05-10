@@ -59,7 +59,7 @@ class TokenData(BaseModel):
 
 
 class UserCreate(BaseModel):
-    name: constr(min_length=2, max_length=20)
+    firstName: constr(min_length=2, max_length=20)
     email: EmailStr
     password: constr(min_length=7)
 
@@ -89,6 +89,6 @@ class UserLogin(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    name: str
+    firstName: str
     email: EmailStr
     lastName: str

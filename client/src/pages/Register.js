@@ -1,94 +1,125 @@
-import { useState, useEffect } from "react";
-import { Logo, FormRow } from "../components";
-import Wrapper from "../assets/wrappers/RegisterPage";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser } from "../features/user/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
+// @mui
+import { styled } from '@mui/material/styles';
+import { Card, Link, Container, Typography } from '@mui/material';
+// hooks
+import useResponsive from '../hooks/useResponsive';
+// components
+import Page from '../components/Page';
+import Logo from '../components/Logo';
+// sections
+import { RegisterForm } from '../sections/auth/register';
+import AuthSocial from '../sections/auth/AuthSocial';
 
-const initialState = {
-  name: "",
-  email: "",
-  password: "",
-  isMember: true,
-};
+// ----------------------------------------------------------------------
 
-function Register() {
-  const [values, setValues] = useState(initialState);
-  const { user, isLoading } = useSelector((store) => store.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const RootStyle = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
+}));
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+const HeaderStyle = styled('header')(({ theme }) => ({
+  top: 0,
+  zIndex: 9,
+  lineHeight: 0,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  position: 'absolute',
+  padding: theme.spacing(3),
+  justifyContent: 'space-between',
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-start',
+    padding: theme.spacing(7, 5, 0, 7),
+  },
+}));
 
-    setValues({ ...values, [name]: value });
-  };
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const { name, email, password, isMember } = values;
-    if (!email || !password || (!isMember && !name)) {
-      toast.error("Please fill out all fields");
-      return;
-    }
-    if (isMember) {
-      dispatch(loginUser({ email: email, password: password }));
-      return;
-    }
-    const currentUser = { name, email, password };
-    dispatch(registerUser(currentUser));
-  };
+const SectionStyle = styled(Card)(({ theme }) => ({
+  width: '100%',
+  maxWidth: 464,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  margin: theme.spacing(2, 0, 2, 2),
+}));
 
-  const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember });
-  };
-  useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    }
-  }, [user, navigate]);
+const ContentStyle = styled('div')(({ theme }) => ({
+  maxWidth: 480,
+  margin: 'auto',
+  minHeight: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  padding: theme.spacing(12, 0),
+}));
+
+// ----------------------------------------------------------------------
+
+export default function Register() {
+  const smUp = useResponsive('up', 'sm');
+
+  const mdUp = useResponsive('up', 'md');
+
   return (
-    <Wrapper className="full-page">
-      <form className="form" onSubmit={onSubmit}>
-        <Logo />
-        <h3>{values.isMember ? "Login" : "Register"}</h3>
-        {/* name field */}
-        {!values.isMember && (
-          <FormRow
-            type="text"
-            name="name"
-            value={values.name}
-            handleChange={handleChange}
-          />
+    <Page title="Register">
+      <RootStyle>
+        <HeaderStyle>
+          <Logo />
+          {smUp && (
+            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
+              Already have an account? {''}
+              <Link variant="subtitle2" component={RouterLink} to="/login">
+                Login
+              </Link>
+            </Typography>
+          )}
+        </HeaderStyle>
+
+        {mdUp && (
+          <SectionStyle>
+            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+              Manage the job more effectively with Minimal
+            </Typography>
+            <img alt="register" src="/static/illustrations/illustration_register.png" />
+          </SectionStyle>
         )}
-        {/* email field */}
-        <FormRow
-          type="email"
-          name="email"
-          value={values.email}
-          handleChange={handleChange}
-        />
-        {/* password field */}
-        <FormRow
-          type="password"
-          name="password"
-          value={values.password}
-          handleChange={handleChange}
-        />
-        <button type="submit" className="btn btn-block" disabled={isLoading}>
-          {isLoading ? "loading..." : "submit"}
-        </button>
-        <p>
-          {values.isMember ? "Not a member yet?" : "Already a member?"}
-          <button type="button" onClick={toggleMember} className="member-btn">
-            {values.isMember ? "Register" : "Login"}
-          </button>
-        </p>
-      </form>
-    </Wrapper>
+
+        <Container>
+          <ContentStyle>
+            <Typography variant="h4" gutterBottom>
+              Get started absolutely free.
+            </Typography>
+
+            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Free forever. No credit card needed.</Typography>
+
+            <AuthSocial />
+
+            <RegisterForm />
+
+            <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
+              By registering, I agree to Minimal&nbsp;
+              <Link underline="always" color="text.primary" href="#">
+                Terms of Service
+              </Link>
+              {''}and{''}
+              <Link underline="always" color="text.primary" href="#">
+                Privacy Policy
+              </Link>
+              .
+            </Typography>
+
+            {!smUp && (
+              <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
+                Already have an account?{' '}
+                <Link variant="subtitle2" to="/login" component={RouterLink}>
+                  Login
+                </Link>
+              </Typography>
+            )}
+          </ContentStyle>
+        </Container>
+      </RootStyle>
+    </Page>
   );
 }
-export default Register;
