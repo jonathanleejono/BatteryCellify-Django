@@ -36,13 +36,6 @@ class BatteryCellOut(BatteryCellBase):
         orm_mode = True
 
 
-class BatteryCellsOut(BatteryCellBase):
-    id: int
-
-    class Config:
-        orm_mode = True
-
-
 class BatteryCellsManyOut(BaseModel):
     batteryCells: List[BatteryCellOut]
     totalBatteryCells: int
