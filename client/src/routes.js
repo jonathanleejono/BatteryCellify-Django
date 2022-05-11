@@ -5,6 +5,7 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Blog from './pages/Blog';
 import User from './pages/User';
+import Profile from './pages/Profile';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';
@@ -29,7 +30,7 @@ export default function Router() {
         { path: 'add-battery-cell', element: <Products /> },
         { path: 'graphs', element: <Blog /> },
         { path: 'manage-csv', element: <Blog /> },
-        { path: 'profile', element: <User /> },
+        { path: 'profile', element: <Profile /> },
       ],
     },
     {
