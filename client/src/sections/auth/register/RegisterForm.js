@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate } from 'react-router-dom';
 // material
@@ -19,6 +19,8 @@ export default function RegisterForm() {
 
   const dispatch = useDispatch();
 
+  const { user, isLoading } = useSelector((store) => store.user);
+
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
@@ -35,13 +37,20 @@ export default function RegisterForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: () => {
-      console.log('formik values: ', formik.values);
       dispatch(registerUser(formik.values));
-      navigate('/dashboard/app', { replace: true });
+      navigate('/app/dashboard', { replace: true });
     },
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/app/dashboard');
+      }, 1);
+    }
+  }, [user, navigate]);
 
   return (
     <FormikProvider value={formik}>

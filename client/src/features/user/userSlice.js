@@ -1,16 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import {
   getUserFromLocalStorage,
   getTokenFromLocalStorage,
   removeUserFromLocalStorage,
-} from "../../utils/localStorage";
-import {
-  loginUserThunk,
-  registerUserThunk,
-  updateUserThunk,
-  clearStoreThunk,
-} from "./userThunk";
+} from '../../utils/localStorage';
+import { loginUserThunk, registerUserThunk, updateUserThunk, clearStoreThunk } from './userThunk';
 
 const initialState = {
   isLoading: false,
@@ -19,29 +14,20 @@ const initialState = {
   token: getTokenFromLocalStorage(),
 };
 
-export const registerUser = createAsyncThunk(
-  "user/registerUser",
-  async (user, thunkAPI) => {
-    return registerUserThunk("/register", user, thunkAPI);
-  }
-);
+export const registerUser = createAsyncThunk('user/registerUser', async (user, thunkAPI) => {
+  return registerUserThunk('/register', user, thunkAPI);
+});
 // used to be /auth/something
-export const loginUser = createAsyncThunk(
-  "user/loginUser",
-  async (user, thunkAPI) => {
-    return loginUserThunk("/login", user, thunkAPI);
-  }
-);
+export const loginUser = createAsyncThunk('user/loginUser', async (user, thunkAPI) => {
+  return loginUserThunk('/login', user, thunkAPI);
+});
 
-export const updateUser = createAsyncThunk(
-  "user/updateUser",
-  async (user, thunkAPI) => {
-    return updateUserThunk("/updateUser", user, thunkAPI);
-  }
-);
-export const clearStore = createAsyncThunk("user/clearStore", clearStoreThunk);
+export const updateUser = createAsyncThunk('user/updateUser', async (user, thunkAPI) => {
+  return updateUserThunk('/updateUser', user, thunkAPI);
+});
+export const clearStore = createAsyncThunk('user/clearStore', clearStoreThunk);
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     toggleSidebar: (state) => {
@@ -66,7 +52,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      toast.success(`Hello There ${user.name}`);
+      toast.success(`Hello There ${user.firstName}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -81,7 +67,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      toast.success(`Welcome Back ${user.name}`);
+      toast.success(`Welcome Back ${user.firstName}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -103,7 +89,7 @@ const userSlice = createSlice({
       toast.error(payload);
     },
     [clearStore.rejected]: () => {
-      toast.error("There was an error..");
+      toast.error('There was an error..');
     },
   },
 });

@@ -1,11 +1,13 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
 import { Link, Stack, Checkbox, TextField, IconButton, InputAdornment, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, registerUser } from '../../../features/user/userSlice';
 import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -13,7 +15,11 @@ import Iconify from '../../../components/Iconify';
 export default function LoginForm() {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const [showPassword, setShowPassword] = useState(false);
+
+  const { user, isLoading } = useSelector((store) => store.user);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -28,7 +34,8 @@ export default function LoginForm() {
     },
     validationSchema: LoginSchema,
     onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+      dispatch(loginUser(formik.values));
+      navigate('/app/dashboard', { replace: true });
     },
   });
 
@@ -37,6 +44,14 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/app/dashboard');
+      }, 1);
+    }
+  }, [user, navigate]);
 
   return (
     <FormikProvider value={formik}>
@@ -71,8 +86,8 @@ export default function LoginForm() {
             helperText={touched.password && errors.password}
           />
         </Stack>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+        <div>&nbsp;</div>
+        {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
           <FormControlLabel
             control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
             label="Remember me"
@@ -81,8 +96,7 @@ export default function LoginForm() {
           <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">
             Forgot password?
           </Link>
-        </Stack>
-
+        </Stack> */}
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
           Login
         </LoadingButton>

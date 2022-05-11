@@ -8,39 +8,44 @@ const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/dashboard/app',
+    path: '/app/dashboard',
     icon: getIcon('eva:pie-chart-2-fill'),
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: getIcon('eva:people-fill'),
+    title: 'all battery cells',
+    path: '/app/all-battery-cells',
+    icon: getIcon('clarity:battery-solid'),
   },
   {
-    title: 'product',
-    path: '/dashboard/products',
-    icon: getIcon('eva:shopping-bag-fill'),
+    title: 'add battery cell',
+    path: '/app/add-battery-cell',
+    icon: getIcon('eva:plus-square-outline'),
   },
   {
-    title: 'blog',
-    path: '/dashboard/blog',
-    icon: getIcon('eva:file-text-fill'),
+    title: 'graphs',
+    path: '/app/graphs',
+    icon: getIcon('bx:line-chart'),
   },
   {
-    title: 'login',
-    path: '/login',
-    icon: getIcon('eva:lock-fill'),
+    title: 'manage CSV',
+    path: '/app/manage-csv',
+    icon: getIcon('bx:spreadsheet'),
   },
   {
-    title: 'register',
-    path: '/register',
-    icon: getIcon('eva:person-add-fill'),
+    title: 'profile',
+    path: '/app/profile',
+    icon: getIcon('eva:person-fill'),
   },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: getIcon('eva:alert-triangle-fill'),
-  },
+  // {
+  //   title: 'login',
+  //   path: '/login',
+  //   icon: getIcon('eva:lock-fill'),
+  // },
+  // {
+  //   title: 'register',
+  //   path: '/register',
+  //   icon: getIcon('eva:person-add-fill'),
+  // },
 ];
 
 export default navConfig;
