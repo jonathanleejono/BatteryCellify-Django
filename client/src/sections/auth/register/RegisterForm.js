@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate } from 'react-router-dom';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Stack, MenuItem, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, registerUser } from '../../../features/user/userSlice';
 import Iconify from '../../../components/Iconify';
+import { BlogPostCard, TestSelect2, BlogPostsSearch } from '../../@dashboard/blog';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,31 @@ export default function RegisterForm() {
   const dispatch = useDispatch();
 
   const { user, isLoading } = useSelector((store) => store.user);
+
+  const currencies = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
+
+  const [currency, setCurrency] = useState('EUR');
+
+  const handleChange = (event) => {
+    setCurrency(event.target.value);
+  };
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
@@ -37,8 +63,10 @@ export default function RegisterForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: () => {
-      dispatch(registerUser(formik.values));
-      navigate('/app/dashboard', { replace: true });
+      // dispatch(registerUser(formik.values));
+      console.log('formik values: ', formik.values);
+      console.log('the currency on submit: ', currency);
+      // navigate('/app/dashboard', { replace: true });
     },
   });
 
@@ -106,6 +134,27 @@ export default function RegisterForm() {
             helperText={touched.password && errors.password}
             value={formik.values.password}
           />
+
+          <TextField
+            fullWidth
+            // autoComplete="username"
+            // type="text"
+            label="Select"
+            // {...getFieldProps('email')}
+            // error={Boolean(touched.email && errors.email)}
+            // helperText={touched.email && errors.email}
+            select
+            value={currency}
+            onChange={handleChange}
+          >
+            {currencies.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          {/* <TestSelect2 options={SORT_OPTIONS} value="testing" /> */}
 
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
             Register

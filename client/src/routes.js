@@ -12,6 +12,7 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import ProtectedRoute from './pages/ProtectedRoute';
+import AddBatteryCell from './pages/AddBatteryCell';
 
 // ----------------------------------------------------------------------
 
@@ -27,8 +28,8 @@ export default function Router() {
       children: [
         { path: 'dashboard', element: <DashboardApp /> },
         { path: 'all-battery-cells', element: <User /> },
-        { path: 'add-battery-cell', element: <Products /> },
-        { path: 'graphs', element: <Blog /> },
+        { path: 'add-battery-cell', element: <AddBatteryCell /> },
+        { path: 'graphs', element: <Products /> },
         { path: 'manage-csv', element: <Blog /> },
         { path: 'profile', element: <Profile /> },
       ],

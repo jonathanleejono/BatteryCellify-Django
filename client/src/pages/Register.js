@@ -88,7 +88,7 @@ export default function Register() {
         <Container>
           <ContentStyle>
             <Typography variant="h4" gutterBottom>
-              Get Started
+              Sign Up
             </Typography>
 
             <Typography sx={{ color: 'text.secondary', mb: 5 }}>Explore and analyze battery cell data.</Typography>
