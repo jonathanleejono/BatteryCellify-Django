@@ -1,10 +1,10 @@
-import React from "react";
-import Plot from "react-plotly.js";
+import React from 'react';
+import Plot from 'react-plotly.js';
 // import Plotly from "plotly.js";
 
 const PlotTest = () => {
   const test = [2, 10, 3];
-  const statusOptions = ["interview", "denied", "huh?"];
+  const statusOptions = ['interview', 'denied', 'huh?'];
 
   return (
     <div>
@@ -14,37 +14,38 @@ const PlotTest = () => {
           {
             x: statusOptions,
             y: [2, 6, 3],
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: "red" },
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: { color: 'red' },
           },
           {
-            type: "bar",
+            type: 'bar',
             x: statusOptions,
             y: [2, 5, 3],
-            text: ["Text A", "Text B", "Text C"],
+            text: ['Text A', 'Text B', 'Text C'],
           },
           {
-            type: "bar",
+            type: 'bar',
             x: statusOptions,
             y: test,
-            marker: { color: "green" },
-            text: ["Text A", "Text B", "Text C"],
-            name: "Lines, Markers and Text",
+            marker: { color: 'green' },
+            text: ['Text A', 'Text B', 'Text C'],
+            name: 'Lines, Markers and Text',
           },
         ]}
         layout={{
-          width: 840,
-          height: 600,
-          title: "A Fancy Plot",
+          autosize: true,
+          title: 'A Fancy Plot',
           xaxis: {
-            title: "testing",
+            title: 'testing',
             titlefont: {
               size: 18,
-              color: "#7f7f7f",
+              color: '#7f7f7f',
             },
           },
         }}
+        useResizeHandler
+        style={{ width: '100%', height: '100%' }}
       />
     </div>
   );

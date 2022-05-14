@@ -217,7 +217,7 @@ export default function AllBatteryCells() {
           </Grid>
           {/* ------------------------------------------------------------- */}
           <Grid item xs={12} md={8}>
-            <Stack mb={3} direction="row" alignItems="right" justifyContent="space-between">
+            <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
               <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
                 <Typography variant="subtitle" sx={{ color: 'text.secondary' }}>
                   Cathode:
