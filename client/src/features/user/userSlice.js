@@ -82,7 +82,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      toast.success(`User Updated!`);
+      toast.success(`Profile Updated!`);
     },
     [updateUser.rejected]: (state, { payload }) => {
       state.isLoading = false;

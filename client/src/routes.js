@@ -5,6 +5,7 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Blog from './pages/Blog';
 import User from './pages/User';
+import AllBatteryCells from './pages/AllBatteryCells';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
@@ -13,6 +14,7 @@ import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import ProtectedRoute from './pages/ProtectedRoute';
 import AddBatteryCell from './pages/AddBatteryCell';
+import EditBatteryCell from './pages/EditBatteryCell';
 
 // ----------------------------------------------------------------------
 
@@ -27,8 +29,9 @@ export default function Router() {
       ),
       children: [
         { path: 'dashboard', element: <DashboardApp /> },
-        { path: 'all-battery-cells', element: <User /> },
+        { path: 'all-battery-cells', element: <AllBatteryCells /> },
         { path: 'add-battery-cell', element: <AddBatteryCell /> },
+        { path: 'edit-battery-cell', element: <EditBatteryCell /> },
         { path: 'graphs', element: <Products /> },
         { path: 'manage-csv', element: <Blog /> },
         { path: 'profile', element: <Profile /> },

@@ -74,6 +74,10 @@ async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Re
 
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
 
+    if not batteryCell:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Please fill out all values")
+
     query = batteryCells.insert(
         values={**batteryCell.dict(), "owner_id": current_user.id})
 

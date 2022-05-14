@@ -53,7 +53,7 @@ export default function ColorManyPicker({ colors, onChecked, sx, ...other }) {
             size="small"
             value={color}
             color="default"
-            checked={onChecked(color)}
+            // checked={onChecked(color)}
             icon={
               <IconColor
                 sx={{

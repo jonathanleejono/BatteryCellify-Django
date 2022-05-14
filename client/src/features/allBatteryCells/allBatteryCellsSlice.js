@@ -1,16 +1,13 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
-import {
-  getAllBatteryCellsThunk,
-  showStatsThunk,
-} from "./allBatteryCellsThunk";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
+import { getAllBatteryCellsThunk, showStatsThunk } from './allBatteryCellsThunk';
 
 const initialFiltersState = {
-  search: "",
-  searchCathode: "all",
-  searchAnode: "all",
-  searchType: "all",
-  searchSource: "all",
+  search: '',
+  searchCathode: '',
+  searchAnode: '',
+  searchType: '',
+  searchSource: '',
 };
 
 const initialState = {
@@ -24,18 +21,12 @@ const initialState = {
   ...initialFiltersState,
 };
 
-export const getAllBatteryCells = createAsyncThunk(
-  "allBatteryCells/getBatteryCells",
-  getAllBatteryCellsThunk
-);
+export const getAllBatteryCells = createAsyncThunk('allBatteryCells/getBatteryCells', getAllBatteryCellsThunk);
 
-export const showStats = createAsyncThunk(
-  "allBatteryCells/showStats",
-  showStatsThunk
-);
+export const showStats = createAsyncThunk('allBatteryCells/showStats', showStatsThunk);
 
 const allBatteryCellsSlice = createSlice({
-  name: "allBatteryCells",
+  name: 'allBatteryCells',
   initialState,
   reducers: {
     showLoading: (state) => {
@@ -44,7 +35,7 @@ const allBatteryCellsSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
-    handleChange: (state, { payload: { name, value } }) => {
+    handleChangeAllBatteryCells: (state, { payload: { name, value } }) => {
       state.page = 1;
       state[name] = value;
     },
@@ -88,7 +79,7 @@ const allBatteryCellsSlice = createSlice({
 export const {
   showLoading,
   hideLoading,
-  handleChange,
+  handleChangeAllBatteryCells,
   clearFilters,
   changePage,
   clearAllBatteryCellsState,

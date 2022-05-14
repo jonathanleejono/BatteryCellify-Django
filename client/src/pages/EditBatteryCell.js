@@ -4,13 +4,13 @@ import { Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
-import { AddBatteryCellForm } from '../sections/@dashboard/batteryCell';
+import { EditBatteryCellForm } from '../sections/@dashboard/batteryCell';
 // mock
 import PRODUCTS from '../_mock/products';
 
 // ----------------------------------------------------------------------
 
-export default function AddBatteryCell() {
+export default function EditBatteryCell() {
   const [openFilter, setOpenFilter] = useState(false);
 
   const handleOpenFilter = () => {
@@ -25,10 +25,10 @@ export default function AddBatteryCell() {
     <Page title="Dashboard: Products">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Add Battery Cell
+          Edit Battery Cell
         </Typography>
 
-        <AddBatteryCellForm />
+        <EditBatteryCellForm />
       </Container>
     </Page>
   );

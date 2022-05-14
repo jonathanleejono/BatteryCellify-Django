@@ -1,14 +1,13 @@
-import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
+import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
 export const getAllBatteryCellsThunk = async (_, thunkAPI) => {
-  const { page, search, searchCathode, searchAnode, searchType, searchSource } =
-    thunkAPI.getState().allBatteryCells;
+  const { page, search, searchCathode, searchAnode, searchType, searchSource } = thunkAPI.getState().allBatteryCells;
 
   // do not push query params on to separate lines or the query param functionality won't work properly
   let url = `/battery-cells?cathode=${searchCathode}&anode=${searchAnode}&type=${searchType}&source=${searchSource}&page=${page}`;
 
   if (search) {
-    url = url + `&search=${search}`;
+    url += `&search=${search}`;
   }
 
   try {
@@ -21,7 +20,7 @@ export const getAllBatteryCellsThunk = async (_, thunkAPI) => {
 
 export const showStatsThunk = async (_, thunkAPI) => {
   try {
-    const resp = await customFetch.get("/stats");
+    const resp = await customFetch.get('/stats');
 
     return resp.data;
   } catch (error) {

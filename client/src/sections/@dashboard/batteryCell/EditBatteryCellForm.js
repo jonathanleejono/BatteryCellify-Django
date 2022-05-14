@@ -8,12 +8,18 @@ import { LoadingButton } from '@mui/lab';
 
 // component
 import { useDispatch, useSelector } from 'react-redux';
-import { handleChange, createBatteryCell } from '../../../features/batteryCell/batteryCellSlice';
+import {
+  handleChange,
+  createBatteryCell,
+  editBatteryCell,
+  clearValues,
+} from '../../../features/batteryCell/batteryCellSlice';
 
 // ----------------------------------------------------------------------
 
-export default function AddBatteryCellForm() {
+export default function EditBatteryCellForm() {
   const {
+    id,
     cellNameId,
     cycles,
     cathode,
@@ -31,12 +37,11 @@ export default function AddBatteryCellForm() {
     depthOfDischarge,
     chargeCapacityRate,
     dischargeCapacityRate,
-    formikInitialValues,
   } = useSelector((store) => store.batteryCell);
 
   const dispatch = useDispatch();
 
-  const AddBatteryCellSchema = Yup.object().shape({
+  const EditBatteryCellSchema = Yup.object().shape({
     cellNameId: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Cell Name ID is required'),
     cycles: Yup.string().max(50, 'Too Long!').required('Cycles required'),
     capacityAh: Yup.string().max(50, 'Too Long!').required('Capacity (Ah) is required'),
@@ -50,40 +55,49 @@ export default function AddBatteryCellForm() {
 
   const formik = useFormik({
     initialValues: {
-      cellNameId: '',
-      cycles: '',
-      cathode: 'LCO',
-      anode: 'Graphite',
-      capacityAh: '',
-      type: '18650',
-      source: 'HNEI',
-      temperatureC: '',
-      maxStateOfCharge: '',
-      minStateOfCharge: '',
-      depthOfDischarge: '',
-      chargeCapacityRate: '',
-      dischargeCapacityRate: '',
+      id,
+      cellNameId,
+      cycles,
+      cathode,
+      cathodeOptions,
+      anode,
+      anodeOptions,
+      capacityAh,
+      type,
+      typeOptions,
+      source,
+      sourceOptions,
+      temperatureC,
+      maxStateOfCharge,
+      minStateOfCharge,
+      depthOfDischarge,
+      chargeCapacityRate,
+      dischargeCapacityRate,
     },
-    validationSchema: AddBatteryCellSchema,
+    validationSchema: EditBatteryCellSchema,
+    enableReinitialize: false,
+
     onSubmit: () => {
       dispatch(
-        createBatteryCell({
-          cellNameId: formik.values.cellNameId,
-          cycles: formik.values.cycles,
-          cathode: cathode || 'LCO',
-          anode: anode || 'graphite',
-          capacityAh: formik.values.capacityAh,
-          type: type || '18650',
-          source: source || 'HNEI',
-          temperatureC: formik.values.temperatureC,
-          maxStateOfCharge: formik.values.maxStateOfCharge,
-          minStateOfCharge: formik.values.minStateOfCharge,
-          depthOfDischarge: formik.values.depthOfDischarge,
-          chargeCapacityRate: formik.values.chargeCapacityRate,
-          dischargeCapacityRate: formik.values.dischargeCapacityRate,
+        editBatteryCell({
+          id,
+          batteryCell: {
+            cellNameId: formik.values.cellNameId,
+            cycles: formik.values.cycles,
+            cathode,
+            anode,
+            capacityAh: formik.values.capacityAh,
+            type,
+            source,
+            temperatureC: formik.values.temperatureC,
+            maxStateOfCharge: formik.values.maxStateOfCharge,
+            minStateOfCharge: formik.values.minStateOfCharge,
+            depthOfDischarge: formik.values.depthOfDischarge,
+            chargeCapacityRate: formik.values.chargeCapacityRate,
+            dischargeCapacityRate: formik.values.dischargeCapacityRate,
+          },
         })
       );
-      resetForm();
     },
   });
 
@@ -217,20 +231,7 @@ export default function AddBatteryCellForm() {
 
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} spacing={2}>
             <Button fullWidth size="large" type="submit" variant="contained" disabled={isSubmitting} padding={5}>
-              Add Battery Cell
-            </Button>
-            <Button
-              fullWidth
-              size="large"
-              variant="outlined"
-              disabled={isSubmitting}
-              ml={5}
-              onClick={() => {
-                console.log('hello world');
-                resetForm();
-              }}
-            >
-              Clear Values
+              Save Battery Cell
             </Button>
           </Stack>
         </Stack>

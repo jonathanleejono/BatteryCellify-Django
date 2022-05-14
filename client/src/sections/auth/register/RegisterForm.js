@@ -74,9 +74,9 @@ export default function RegisterForm() {
 
   useEffect(() => {
     if (user) {
-      setTimeout(() => {
-        navigate('/app/dashboard');
-      }, 1);
+      // setTimeout(() => {
+      navigate('/app/dashboard');
+      // }, 1);
     }
   }, [user, navigate]);
 
