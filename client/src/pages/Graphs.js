@@ -17,7 +17,7 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
-import { ChartsContainer, PlotlyComponent, PlotTest } from '../components2';
+import { ChartsContainer, PlotlyComponent, PlotTest } from '../components';
 
 // ----------------------------------------------------------------------
 
