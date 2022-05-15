@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter, Request, UploadFile
 from .. import models, schemas, oauth2
 from ..database import database
-from ..models import csvData
+from ..models import csvCycleData, csvTimeSeriesData
 from ..database import database
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -16,42 +16,44 @@ router = APIRouter(
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.get("/{id}", status_code=status.HTTP_200_OK)
-async def get_csvData(id: int, current_user: int = Depends(oauth2.get_current_user)):
+@router.get("/cycleData/{id}", status_code=status.HTTP_200_OK)
+async def get_csvCycleData(id: int, current_user: int = Depends(oauth2.get_current_user)):
 
-    query = csvData.select().where(csvData.c.batteryCell_id == id)
+    query = csvCycleData.select().where(csvCycleData.c.batteryCell_id == id)
 
-    csvData_batteryCell = await database.fetch_all(query)
+    csvCycleData_batteryCells = await database.fetch_all(query)
 
-    if not csvData_batteryCell:
+    if not csvCycleData_batteryCells:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"Csv data for battery cell with id: {id} does not exist")
+                            detail=f"Cycle data for battery cell with id: {id} does not exist")
 
-    if csvData_batteryCell.owner_id != current_user.id:
+    if csvCycleData_batteryCells[0]["owner_id"] != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    return {"csvData_batteryCell": csvData_batteryCell}
+    return {"csvCycleData_batteryCell": csvCycleData_batteryCells}
 
 
-@router.post("/{id}", status_code=status.HTTP_201_CREATED)
+@router.post("/cycleData/{id}", status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def upload_csvData(id: int, request: Request, upload_file: UploadFile, current_user: int = Depends(oauth2.get_current_user)):
+async def upload_csvCycleData(id: int, request: Request, upload_file: UploadFile, current_user: int = Depends(oauth2.get_current_user)):
 
     contents = await upload_file.read()
     s = str(contents, 'utf-8')
     data = StringIO(s)
     df = pd.read_csv(data)
     df = df.fillna(0)
+    if "Unnamed: 0" in df:
+        df = df.drop("Unnamed: 0", 1)
 
-    csvDataAlreadyExists = await database.fetch_one(csvData.select().where(csvData.c.batteryCell_id == id))
+    csvCycleDataAlreadyExists = await database.fetch_one(csvCycleData.select().where(csvCycleData.c.batteryCell_id == id))
 
-    if csvDataAlreadyExists:
+    if csvCycleDataAlreadyExists:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Csv data already exists")
+                            detail="Cycle data already exists")
 
     for i in range(len(df)):
-        query = csvData.insert().values(
+        query = csvCycleData.insert().values(
             cycleIndex=df["Cycle_Index"][i],
             startTime=df["Start_Time"][i],
             endTime=df["End_Time"][i],
@@ -71,24 +73,145 @@ async def upload_csvData(id: int, request: Request, upload_file: UploadFile, cur
     return "Upload successful!"
 
 
-@router.delete("/{id}", status_code=status.HTTP_200_OK)
-@limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def delete_csvData(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
+@router.delete("/cycleData/{id}", status_code=status.HTTP_200_OK)
+@limiter.limit("3/minute", error_message="Too many requests, please try again later")
+async def delete_csvCycleData(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
 
-    query = csvData.select().where(csvData.c.batteryCell_id == id)
+    query = csvCycleData.select().where(csvCycleData.c.batteryCell_id == id)
 
-    csvData_batteryCell = await database.fetch_one(query)
+    csvCycleData_batteryCell = await database.fetch_one(query)
 
-    if not csvData_batteryCell:
+    if not csvCycleData_batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"Csv data for battery cell with id: {id} does not exist")
+                            detail=f"Cycle data for battery cell with id: {id} does not exist")
 
-    if csvData_batteryCell.owner_id != current_user.id:
+    if csvCycleData_batteryCell.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    delete_csvData = csvData.delete().where(csvData.c.batteryCell_id == id)
+    delete_csvCycleData = csvCycleData.delete().where(
+        csvCycleData.c.batteryCell_id == id)
 
-    await database.execute(delete_csvData)
+    await database.execute(delete_csvCycleData)
 
-    return {"msg": "Success! Csv data for battery cell removed", "id": id}
+    return {"msg": "Success! Cycle data for battery cell removed", "id": id}
+
+
+@router.get("/timeSeriesData/{id}", status_code=status.HTTP_200_OK)
+async def get_csvTimeSeriesData(id: int, current_user: int = Depends(oauth2.get_current_user)):
+
+    query = csvTimeSeriesData.select().where(
+        csvTimeSeriesData.c.batteryCell_id == id)
+
+    csvTimeSeriesData_batteryCells = await database.fetch_all(query)
+
+    if not csvTimeSeriesData_batteryCells:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Time series data for battery cell with id: {id} does not exist")
+
+    if csvTimeSeriesData_batteryCells[0]["owner_id"] != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Not authorized to perform requested action")
+
+    return {"csvTimeSeriesData_batteryCell": csvTimeSeriesData_batteryCells}
+
+
+@router.post("/timeSeriesData/{id}", status_code=status.HTTP_201_CREATED)
+@limiter.limit("10/minute", error_message="Too many requests, please try again later")
+async def upload_csvTimeSeriesData(id: int, request: Request, upload_file: UploadFile, current_user: int = Depends(oauth2.get_current_user)):
+
+    contents = await upload_file.read()
+    s = str(contents, 'utf-8')
+    data = StringIO(s)
+    df = pd.read_csv(data)
+    df = df.fillna(0)
+
+    if "Unnamed: 0" in df:
+        df = df.drop("Unnamed: 0", 1)
+
+    csvTimeSeriesDataAlreadyExists = await database.fetch_one(csvTimeSeriesData.select().where(csvTimeSeriesData.c.batteryCell_id == id))
+
+    if csvTimeSeriesDataAlreadyExists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Time series data already exists")
+
+    for i in range(len(df)):
+        query = csvTimeSeriesData.insert().values(
+            dateTime=df["Date_Time"][i],
+            testTimeSeconds=df["Test_Time (s)"][i],
+            cycleIndex=df["Cycle_Index"][i],
+            currentA=df["Current (A)"][i],
+            voltageV=df["Voltage (V)"][i],
+            chargeCapacityAh=df["Charge_Capacity (Ah)"][i],
+            dischargeCapacityAh=df["Discharge_Capacity (Ah)"][i],
+            chargeEnergyWh=df["Charge_Energy (Wh)"][i],
+            dischargeEnergyWh=df["Discharge_Energy (Wh)"][i],
+            environmentTempCelsius=df["Environment_Temperature (C)"][i],
+            cellTempCelsius=df["Cell_Temperature (C)"][i],
+            batteryCell_id=id,
+            owner_id=current_user.id)
+        await database.execute(query)
+
+    return "Upload successful!"
+
+
+@router.delete("/timeSeriesData/{id}", status_code=status.HTTP_200_OK)
+@limiter.limit("3/minute", error_message="Too many requests, please try again later")
+async def delete_csvTimeSeriesData(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
+
+    query = csvTimeSeriesData.select().where(
+        csvTimeSeriesData.c.batteryCell_id == id)
+
+    csvTimeSeriesData_batteryCell = await database.fetch_one(query)
+
+    if not csvTimeSeriesData_batteryCell:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Csv data for battery cell with id: {id} does not exist")
+
+    if csvTimeSeriesData_batteryCell.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Not authorized to perform requested action")
+
+    delete_csvTimeSeriesData = csvTimeSeriesData.delete().where(
+        csvTimeSeriesData.c.batteryCell_id == id)
+
+    await database.execute(delete_csvTimeSeriesData)
+
+    return {"msg": "Success! Time series data for battery cell removed", "id": id}
+
+    # -----------------------------------------------
+
+    # for row in range(len(df)):
+    #     query = csvCycleData.insert().values(
+    #         cycleIndex=df[row][0],
+    #         startTime=df[row][1],
+    #         endTime=df[row][2],
+    #         testTimeSeconds=df[row][3],
+    #         minCurrentA=df[row][4],
+    #         maxCurrentA=df[row][5],
+    #         minVoltageV=df[row][6],
+    #         maxVoltageV=df[row][7],
+    #         chargeCapacityAh=df[row][8],
+    #         dischargeCapacityAh=df[row][9],
+    #         chargeEnergyWh=df[row][10],
+    #         dischargeEnergyWh=df[row][11],
+    #         batteryCell_id=id,
+    #         owner_id=current_user.id)
+    #     await database.execute(query)
+
+    # for row in range(len(df)):
+    #     query = csvTimeSeriesData.insert().values(
+    #         dateTime=df[row][0],
+    #         testTimeSeconds=df[row][1],
+    #         cycleIndex=df[row][2],
+    #         currentA=df[row][3],
+    #         voltageV=df[row][4],
+    #         chargeCapacityAh=df[row][5],
+    #         dischargeCapacityAh=df[row][6],
+    #         chargeEnergyWh=df[row][7],
+    #         dischargeEnergyWh=df[row][8],
+    #         environmentTempCelsius=df[row][9],
+    #         cellTempCelsius=df[row][10],
+    #         batteryCell_id=id,
+    #         owner_id=current_user.id)
+    #     await database.execute(query)

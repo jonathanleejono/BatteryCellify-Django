@@ -2,7 +2,7 @@ from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from typing import Optional, List
 from .. import models, schemas, oauth2
 from ..database import database
-from ..models import batteryCells, csvData
+from ..models import batteryCells, csvCycleData
 from ..database import database
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -138,9 +138,9 @@ async def delete_batteryCell(request: Request, id: int, current_user: int = Depe
 
     # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
 
-    delete_csvData_batteryCell = csvData.delete().where(
-        csvData.c.batteryCell_id == id)
+    delete_csvCycleData_batteryCell = csvCycleData.delete().where(
+        csvCycleData.c.batteryCell_id == id)
 
-    await database.execute(delete_csvData_batteryCell)
+    await database.execute(delete_csvCycleData_batteryCell)
 
     return {"msg": "Success! Battery cell removed", "id": id}
