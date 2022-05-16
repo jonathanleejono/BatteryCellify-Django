@@ -42,6 +42,9 @@ const allBatteryCellsSlice = createSlice({
     clearFilters: (state) => {
       return { ...state, ...initialFiltersState };
     },
+    clearState: (state) => {
+      return { ...state, ...initialState };
+    },
     changePage: (state, { payload }) => {
       state.page = payload;
     },
@@ -81,6 +84,7 @@ export const {
   hideLoading,
   handleChangeAllBatteryCells,
   clearFilters,
+  clearState,
   changePage,
   clearAllBatteryCellsState,
 } = allBatteryCellsSlice.actions;

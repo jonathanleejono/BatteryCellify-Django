@@ -5,6 +5,9 @@ import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom'
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
 //
+import { useDispatch, useSelector } from 'react-redux';
+import { clearState } from '../features/allBatteryCells/allBatteryCellsSlice';
+import { clearValues } from '../features/csvData/csvDataSlice';
 import Iconify from './Iconify';
 
 // ----------------------------------------------------------------------
@@ -144,9 +147,18 @@ export default function NavSection({ navConfig, ...other }) {
 
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
+  const dispatch = useDispatch();
+
   return (
     <Box {...other}>
-      <List disablePadding sx={{ p: 1 }}>
+      <List
+        disablePadding
+        sx={{ p: 1 }}
+        onClick={() => {
+          dispatch(clearState());
+          dispatch(clearValues());
+        }}
+      >
         {navConfig.map((item) => (
           <NavItem key={item.title} item={item} active={match} />
         ))}

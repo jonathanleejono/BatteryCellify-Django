@@ -80,7 +80,6 @@ export default function ProfileForm() {
             <Button
               fullWidth
               size="large"
-              type="submit"
               variant="outlined"
               disabled={isSubmitting}
               ml={5}

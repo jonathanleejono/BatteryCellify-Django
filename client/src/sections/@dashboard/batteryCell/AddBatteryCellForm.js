@@ -37,15 +37,15 @@ export default function AddBatteryCellForm() {
   const dispatch = useDispatch();
 
   const AddBatteryCellSchema = Yup.object().shape({
-    cellNameId: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Cell Name ID is required'),
-    cycles: Yup.string().max(50, 'Too Long!').required('Cycles required'),
-    capacityAh: Yup.string().max(50, 'Too Long!').required('Capacity (Ah) is required'),
-    temperatureC: Yup.string().max(50, 'Too Long!').required('Temperature (C) is required'),
-    maxStateOfCharge: Yup.string().max(50, 'Too Long!').required('Max State of Charge is required'),
-    minStateOfCharge: Yup.string().max(50, 'Too Long!').required('Min State of Charge is required'),
-    depthOfDischarge: Yup.string().max(50, 'Too Long!').required('Depth of Discharge is required'),
-    chargeCapacityRate: Yup.string().max(50, 'Too Long!').required('Charge Capacity Rate required'),
-    dischargeCapacityRate: Yup.string().max(50, 'Too Long!').required('Discharge Capacity Rate is required'),
+    cellNameId: Yup.string().min(2, 'Too Short!').max(100, 'Too Long!').required('Cell Name ID is required'),
+    cycles: Yup.string().max(100, 'Too Long!').required('Cycles required'),
+    capacityAh: Yup.string().max(100, 'Too Long!').required('Capacity (Ah) is required'),
+    temperatureC: Yup.string().max(100, 'Too Long!').required('Temperature (C) is required'),
+    maxStateOfCharge: Yup.string().max(100, 'Too Long!').required('Max State of Charge is required'),
+    minStateOfCharge: Yup.string().max(100, 'Too Long!').required('Min State of Charge is required'),
+    depthOfDischarge: Yup.string().max(100, 'Too Long!').required('Depth of Discharge is required'),
+    chargeCapacityRate: Yup.string().max(100, 'Too Long!').required('Charge Capacity Rate required'),
+    dischargeCapacityRate: Yup.string().max(100, 'Too Long!').required('Discharge Capacity Rate is required'),
   });
 
   const formik = useFormik({

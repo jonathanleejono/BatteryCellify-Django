@@ -13,6 +13,7 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import Graphs from './pages/Graphs';
+import ManageCsv from './pages/ManageCsv';
 import ProtectedRoute from './pages/ProtectedRoute';
 import AddBatteryCell from './pages/AddBatteryCell';
 import EditBatteryCell from './pages/EditBatteryCell';
@@ -34,7 +35,7 @@ export default function Router() {
         { path: 'add-battery-cell', element: <AddBatteryCell /> },
         { path: 'edit-battery-cell', element: <EditBatteryCell /> },
         { path: 'graphs', element: <Graphs /> },
-        { path: 'manage-csv', element: <Blog /> },
+        { path: 'manage-csv', element: <ManageCsv /> },
         { path: 'profile', element: <Profile /> },
       ],
     },

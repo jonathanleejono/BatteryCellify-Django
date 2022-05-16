@@ -83,21 +83,6 @@ const initialState = {
   chargeCapacityRate: '',
   dischargeCapacityRate: '',
   editBatteryCellId: '',
-  formikInitialValues: {
-    cellNameId: '',
-    cycles: '',
-    cathode: 'LCO',
-    anode: 'graphite',
-    capacityAh: '',
-    type: '18650',
-    source: 'HNEI',
-    temperatureC: '',
-    maxStateOfCharge: '',
-    minStateOfCharge: '',
-    depthOfDischarge: '',
-    chargeCapacityRate: '',
-    // dischargeCapacityRate: '',
-  },
 };
 
 export const createBatteryCell = createAsyncThunk('batteryCell/createBatteryCell', createBatteryCellThunk);

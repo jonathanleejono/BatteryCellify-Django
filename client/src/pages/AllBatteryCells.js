@@ -100,7 +100,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_batteryCell) => _batteryCell.cellNameId.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_batteryCell) => _batteryCell.id.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -179,9 +179,9 @@ export default function AllBatteryCells() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - batteryCells.length) : 0;
 
-  const filteredUsers = applySortFilter(batteryCells, getComparator(order, orderBy), filterName);
+  const filteredBatteryCells = applySortFilter(batteryCells, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = filteredBatteryCells.length === 0;
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -295,7 +295,7 @@ export default function AllBatteryCells() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredBatteryCells.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {
                       id,
                       cellNameId,
