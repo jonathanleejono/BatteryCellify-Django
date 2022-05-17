@@ -33,7 +33,29 @@ async def get_csvCycleData(id: int, current_user: int = Depends(oauth2.get_curre
 
         csvCycleData_batteryCells = await database.fetch_all(query)
 
-        return {"csvCycleData_batteryCell": csvCycleData_batteryCells}
+        cycleNumbers = [batteryCell["Cycle_Index"]
+                        for batteryCell in csvCycleData_batteryCells]
+
+        dischargeCapacityAh = [batteryCell["Discharge_Capacity (Ah)"]
+                               for batteryCell in csvCycleData_batteryCells]
+        dischargeEnergyWh = [batteryCell["Discharge_Energy (Wh)"]
+
+                             for batteryCell in csvCycleData_batteryCells]
+        chargeCapacityAh = [batteryCell["Charge_Capacity (Ah)"]
+                            for batteryCell in csvCycleData_batteryCells]
+        chargeEnergyWh = [batteryCell["Charge_Energy (Wh)"]
+                          for batteryCell in csvCycleData_batteryCells]
+
+        energyEfficiency = [float(a)/float(b)
+                            for a, b in zip(dischargeEnergyWh, chargeEnergyWh)]
+        coulombicEfficiency = [float(a)/float(b)
+                               for a, b in zip(dischargeCapacityAh, chargeCapacityAh)]
+
+        return {"cycleNumbers": cycleNumbers,
+                "dischargeCapacityAh": dischargeCapacityAh,
+                "dischargeEnergyWh": dischargeEnergyWh,
+                "energyEfficiency": energyEfficiency,
+                "coulombicEfficiency": coulombicEfficiency}
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="An error occurred")
@@ -144,7 +166,119 @@ async def get_csvTimeSeriesData(id: int, current_user: int = Depends(oauth2.get_
 
         csvTimeSeriesData_batteryCells = await database.fetch_all(query)
 
-        return {"csvTimeSeriesData_batteryCell": csvTimeSeriesData_batteryCells}
+        testTime = [
+            batteryCell["Test_Time (s)"] for batteryCell in csvTimeSeriesData_batteryCells]
+
+        dischargeCapacityAh = [batteryCell["Discharge_Capacity (Ah)"]
+                               for batteryCell in csvTimeSeriesData_batteryCells]
+        dischargeEnergyWh = [batteryCell["Discharge_Energy (Wh)"]
+                             for batteryCell in csvTimeSeriesData_batteryCells]
+
+        voltageCycles100Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 1 <= batteryCell["Cycle_Index"] <= 100]
+        voltageCycles200Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 101 <= batteryCell["Cycle_Index"] <= 200]
+        voltageCycles300Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 201 <= batteryCell["Cycle_Index"] <= 300]
+        voltageCycles400Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 301 <= batteryCell["Cycle_Index"] <= 400]
+        voltageCycles500Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 401 <= batteryCell["Cycle_Index"] <= 500]
+        voltageCycles600Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 501 <= batteryCell["Cycle_Index"] <= 600]
+        voltageCycles700Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 601 <= batteryCell["Cycle_Index"] <= 700]
+        voltageCycles800Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 701 <= batteryCell["Cycle_Index"] <= 800]
+        voltageCycles900Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 801 <= batteryCell["Cycle_Index"] <= 900]
+        voltageCycles1000Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 901 <= batteryCell["Cycle_Index"] <= 1000]
+        voltageCycles1100Step = [
+            batteryCell["Voltage (V)"] for batteryCell in csvTimeSeriesData_batteryCells if 1001 <= batteryCell["Cycle_Index"] <= 1100]
+
+        chargeCapacityCycles100Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 1 <= batteryCell["Cycle_Index"] <= 100]
+        chargeCapacityCycles200Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 101 <= batteryCell["Cycle_Index"] <= 200]
+        chargeCapacityCycles300Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 201 <= batteryCell["Cycle_Index"] <= 300]
+        chargeCapacityCycles400Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 301 <= batteryCell["Cycle_Index"] <= 400]
+        chargeCapacityCycles500Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 401 <= batteryCell["Cycle_Index"] <= 500]
+        chargeCapacityCycles600Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 501 <= batteryCell["Cycle_Index"] <= 600]
+        chargeCapacityCycles700Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 601 <= batteryCell["Cycle_Index"] <= 700]
+        chargeCapacityCycles800Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 701 <= batteryCell["Cycle_Index"] <= 800]
+        chargeCapacityCycles900Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 801 <= batteryCell["Cycle_Index"] <= 900]
+        chargeCapacityCycles1000Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 901 <= batteryCell["Cycle_Index"] <= 1000]
+        chargeCapacityCycles1100Step = [
+            batteryCell["Charge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 1001 <= batteryCell["Cycle_Index"] <= 1100]
+
+        dischargeCapacityCycles100Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 1 <= batteryCell["Cycle_Index"] <= 100]
+        dischargeCapacityCycles200Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 101 <= batteryCell["Cycle_Index"] <= 200]
+        dischargeCapacityCycles300Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 201 <= batteryCell["Cycle_Index"] <= 300]
+        dischargeCapacityCycles400Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 301 <= batteryCell["Cycle_Index"] <= 400]
+        dischargeCapacityCycles500Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 401 <= batteryCell["Cycle_Index"] <= 500]
+        dischargeCapacityCycles600Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 501 <= batteryCell["Cycle_Index"] <= 600]
+        dischargeCapacityCycles700Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 601 <= batteryCell["Cycle_Index"] <= 700]
+        dischargeCapacityCycles800Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 701 <= batteryCell["Cycle_Index"] <= 800]
+        dischargeCapacityCycles900Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 801 <= batteryCell["Cycle_Index"] <= 900]
+        dischargeCapacityCycles1000Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 901 <= batteryCell["Cycle_Index"] <= 1000]
+        dischargeCapacityCycles1100Step = [
+            batteryCell["Discharge_Capacity (Ah)"] for batteryCell in csvTimeSeriesData_batteryCells if 1001 <= batteryCell["Cycle_Index"] <= 1100]
+
+        return {"testTime": testTime,
+                "dischargeCapacityAh": dischargeCapacityAh,
+                "dischargeEnergyWh": dischargeEnergyWh,
+                "voltageCycles100Step": voltageCycles100Step,
+                "voltageCycles200Step": voltageCycles200Step,
+                "voltageCycles300Step": voltageCycles300Step,
+                "voltageCycles400Step": voltageCycles400Step,
+                "voltageCycles500Step": voltageCycles500Step,
+                "voltageCycles600Step": voltageCycles600Step,
+                "voltageCycles700Step": voltageCycles700Step,
+                "voltageCycles800Step": voltageCycles800Step,
+                "voltageCycles900Step": voltageCycles900Step,
+                "voltageCycles1000Step": voltageCycles1000Step,
+                "voltageCycles1100Step": voltageCycles1100Step,
+                "chargeCapacityCycles100Step": chargeCapacityCycles100Step,
+                "chargeCapacityCycles200Step": chargeCapacityCycles200Step,
+                "chargeCapacityCycles300Step": chargeCapacityCycles300Step,
+                "chargeCapacityCycles400Step": chargeCapacityCycles400Step,
+                "chargeCapacityCycles500Step": chargeCapacityCycles500Step,
+                "chargeCapacityCycles600Step": chargeCapacityCycles600Step,
+                "chargeCapacityCycles700Step": chargeCapacityCycles700Step,
+                "chargeCapacityCycles800Step": chargeCapacityCycles800Step,
+                "chargeCapacityCycles900Step": chargeCapacityCycles900Step,
+                "chargeCapacityCycles1000Step": chargeCapacityCycles1000Step,
+                "chargeCapacityCycles1100Step": chargeCapacityCycles1100Step,
+                "dischargeCapacityCycles100Step": dischargeCapacityCycles100Step,
+                "dischargeCapacityCycles200Step": dischargeCapacityCycles200Step,
+                "dischargeCapacityCycles300Step": dischargeCapacityCycles300Step,
+                "dischargeCapacityCycles400Step": dischargeCapacityCycles400Step,
+                "dischargeCapacityCycles500Step": dischargeCapacityCycles500Step,
+                "dischargeCapacityCycles600Step": dischargeCapacityCycles600Step,
+                "dischargeCapacityCycles700Step": dischargeCapacityCycles700Step,
+                "dischargeCapacityCycles800Step": dischargeCapacityCycles800Step,
+                "dischargeCapacityCycles900Step": dischargeCapacityCycles900Step,
+                "dischargeCapacityCycles1000Step": dischargeCapacityCycles1000Step,
+                "dischargeCapacityCycles1100Step": dischargeCapacityCycles1100Step, }
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="An error occurred")
