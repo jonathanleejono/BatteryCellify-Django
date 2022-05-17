@@ -1,15 +1,14 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
-// import Plotly from "plotly.js";
 
-const PlotTest = () => {
+const EfficenciesGraph = () => {
   const test = [2, 10, 3];
   const statusOptions = ['interview', 'denied', 'huh?'];
 
   return (
     <div>
       <Plot
-        divId="plotlyChart"
+        divId="EfficenciesGraph"
         data={[
           {
             x: statusOptions,
@@ -35,20 +34,33 @@ const PlotTest = () => {
         ]}
         layout={{
           autosize: true,
-          title: 'A Fancy Plot',
+          title: 'Efficencies',
           xaxis: {
-            title: 'testing',
+            title: 'Cycle Number',
             titlefont: {
-              size: 18,
-              color: '#7f7f7f',
+              size: 14,
+              color: '#000000',
+            },
+          },
+          yaxis: {
+            title: 'Energy and Coulombic Efficencies',
+            titlefont: {
+              size: 14,
+              color: '#000000',
             },
           },
         }}
         useResizeHandler
-        style={{ width: '100%', height: '100%' }}
+        style={{
+          width: '100%',
+          height: '100%',
+
+          borderRadius: '5px',
+          boxShadow: '0 4px 9px -3px rgb(102 136 153 / 15%)',
+        }}
       />
     </div>
   );
 };
 
-export default PlotTest;
+export default EfficenciesGraph;
