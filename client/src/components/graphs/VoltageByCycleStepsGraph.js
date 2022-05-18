@@ -223,6 +223,9 @@ const VoltageByCycleStepsGraph = ({
         layout={{
           autosize: true,
           title: 'Cycle Quantities By Step',
+          font: {
+            family: 'Public Sans, sans-serif',
+          },
           xaxis: {
             title: 'Capacity (Ah)',
             titlefont: {

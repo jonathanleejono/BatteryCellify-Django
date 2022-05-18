@@ -35,6 +35,9 @@ const TimeSeriesDecayGraph = ({
         layout={{
           autosize: true,
           title: 'Time Series - Data Energy and Capacity Decay',
+          font: {
+            family: 'Public Sans, sans-serif',
+          },
           xaxis: {
             title: 'Time (s)',
             titlefont: {

@@ -36,6 +36,9 @@ const EfficenciesGraph = ({
         layout={{
           autosize: true,
           title: 'Efficencies',
+          font: {
+            family: 'Public Sans, sans-serif',
+          },
           xaxis: {
             title: 'Cycle Number',
             titlefont: {

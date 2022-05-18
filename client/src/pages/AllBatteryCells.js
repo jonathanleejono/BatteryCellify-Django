@@ -124,7 +124,7 @@ export default function AllBatteryCells() {
 
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState('desc');
 
   const [selected, setSelected] = useState([]);
 
@@ -362,17 +362,17 @@ export default function AllBatteryCells() {
                         </TableCell>
                         <TableCell align="left">{cellNameId}</TableCell>
                         <TableCell align="left">{cycles}</TableCell>
-                        <TableCell align="left">
-                          <Label variant="ghost" color={(cathode === 'LCO' && 'error') || 'success'}>
-                            {/* {capitalCase(cathode)} */}
-                            {cathode.toUpperCase()}
-                          </Label>
-                        </TableCell>
+                        <TableCell align="left">{cathode.toUpperCase()}</TableCell>
                         <TableCell align="left">{capitalCase(anode)}</TableCell>
                         <TableCell align="left">{capacityAh}</TableCell>
                         <TableCell align="left">{capitalCase(type)}</TableCell>
                         <TableCell align="left">{source.toUpperCase()}</TableCell>
-                        <TableCell align="left">{temperatureC}</TableCell>
+
+                        <TableCell align="left">
+                          <Label variant="ghost" color={(temperatureC >= '25.00' && 'error') || 'warning'}>
+                            {temperatureC}
+                          </Label>
+                        </TableCell>
                         <TableCell align="left">{maxStateOfCharge}</TableCell>
                         <TableCell align="left">{minStateOfCharge}</TableCell>
                         <TableCell align="left">{depthOfDischarge}</TableCell>

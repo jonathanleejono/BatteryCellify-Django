@@ -7,18 +7,18 @@ from pydantic.types import conint, constr
 
 class BatteryCellBase(BaseModel):
     cellNameId: str
-    cycles: str
+    cycles: float
     cathode: str
     anode: str
-    capacityAh: str
+    capacityAh: float
     type: str
     source: str
-    temperatureC: str
-    maxStateOfCharge: str
-    minStateOfCharge: str
-    depthOfDischarge: str
-    chargeCapacityRate: str
-    dischargeCapacityRate: str
+    temperatureC: float
+    maxStateOfCharge: float
+    minStateOfCharge: float
+    depthOfDischarge: float
+    chargeCapacityRate: float
+    dischargeCapacityRate: float
 
 
 class BatteryCellCreate(BatteryCellBase):
@@ -39,7 +39,32 @@ class BatteryCellOut(BatteryCellBase):
 class BatteryCellsManyOut(BaseModel):
     batteryCells: List[BatteryCellOut]
     totalBatteryCells: int
-    numOfPages: int
+    averageCapacity: float
+    averageDepthOfDischarge: float
+    averageTemperatureC: float
+    totalCathodeLCOCells: int
+    totalCathodeLFPCells: int
+    totalCathodeNCACells: int
+    totalCathodeNMCCells: int
+    totalCathodeNMCLCOCells: int
+    avgTemp18650Cells: float
+    avgMaxSoC18650Cells: float
+    avgMinSoC18650Cells: float
+    avgDoD18650Cells: float
+    avgChargeCRate18650Cells: float
+    avgDischargeCRate18650Cells: float
+    avgTempPouchCells: float
+    avgMaxSoCPouchCells: float
+    avgMinSoCPouchCells: float
+    avgDoDPouchCells: float
+    avgChargeCRatePouchCells: float
+    avgDischargeCRatePouchCells: float
+    avgTempPrismaticCells: float
+    avgMaxSoCPrismaticCells: float
+    avgMinSoCPrismaticCells: float
+    avgDoDPrismaticCells: float
+    avgChargeCRatePrismaticCells: float
+    avgDischargeCRatePrismaticCells: float
 
     class Config:
         orm_mode = True

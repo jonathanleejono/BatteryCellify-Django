@@ -8,6 +8,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 import math
+import statistics
 import re
 
 router = APIRouter(
@@ -28,47 +29,137 @@ async def get_batteryCells(
         source: Optional[str] = "",
         page: int = 1,
         skip: int = 0):
-    try:
-        batteryCells_query = batteryCells.select().where(
-            batteryCells.c.owner_id == current_user.id)
 
-        result = batteryCells_query
+    batteryCells_query = batteryCells.select().where(
+        batteryCells.c.owner_id == current_user.id)
 
-        # result = result.skip(skip).limit(limit)
+    result = batteryCells_query
 
-        all_batteryCells = await database.fetch_all(result)
+    # result = result.skip(skip).limit(limit)
 
-        if search and search != None:
-            all_batteryCells = list(filter(lambda x: re.search(
-                search, x["cellNameId"]), all_batteryCells))
+    all_batteryCells = await database.fetch_all(result)
 
-        if cathode and cathode != "all":
-            all_batteryCells = [
-                batteryCell for batteryCell in all_batteryCells
-                if batteryCell['cathode'] == cathode]
-        if anode and anode != "all":
-            all_batteryCells = [
-                batteryCell for batteryCell in all_batteryCells
-                if batteryCell['anode'] == anode]
-        if type and type != "all":
-            all_batteryCells = [
-                batteryCell for batteryCell in all_batteryCells
-                if batteryCell['type'] == type]
-        if source and source != "all":
-            all_batteryCells = [
-                batteryCell for batteryCell in all_batteryCells
-                if batteryCell['source'] == source]
+    if search and search != None:
+        all_batteryCells = list(filter(lambda x: re.search(
+            search, x["cellNameId"]), all_batteryCells))
 
-        totalBatteryCells = len(all_batteryCells)
+    if cathode and cathode != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['cathode'] == cathode]
+    if anode and anode != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['anode'] == anode]
+    if type and type != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['type'] == type]
+    if source and source != "all":
+        all_batteryCells = [
+            batteryCell for batteryCell in all_batteryCells
+            if batteryCell['source'] == source]
 
-        pagesLimit = totalBatteryCells / limit
+    totalBatteryCells = len(all_batteryCells)
 
-        numOfPages = math.ceil(pagesLimit)
+    pagesLimit = totalBatteryCells / limit
 
-        return {"batteryCells": all_batteryCells, "totalBatteryCells": totalBatteryCells, "numOfPages": numOfPages}
-    except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+    numOfPages = math.ceil(pagesLimit)
+
+    averageCapacity = statistics.fmean([batteryCell["capacityAh"]
+                                        for batteryCell in all_batteryCells])
+    averageDepthOfDischarge = statistics.fmean([batteryCell["depthOfDischarge"]
+                                               for batteryCell in all_batteryCells])
+    averageTemperatureC = statistics.fmean([batteryCell["temperatureC"]
+                                           for batteryCell in all_batteryCells])
+
+    totalCathodeLCOCells = len([
+        batteryCell for batteryCell in all_batteryCells
+        if batteryCell['cathode'] == 'LCO'])
+    totalCathodeLFPCells = len([
+        batteryCell for batteryCell in all_batteryCells
+        if batteryCell['cathode'] == 'LFP'])
+    totalCathodeNCACells = len([
+        batteryCell for batteryCell in all_batteryCells
+        if batteryCell['cathode'] == 'NCA'])
+    totalCathodeNMCCells = len([
+        batteryCell for batteryCell in all_batteryCells
+        if batteryCell['cathode'] == 'NMC'])
+    totalCathodeNMCLCOCells = len([
+        batteryCell for batteryCell in all_batteryCells
+        if batteryCell['cathode'] == 'NMC-LCO'])
+
+    avgTemp18650Cells = statistics.fmean([batteryCell["temperatureC"]
+                                         if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+    avgMaxSoC18650Cells = statistics.fmean([batteryCell["maxStateOfCharge"]
+                                           if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+    avgMinSoC18650Cells = statistics.fmean([batteryCell["minStateOfCharge"]
+                                           if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+    avgDoD18650Cells = statistics.fmean([batteryCell["depthOfDischarge"]
+                                        if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+    avgChargeCRate18650Cells = statistics.fmean([batteryCell["chargeCapacityRate"]
+                                                if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+    avgDischargeCRate18650Cells = statistics.fmean([batteryCell["dischargeCapacityRate"]
+                                                   if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+
+    avgTempPouchCells = statistics.fmean([batteryCell["temperatureC"]
+                                         if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+    avgMaxSoCPouchCells = statistics.fmean([batteryCell["maxStateOfCharge"]
+                                           if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+    avgMinSoCPouchCells = statistics.fmean([batteryCell["minStateOfCharge"]
+                                           if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+    avgDoDPouchCells = statistics.fmean([batteryCell["depthOfDischarge"]
+                                        if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+    avgChargeCRatePouchCells = statistics.fmean([batteryCell["chargeCapacityRate"]
+                                                if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+    avgDischargeCRatePouchCells = statistics.fmean([batteryCell["dischargeCapacityRate"]
+                                                   if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+
+    avgTempPrismaticCells = statistics.fmean([batteryCell["temperatureC"]
+                                             if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+    avgMaxSoCPrismaticCells = statistics.fmean([batteryCell["maxStateOfCharge"]
+                                               if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+    avgMinSoCPrismaticCells = statistics.fmean([batteryCell["minStateOfCharge"]
+                                               if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+    avgDoDPrismaticCells = statistics.fmean([batteryCell["depthOfDischarge"]
+                                            if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+    avgChargeCRatePrismaticCells = statistics.fmean([batteryCell["chargeCapacityRate"]
+                                                    if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+    avgDischargeCRatePrismaticCells = statistics.fmean(
+        [batteryCell["dischargeCapacityRate"] if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+
+    #    [a if a else 2 for a in [0,1,0,3]]
+    #    [batteryCell["dischargeCapacityRate"] if batteryCell["type"] == "prismatic" else 0 for batteryCell in all_batteryCells]
+
+    return {"batteryCells": all_batteryCells,
+            "totalBatteryCells": totalBatteryCells,
+            "averageCapacity": averageCapacity,
+            "averageDepthOfDischarge": averageDepthOfDischarge,
+            "averageTemperatureC": averageTemperatureC,
+            "totalCathodeLCOCells": totalCathodeLCOCells,
+            "totalCathodeLFPCells": totalCathodeLFPCells,
+            "totalCathodeNCACells": totalCathodeNCACells,
+            "totalCathodeNMCCells": totalCathodeNMCCells,
+            "totalCathodeNMCLCOCells": totalCathodeNMCLCOCells,
+            "avgTemp18650Cells": avgTemp18650Cells,
+            "avgMaxSoC18650Cells": avgMaxSoC18650Cells,
+            "avgMinSoC18650Cells": avgMinSoC18650Cells,
+            "avgDoD18650Cells": avgDoD18650Cells,
+            "avgChargeCRate18650Cells": avgChargeCRate18650Cells,
+            "avgDischargeCRate18650Cells": avgDischargeCRate18650Cells,
+            "avgTempPouchCells": avgTempPouchCells,
+            "avgMaxSoCPouchCells": avgMaxSoCPouchCells,
+            "avgMinSoCPouchCells": avgMinSoCPouchCells,
+            "avgDoDPouchCells": avgDoDPouchCells,
+            "avgChargeCRatePouchCells": avgChargeCRatePouchCells,
+            "avgDischargeCRatePouchCells": avgDischargeCRatePouchCells,
+            "avgTempPrismaticCells": avgTempPrismaticCells,
+            "avgMaxSoCPrismaticCells": avgMaxSoCPrismaticCells,
+            "avgMinSoCPrismaticCells": avgMinSoCPrismaticCells,
+            "avgDoDPrismaticCells": avgDoDPrismaticCells,
+            "avgChargeCRatePrismaticCells": avgChargeCRatePrismaticCells,
+            "avgDischargeCRatePrismaticCells": avgDischargeCRatePrismaticCells,
+            }
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BatteryCellOut)

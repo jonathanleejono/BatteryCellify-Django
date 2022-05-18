@@ -28,6 +28,9 @@ const CycleDecayGraph = ({ cycleNumbers, cycleDischargeCapacityAh, cycleDischarg
         layout={{
           autosize: true,
           title: 'Cycle Number Data - Energy and Capacity Decay',
+          font: {
+            family: 'Public Sans, sans-serif',
+          },
           xaxis: {
             title: 'Cycle Number',
             titlefont: {
