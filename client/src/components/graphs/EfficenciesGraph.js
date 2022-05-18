@@ -1,9 +1,14 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-const EfficenciesGraph = () => {
-  const test = [2, 10, 3];
-  const statusOptions = ['interview', 'denied', 'huh?'];
+const EfficenciesGraph = ({
+  cycleNumbersAdjustedCapacity,
+  cycleNumbersAdjustedEnergy,
+  energyEfficiency,
+  coulombicEfficiency,
+  batteryCellNameId,
+}) => {
+  // cycle numbers and the effiencies do not have the same length right now
 
   return (
     <div>
@@ -11,27 +16,23 @@ const EfficenciesGraph = () => {
         divId="EfficenciesGraph"
         data={[
           {
-            x: statusOptions,
-            y: [2, 6, 3],
-            type: 'scatter',
-            mode: 'lines+markers',
+            type: 'line',
+            x: cycleNumbersAdjustedCapacity,
+            y: coulombicEfficiency,
+            marker: { color: 'blue' },
+            text: `ah_eff: ${batteryCellNameId}`,
+            name: `ah_eff: ${batteryCellNameId}`,
+          },
+          {
+            type: 'line',
+            x: cycleNumbersAdjustedEnergy,
+            y: energyEfficiency,
             marker: { color: 'red' },
-          },
-          {
-            type: 'bar',
-            x: statusOptions,
-            y: [2, 5, 3],
-            text: ['Text A', 'Text B', 'Text C'],
-          },
-          {
-            type: 'bar',
-            x: statusOptions,
-            y: test,
-            marker: { color: 'green' },
-            text: ['Text A', 'Text B', 'Text C'],
-            name: 'Lines, Markers and Text',
+            text: `wh_eff: ${batteryCellNameId}`,
+            name: `wh_eff: ${batteryCellNameId}`,
           },
         ]}
+        // -------------------------------------------------
         layout={{
           autosize: true,
           title: 'Efficencies',
@@ -48,6 +49,13 @@ const EfficenciesGraph = () => {
               size: 14,
               color: '#000000',
             },
+          },
+          legend: {
+            orientation: 'h',
+            yanchor: 'bottom',
+            y: 1.5,
+            xanchor: 'right',
+            x: 1,
           },
         }}
         useResizeHandler

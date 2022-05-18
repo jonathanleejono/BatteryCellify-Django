@@ -1,37 +1,30 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-const CycleDecayGraph = () => {
-  const test = [2, 10, 3];
-  const statusOptions = ['interview', 'denied', 'huh?'];
-
+const CycleDecayGraph = ({ cycleNumbers, cycleDischargeCapacityAh, cycleDischargeEnergyWh, batteryCellNameId }) => {
   return (
     <div>
       <Plot
         divId="CycleDecayGraph"
         data={[
           {
-            x: statusOptions,
-            y: [2, 6, 3],
-            type: 'scatter',
-            mode: 'lines+markers',
+            type: 'line',
+            x: cycleNumbers,
+            y: cycleDischargeCapacityAh,
+            marker: { color: 'blue' },
+            text: `ah_d: ${batteryCellNameId}`,
+            name: `ah_d: ${batteryCellNameId}`,
+          },
+          {
+            type: 'line',
+            x: cycleNumbers,
+            y: cycleDischargeEnergyWh,
             marker: { color: 'red' },
-          },
-          {
-            type: 'bar',
-            x: statusOptions,
-            y: [2, 5, 3],
-            text: ['Text A', 'Text B', 'Text C'],
-          },
-          {
-            type: 'bar',
-            x: statusOptions,
-            y: test,
-            marker: { color: 'green' },
-            text: ['Text A', 'Text B', 'Text C'],
-            name: 'Lines, Markers and Text',
+            text: `wh_d: ${batteryCellNameId}`,
+            name: `wh_d: ${batteryCellNameId}`,
           },
         ]}
+        // -------------------------------------------------
         layout={{
           autosize: true,
           title: 'Cycle Number Data - Energy and Capacity Decay',
@@ -48,6 +41,13 @@ const CycleDecayGraph = () => {
               size: 14,
               color: '#000000',
             },
+          },
+          legend: {
+            orientation: 'h',
+            yanchor: 'bottom',
+            y: 1.5,
+            xanchor: 'right',
+            x: 1,
           },
         }}
         useResizeHandler

@@ -13,13 +13,15 @@ const initialState = {
   isLoading: false,
   selectedBatteryCell: '',
   cycleNumbers: [],
-  dischargeCapacityAh: [],
-  dischargeEnergyWh: [],
+  cycleDischargeCapacityAh: [],
+  cycleDischargeEnergyWh: [],
   energyEfficiency: [],
   coulombicEfficiency: [],
+  cycleNumbersAdjustedCapacity: [],
+  cycleNumbersAdjustedEnergy: [],
   testTime: [],
-  dischargeCapacityAh: [],
-  dischargeEnergyWh: [],
+  timeSeriesDischargeCapacityAh: [],
+  timeSeriesDischargeEnergyWh: [],
   voltageCycles100Step: [],
   voltageCycles200Step: [],
   voltageCycles300Step: [],
@@ -116,10 +118,12 @@ const csvDataSlice = createSlice({
       toast.dismiss();
       state.isLoading = false;
       state.cycleNumbers = payload.cycleNumbers;
-      state.dischargeCapacityAh = payload.dischargeCapacityAh;
-      state.dischargeEnergyWh = payload.dischargeEnergyWh;
+      state.cycleDischargeCapacityAh = payload.cycleDischargeCapacityAh;
+      state.cycleDischargeEnergyWh = payload.cycleDischargeEnergyWh;
       state.energyEfficiency = payload.energyEfficiency;
       state.coulombicEfficiency = payload.coulombicEfficiency;
+      state.cycleNumbersAdjustedCapacity = payload.cycleNumbersAdjustedCapacity;
+      state.cycleNumbersAdjustedEnergy = payload.cycleNumbersAdjustedEnergy;
     },
     [getCycleData.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -157,12 +161,12 @@ const csvDataSlice = createSlice({
       state.isLoading = true;
       toast.loading('Please wait...');
     },
-    [getTimeSeriesData.fulfilled]: (state) => {
+    [getTimeSeriesData.fulfilled]: (state, { payload }) => {
       toast.dismiss();
       state.isLoading = false;
       state.testTime = payload.testTime;
-      state.dischargeCapacityAh = payload.dischargeCapacityAh;
-      state.dischargeEnergyWh = payload.dischargeEnergyWh;
+      state.timeSeriesDischargeCapacityAh = payload.timeSeriesDischargeCapacityAh;
+      state.timeSeriesDischargeEnergyWh = payload.timeSeriesDischargeEnergyWh;
       state.voltageCycles100Step = payload.voltageCycles100Step;
       state.voltageCycles200Step = payload.voltageCycles200Step;
       state.voltageCycles300Step = payload.voltageCycles300Step;
@@ -174,28 +178,28 @@ const csvDataSlice = createSlice({
       state.voltageCycles900Step = payload.voltageCycles900Step;
       state.voltageCycles1000Step = payload.voltageCycles1000Step;
       state.voltageCycles1100Step = payload.voltageCycles1100Step;
-      state.chargeCapacity100Step = payload.chargeCapacity100Step;
-      state.chargeCapacity200Step = payload.chargeCapacity200Step;
-      state.chargeCapacity300Step = payload.chargeCapacity300Step;
-      state.chargeCapacity400Step = payload.chargeCapacity400Step;
-      state.chargeCapacity500Step = payload.chargeCapacity500Step;
-      state.chargeCapacity600Step = payload.chargeCapacity600Step;
-      state.chargeCapacity700Step = payload.chargeCapacity700Step;
-      state.chargeCapacity800Step = payload.chargeCapacity800Step;
-      state.chargeCapacity900Step = payload.chargeCapacity900Step;
-      state.chargeCapacity1000Step = payload.chargeCapacity1000Step;
-      state.chargeCapacity1100Step = payload.chargeCapacity1100Step;
-      state.dischargeCapacity100Step = payload.dischargeCapacity100Step;
-      state.dischargeCapacity200Step = payload.dischargeCapacity200Step;
-      state.dischargeCapacity300Step = payload.dischargeCapacity300Step;
-      state.dischargeCapacity400Step = payload.dischargeCapacity400Step;
-      state.dischargeCapacity500Step = payload.dischargeCapacity500Step;
-      state.dischargeCapacity600Step = payload.dischargeCapacity600Step;
-      state.dischargeCapacity700Step = payload.dischargeCapacity700Step;
-      state.dischargeCapacity800Step = payload.dischargeCapacity800Step;
-      state.dischargeCapacity900Step = payload.dischargeCapacity900Step;
-      state.dischargeCapacity1000Step = payload.dischargeCapacity1000Step;
-      state.dischargeCapacity1100Step = payload.dischargeCapacity1100Step;
+      state.chargeCapacityCycles100Step = payload.chargeCapacityCycles100Step;
+      state.chargeCapacityCycles200Step = payload.chargeCapacityCycles200Step;
+      state.chargeCapacityCycles300Step = payload.chargeCapacityCycles300Step;
+      state.chargeCapacityCycles400Step = payload.chargeCapacityCycles400Step;
+      state.chargeCapacityCycles500Step = payload.chargeCapacityCycles500Step;
+      state.chargeCapacityCycles600Step = payload.chargeCapacityCycles600Step;
+      state.chargeCapacityCycles700Step = payload.chargeCapacityCycles700Step;
+      state.chargeCapacityCycles800Step = payload.chargeCapacityCycles800Step;
+      state.chargeCapacityCycles900Step = payload.chargeCapacityCycles900Step;
+      state.chargeCapacityCycles1000Step = payload.chargeCapacityCycles1000Step;
+      state.chargeCapacityCycles1100Step = payload.chargeCapacityCycles1100Step;
+      state.dischargeCapacityCycles100Step = payload.dischargeCapacityCycles100Step;
+      state.dischargeCapacityCycles200Step = payload.dischargeCapacityCycles200Step;
+      state.dischargeCapacityCycles300Step = payload.dischargeCapacityCycles300Step;
+      state.dischargeCapacityCycles400Step = payload.dischargeCapacityCycles400Step;
+      state.dischargeCapacityCycles500Step = payload.dischargeCapacityCycles500Step;
+      state.dischargeCapacityCycles600Step = payload.dischargeCapacityCycles600Step;
+      state.dischargeCapacityCycles700Step = payload.dischargeCapacityCycles700Step;
+      state.dischargeCapacityCycles800Step = payload.dischargeCapacityCycles800Step;
+      state.dischargeCapacityCycles900Step = payload.dischargeCapacityCycles900Step;
+      state.dischargeCapacityCycles1000Step = payload.dischargeCapacityCycles1000Step;
+      state.dischargeCapacityCycles1100Step = payload.dischargeCapacityCycles1100Step;
     },
     [getTimeSeriesData.rejected]: (state, { payload }) => {
       state.isLoading = false;
