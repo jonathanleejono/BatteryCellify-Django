@@ -9,7 +9,6 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, registerUser } from '../../../features/user/userSlice';
 import Iconify from '../../../components/Iconify';
-import { BlogPostCard, TestSelect2, BlogPostsSearch } from '../../@dashboard/blog';
 
 // ----------------------------------------------------------------------
 
@@ -21,25 +20,6 @@ export default function RegisterForm() {
   const dispatch = useDispatch();
 
   const { user, isLoading } = useSelector((store) => store.user);
-
-  const currencies = [
-    {
-      value: 'USD',
-      label: '$',
-    },
-    {
-      value: 'EUR',
-      label: '€',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
 
   const [currency, setCurrency] = useState('EUR');
 
@@ -63,10 +43,8 @@ export default function RegisterForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: () => {
-      // dispatch(registerUser(formik.values));
-      console.log('formik values: ', formik.values);
-      console.log('the currency on submit: ', currency);
-      // navigate('/app/dashboard', { replace: true });
+      dispatch(registerUser(formik.values));
+      navigate('/app/dashboard', { replace: true });
     },
   });
 
@@ -134,27 +112,6 @@ export default function RegisterForm() {
             helperText={touched.password && errors.password}
             value={formik.values.password}
           />
-
-          <TextField
-            fullWidth
-            // autoComplete="username"
-            // type="text"
-            label="Select"
-            // {...getFieldProps('email')}
-            // error={Boolean(touched.email && errors.email)}
-            // helperText={touched.email && errors.email}
-            select
-            value={currency}
-            onChange={handleChange}
-          >
-            {currencies.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          {/* <TestSelect2 options={SORT_OPTIONS} value="testing" /> */}
 
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
             Register

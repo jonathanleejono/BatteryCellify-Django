@@ -62,10 +62,6 @@ async def get_batteryCells(
 
     totalBatteryCells = len(all_batteryCells)
 
-    pagesLimit = totalBatteryCells / limit
-
-    numOfPages = math.ceil(pagesLimit)
-
     averageCapacity = statistics.fmean([batteryCell["capacityAh"]
                                         for batteryCell in all_batteryCells])
     averageDepthOfDischarge = statistics.fmean([batteryCell["depthOfDischarge"]
@@ -89,47 +85,43 @@ async def get_batteryCells(
         batteryCell for batteryCell in all_batteryCells
         if batteryCell['cathode'] == 'NMC-LCO'])
 
-    avgTemp18650Cells = statistics.fmean([batteryCell["temperatureC"]
-                                         if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
-    avgMaxSoC18650Cells = statistics.fmean([batteryCell["maxStateOfCharge"]
-                                           if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
-    avgMinSoC18650Cells = statistics.fmean([batteryCell["minStateOfCharge"]
-                                           if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
-    avgDoD18650Cells = statistics.fmean([batteryCell["depthOfDischarge"]
-                                        if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
-    avgChargeCRate18650Cells = statistics.fmean([batteryCell["chargeCapacityRate"]
-                                                if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
-    avgDischargeCRate18650Cells = statistics.fmean([batteryCell["dischargeCapacityRate"]
-                                                   if batteryCell["type"] == "18650" else 0 for batteryCell in all_batteryCells])
+    lcoCycles = [batteryCell["cycles"]
+                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "LCO"]
+    lfpCycles = [batteryCell["cycles"]
+                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "LFP"]
+    ncaCycles = [batteryCell["cycles"]
+                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "NCA"]
+    nmcCycles = [batteryCell["cycles"]
+                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "NMC"]
+    nmcLcoCycles = [batteryCell["cycles"]
+                    for batteryCell in all_batteryCells if batteryCell["cathode"] == "NMC-LCO"]
 
-    avgTempPouchCells = statistics.fmean([batteryCell["temperatureC"]
-                                         if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
-    avgMaxSoCPouchCells = statistics.fmean([batteryCell["maxStateOfCharge"]
-                                           if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
-    avgMinSoCPouchCells = statistics.fmean([batteryCell["minStateOfCharge"]
-                                           if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
-    avgDoDPouchCells = statistics.fmean([batteryCell["depthOfDischarge"]
-                                        if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
-    avgChargeCRatePouchCells = statistics.fmean([batteryCell["chargeCapacityRate"]
-                                                if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
-    avgDischargeCRatePouchCells = statistics.fmean([batteryCell["dischargeCapacityRate"]
-                                                   if batteryCell["type"] == "pouch" else 0.0 for batteryCell in all_batteryCells])
+    # the if statement checks if a battery cell with that specific cathode exists, if not, return 0 for the average
 
-    avgTempPrismaticCells = statistics.fmean([batteryCell["temperatureC"]
-                                             if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
-    avgMaxSoCPrismaticCells = statistics.fmean([batteryCell["maxStateOfCharge"]
-                                               if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
-    avgMinSoCPrismaticCells = statistics.fmean([batteryCell["minStateOfCharge"]
-                                               if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
-    avgDoDPrismaticCells = statistics.fmean([batteryCell["depthOfDischarge"]
-                                            if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
-    avgChargeCRatePrismaticCells = statistics.fmean([batteryCell["chargeCapacityRate"]
-                                                    if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
-    avgDischargeCRatePrismaticCells = statistics.fmean(
-        [batteryCell["dischargeCapacityRate"] if batteryCell["type"] == "prismatic" else 0.0 for batteryCell in all_batteryCells])
+    if len(lcoCycles) > 0:
+        avgCyclesLC0Cells = statistics.fmean(lcoCycles)
+    else:
+        avgCyclesLC0Cells = 0.0
 
-    #    [a if a else 2 for a in [0,1,0,3]]
-    #    [batteryCell["dischargeCapacityRate"] if batteryCell["type"] == "prismatic" else 0 for batteryCell in all_batteryCells]
+    if len(lfpCycles) > 0:
+        avgCyclesLFPCells = statistics.fmean(lfpCycles)
+    else:
+        avgCyclesLFPCells = 0.0
+
+    if len(ncaCycles) > 0:
+        avgCyclesNCACells = statistics.fmean(ncaCycles)
+    else:
+        avgCyclesNCACells = 0.0
+
+    if len(nmcCycles) > 0:
+        avgCyclesNMCCells = statistics.fmean(nmcCycles)
+    else:
+        avgCyclesNMCCells = 0.0
+
+    if len(nmcLcoCycles) > 0:
+        avgCyclesNMCLCOCells = statistics.fmean(nmcLcoCycles)
+    else:
+        avgCyclesNMCLCOCells = 0.0
 
     return {"batteryCells": all_batteryCells,
             "totalBatteryCells": totalBatteryCells,
@@ -141,24 +133,12 @@ async def get_batteryCells(
             "totalCathodeNCACells": totalCathodeNCACells,
             "totalCathodeNMCCells": totalCathodeNMCCells,
             "totalCathodeNMCLCOCells": totalCathodeNMCLCOCells,
-            "avgTemp18650Cells": avgTemp18650Cells,
-            "avgMaxSoC18650Cells": avgMaxSoC18650Cells,
-            "avgMinSoC18650Cells": avgMinSoC18650Cells,
-            "avgDoD18650Cells": avgDoD18650Cells,
-            "avgChargeCRate18650Cells": avgChargeCRate18650Cells,
-            "avgDischargeCRate18650Cells": avgDischargeCRate18650Cells,
-            "avgTempPouchCells": avgTempPouchCells,
-            "avgMaxSoCPouchCells": avgMaxSoCPouchCells,
-            "avgMinSoCPouchCells": avgMinSoCPouchCells,
-            "avgDoDPouchCells": avgDoDPouchCells,
-            "avgChargeCRatePouchCells": avgChargeCRatePouchCells,
-            "avgDischargeCRatePouchCells": avgDischargeCRatePouchCells,
-            "avgTempPrismaticCells": avgTempPrismaticCells,
-            "avgMaxSoCPrismaticCells": avgMaxSoCPrismaticCells,
-            "avgMinSoCPrismaticCells": avgMinSoCPrismaticCells,
-            "avgDoDPrismaticCells": avgDoDPrismaticCells,
-            "avgChargeCRatePrismaticCells": avgChargeCRatePrismaticCells,
-            "avgDischargeCRatePrismaticCells": avgDischargeCRatePrismaticCells,
+            "avgCyclesLC0Cells": avgCyclesLC0Cells,
+            "avgCyclesLFPCells": avgCyclesLFPCells,
+            "avgCyclesNCACells": avgCyclesNCACells,
+            "avgCyclesNMCCells": avgCyclesNMCCells,
+            "avgCyclesNMCLCOCells": avgCyclesNMCLCOCells,
+            "lcoCycles": lcoCycles,
             }
 
 

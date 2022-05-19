@@ -40,24 +40,11 @@ export default function DashboardApp() {
     totalCathodeNCACells,
     totalCathodeNMCCells,
     totalCathodeNMCLCOCells,
-    avgTemp18650Cells,
-    avgMaxSoC18650Cells,
-    avgMinSoC18650Cells,
-    avgDoD18650Cells,
-    avgChargeCRate18650Cells,
-    avgDischargeCRate18650Cells,
-    avgTempPouchCells,
-    avgMaxSoCPouchCells,
-    avgMinSoCPouchCells,
-    avgDoDPouchCells,
-    avgChargeCRatePouchCells,
-    avgDischargeCRatePouchCells,
-    avgTempPrismaticCells,
-    avgMaxSoCPrismaticCells,
-    avgMinSoCPrismaticCells,
-    avgDoDPrismaticCells,
-    avgChargeCRatePrismaticCells,
-    avgDischargeCRatePrismaticCells,
+    avgCyclesLC0Cells,
+    avgCyclesLFPCells,
+    avgCyclesNCACells,
+    avgCyclesNMCCells,
+    avgCyclesNMCLCOCells,
   } = useSelector((store) => store.allBatteryCells);
 
   const dispatch = useDispatch();
@@ -113,19 +100,14 @@ export default function DashboardApp() {
 
           <Grid item xs={12} md={6} lg={6}>
             <AppConversionRates
-              title="Conversion Rates"
-              subheader="(+43%) than last year"
+              title="Average Cycles Per Cathode"
+              // subheader="(+43%) than last year"
               chartData={[
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
+                { label: 'LCO', value: avgCyclesLC0Cells },
+                { label: 'LFP', value: avgCyclesLFPCells },
+                { label: 'NCA', value: avgCyclesNCACells },
+                { label: 'NMC', value: avgCyclesNMCCells },
+                { label: 'NMC-LCO', value: avgCyclesNMCLCOCells },
               ]}
             />
           </Grid>

@@ -47,24 +47,12 @@ class BatteryCellsManyOut(BaseModel):
     totalCathodeNCACells: int
     totalCathodeNMCCells: int
     totalCathodeNMCLCOCells: int
-    avgTemp18650Cells: float
-    avgMaxSoC18650Cells: float
-    avgMinSoC18650Cells: float
-    avgDoD18650Cells: float
-    avgChargeCRate18650Cells: float
-    avgDischargeCRate18650Cells: float
-    avgTempPouchCells: float
-    avgMaxSoCPouchCells: float
-    avgMinSoCPouchCells: float
-    avgDoDPouchCells: float
-    avgChargeCRatePouchCells: float
-    avgDischargeCRatePouchCells: float
-    avgTempPrismaticCells: float
-    avgMaxSoCPrismaticCells: float
-    avgMinSoCPrismaticCells: float
-    avgDoDPrismaticCells: float
-    avgChargeCRatePrismaticCells: float
-    avgDischargeCRatePrismaticCells: float
+    avgCyclesLC0Cells: float
+    avgCyclesLFPCells: float
+    avgCyclesNCACells: float
+    avgCyclesNMCCells: float
+    avgCyclesNMCLCOCells: float
+    lcoCycles: List
 
     class Config:
         orm_mode = True

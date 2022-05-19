@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';
+import Landing from './pages/Landing';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import Graphs from './pages/Graphs';
@@ -46,6 +47,7 @@ export default function Router() {
         { path: '/', element: <Navigate to="/app/dashboard" /> },
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
+        { path: 'landing', element: <Landing /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
