@@ -105,6 +105,6 @@ csvTimeSeriesData = Table(
 
 
 # the order matters
-engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URL)
+# engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URL)
 
-metadata.create_all(engine)
+# metadata.create_all(engine)

@@ -147,84 +147,73 @@ async def get_batteryCells(
 async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Request, current_user: int = Depends(oauth2.get_current_user)):
 
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
-    try:
-        if not batteryCell:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"Please fill out all values")
+    if not batteryCell:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Please fill out all values")
 
-        query = batteryCells.insert(
-            values={**batteryCell.dict(), "owner_id": current_user.id})
+    query = batteryCells.insert(
+        values={**batteryCell.dict(), "owner_id": current_user.id})
 
-        # the database.execute(query) is what inserts the object into the db, while also retrieving the id at the same time
-        created_batteryCellId = await database.execute(query)
+    # the database.execute(query) is what inserts the object into the db, while also retrieving the id at the same time
+    created_batteryCellId = await database.execute(query)
 
-        created_batteryCell = {
-            **batteryCell.dict(), "id": created_batteryCellId}
+    created_batteryCell = {
+        **batteryCell.dict(), "id": created_batteryCellId}
 
-        return created_batteryCell
-
-    except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+    return created_batteryCell
 
 
 @router.patch("/{id}", response_model=schemas.BatteryCellOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def update_batteryCell(request: Request, id: int, updating_batteryCell: schemas.BatteryCellUpdate, current_user: int = Depends(oauth2.get_current_user)):
-    try:
-        batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
-        batteryCell = await database.fetch_one(batteryCell_query)
+    batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
-        if not batteryCell:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"Battery cell with id: {id} does not exist")
+    batteryCell = await database.fetch_one(batteryCell_query)
 
-        if batteryCell.owner_id != current_user.id:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                                detail="Not authorized to perform requested action")
+    if not batteryCell:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Battery cell with id: {id} does not exist")
 
-        updated_batteryCell_query = batteryCells.update().where(batteryCells.c.id == id).values(
-            **updating_batteryCell.dict())
+    if batteryCell.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Not authorized to perform requested action")
 
-        await database.execute(updated_batteryCell_query)
+    updated_batteryCell_query = batteryCells.update().where(batteryCells.c.id == id).values(
+        **updating_batteryCell.dict())
 
-        updated_batteryCell = {**updating_batteryCell.dict(), "id": id}
+    await database.execute(updated_batteryCell_query)
 
-        return updated_batteryCell
-    except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+    updated_batteryCell = {**updating_batteryCell.dict(), "id": id}
+
+    return updated_batteryCell
 
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def delete_batteryCell(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
-    try:
-        batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
-        batteryCell = await database.fetch_one(batteryCell_query)
+    batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
-        if not batteryCell:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"Battery cell with id: {id} does not exist")
+    batteryCell = await database.fetch_one(batteryCell_query)
 
-        if batteryCell.owner_id != current_user.id:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                                detail="Not authorized to perform requested action")
+    if not batteryCell:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Battery cell with id: {id} does not exist")
 
-        delete_batteryCell = batteryCells.delete().where(batteryCells.c.id == id)
+    if batteryCell.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Not authorized to perform requested action")
 
-        await database.execute(delete_batteryCell)
+    delete_batteryCell = batteryCells.delete().where(batteryCells.c.id == id)
 
-        # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
+    await database.execute(delete_batteryCell)
 
-        delete_csvCycleData_batteryCell = csvCycleData.delete().where(
-            csvCycleData.c.batteryCell_id == id)
+    # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
 
-        await database.execute(delete_csvCycleData_batteryCell)
+    delete_csvCycleData_batteryCell = csvCycleData.delete().where(
+        csvCycleData.c.batteryCell_id == id)
 
-        return {"msg": "Success! Battery cell removed", "id": id}
-    except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+    await database.execute(delete_csvCycleData_batteryCell)
+
+    return {"msg": "Success! Battery cell removed", "id": id}

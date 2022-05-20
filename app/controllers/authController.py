@@ -15,35 +15,30 @@ limiter = Limiter(key_func=get_remote_address)
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 @limiter.limit("5/minute", error_message="Too many requests, please try again later")
 async def create_user(user: schemas.UserCreate, request: Request):
-    try:
-        if not user.email or not user.firstName or not user.password:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="Please provide all values")
-
-        emailAlreadyExists = await database.fetch_one(users.select().where(users.c.email == user.email))
-
-        if emailAlreadyExists:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="Email already exists")
-
-        hashed_password = utils.hash(user.password)
-        user.password = hashed_password
-
-        query = users.insert(values={**user.dict()})
-
-        registered_user_id = await database.execute(query)
-
-        access_token = oauth2.create_access_token(
-            data={"user_id": registered_user_id})
-
-        registered_user = {"email": user.email,
-                           "firstName": user.firstName, "lastName": "lastName"}
-
-        return {"user": registered_user, "token": access_token}
-
-    except:
+    if not user.email or not user.firstName or not user.password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+                            detail="Please provide all values")
+
+    emailAlreadyExists = await database.fetch_one(users.select().where(users.c.email == user.email))
+
+    if emailAlreadyExists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Email already exists")
+
+    hashed_password = utils.hash(user.password)
+    user.password = hashed_password
+
+    query = users.insert(values={**user.dict()})
+
+    registered_user_id = await database.execute(query)
+
+    access_token = oauth2.create_access_token(
+        data={"user_id": registered_user_id})
+
+    registered_user = {"email": user.email,
+                       "firstName": user.firstName, "lastName": "lastName"}
+
+    return {"user": registered_user, "token": access_token}
 
 
 @router.post('/login', response_model=schemas.UserOut)
