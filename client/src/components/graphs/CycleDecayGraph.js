@@ -5,7 +5,7 @@ const CycleDecayGraph = ({
   cycle_numbers,
   cycle_discharge_capacity_ah,
   cycle_discharge_energy_wh,
-  batteryCellNameId,
+  batterycell_name_id,
 }) => {
   return (
     <div>
@@ -17,16 +17,16 @@ const CycleDecayGraph = ({
             x: cycle_numbers,
             y: cycle_discharge_capacity_ah,
             marker: { color: 'blue' },
-            text: `ah_d: ${batteryCellNameId}`,
-            name: `ah_d: ${batteryCellNameId}`,
+            text: `ah_d: ${batterycell_name_id}`,
+            name: `ah_d: ${batterycell_name_id}`,
           },
           {
             type: 'line',
             x: cycle_numbers,
             y: cycle_discharge_energy_wh,
             marker: { color: 'red' },
-            text: `wh_d: ${batteryCellNameId}`,
-            name: `wh_d: ${batteryCellNameId}`,
+            text: `wh_d: ${batterycell_name_id}`,
+            name: `wh_d: ${batterycell_name_id}`,
           },
         ]}
         // -------------------------------------------------

@@ -132,7 +132,7 @@ export default function ManageCsvForm() {
         >
           {batteryCells.map((option) => (
             <MenuItem key={option.id} value={option}>
-              {option.cellNameId}
+              {option.cell_name_id}
             </MenuItem>
           ))}
         </TextField>
@@ -214,7 +214,7 @@ export default function ManageCsvForm() {
         <DialogTitle id="form-dialog-title"> Delete the stored CSV data? </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {JSON.stringify(selectedBatteryCell.cellNameId)}
+            {JSON.stringify(selectedBatteryCell.cell_name_id)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

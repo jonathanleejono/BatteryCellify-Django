@@ -62,19 +62,19 @@ const DataGridTable = () => {
                   dispatch(
                     setEditBatteryCell({
                       id: params.row.id,
-                      cellNameId: params.row.cellNameId,
+                      cell_name_id: params.row.cell_name_id,
                       cycles: params.row.cycles,
                       cathode: params.row.cathode,
                       anode: params.row.anode,
-                      capacityAh: params.row.capacityAh,
+                      capacity_ah: params.row.capacity_ah,
                       type: params.row.type,
                       source: params.row.source,
-                      temperatureC: params.row.temperatureC,
-                      maxStateOfCharge: params.row.maxStateOfCharge,
-                      minStateOfCharge: params.row.minStateOfCharge,
-                      depthOfDischarge: params.row.depthOfDischarge,
-                      chargeCapacityRate: params.row.chargeCapacityRate,
-                      dischargeCapacityRate: params.row.dischargeCapacityRate,
+                      temperature_c: params.row.temperature_c,
+                      max_state_of_charge: params.row.max_state_of_charge,
+                      min_state_of_charge: params.row.min_state_of_charge,
+                      depth_of_discharge: params.row.depth_of_discharge,
+                      charge_capacity_rate: params.row.charge_capacity_rate,
+                      discharge_capacity_rate: params.row.discharge_capacity_rate,
                     })
                   );
                 }}
@@ -96,8 +96,8 @@ const DataGridTable = () => {
     },
     { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'cellNameId',
-      headerName: 'cellNameId',
+      field: 'cell_name_id',
+      headerName: 'cell_name_id',
       width: 400,
     },
     {

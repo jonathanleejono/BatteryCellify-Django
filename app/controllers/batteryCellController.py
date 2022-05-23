@@ -99,22 +99,21 @@ async def get_batteryCells(db: AsyncSession = Depends(get_db),
             }
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=entities.BatteryCellOut)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=entities.Battery_Cells)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def create_batteryCell(batteryCell: entities.BatteryCellCreate, request: Request, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
+    # make sure the response_model = the table itself for pytest
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
-    try:
-        created_batteryCell = entities.Battery_Cells(
-            **batteryCell.dict(), owner_id=current_user.id)
-        db.add(created_batteryCell)
-        await db.commit()
-        await db.refresh(created_batteryCell)
-        return created_batteryCell
 
-    except Exception as e:
-        print('Error! Code: {c}, Message, {m}'.format(
-            c=type(e).__name__, m=str(e)))
+    created_batteryCell = entities.Battery_Cells(
+        **batteryCell.dict(), owner_id=current_user.id)
+
+    db.add(created_batteryCell)
+
+    await db.commit()
+    await db.refresh(created_batteryCell)
+    return created_batteryCell
 
 
 @router.patch("/{id}", response_model=entities.BatteryCellOut)
@@ -145,10 +144,6 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: en
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-
-    # batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
-
-    # batteryCell = await database.fetch_one(batteryCell_query)
 
     batteryCell = await db.get(entities.Battery_Cells, id)
 

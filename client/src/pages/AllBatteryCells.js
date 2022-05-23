@@ -59,19 +59,19 @@ const TABLE_HEAD = [
   // { id: 'more', label: 'more', alignRight: false },
   { id: 'edit', label: 'Edit', alignRight: false },
   { id: 'id', label: 'Id', alignRight: false },
-  { id: 'cellNameId', label: 'Cell Name Id', alignRight: false },
+  { id: 'cell_name_id', label: 'Cell Name Id', alignRight: false },
   { id: 'cycles', label: 'Cycles', alignRight: false },
   { id: 'cathode', label: 'Cathode', alignRight: false },
   { id: 'anode', label: 'Anode', alignRight: false },
-  { id: 'capacityAh', label: 'Capacity (Ah)', alignRight: false },
+  { id: 'capacity_ah', label: 'Capacity (Ah)', alignRight: false },
   { id: 'type', label: 'Type', alignRight: false },
   { id: 'source', label: 'Source', alignRight: false },
-  { id: 'temperatureC', label: 'Temp (C)', alignRight: false },
-  { id: 'maxStateOfCharge', label: 'Max SoC', alignRight: false },
-  { id: 'minStateOfCharge', label: 'Min SoC', alignRight: false },
-  { id: 'depthOfDischarge', label: 'DoD', alignRight: false },
-  { id: 'chargeCapacityRate', label: 'Charge C Rate', alignRight: false },
-  { id: 'dischargeCapacityRate', label: 'Discharge C Rate', alignRight: false },
+  { id: 'temperature_c', label: 'Temp (C)', alignRight: false },
+  { id: 'max_state_of_charge', label: 'Max SoC', alignRight: false },
+  { id: 'min_state_of_charge', label: 'Min SoC', alignRight: false },
+  { id: 'depth_of_discharge', label: 'DoD', alignRight: false },
+  { id: 'charge_capacity_rate', label: 'Charge C Rate', alignRight: false },
+  { id: 'discharge_capacity_rate', label: 'Discharge C Rate', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -298,19 +298,19 @@ export default function AllBatteryCells() {
                   {filteredBatteryCells.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {
                       id,
-                      cellNameId,
+                      cell_name_id,
                       cycles,
                       cathode,
                       anode,
-                      capacityAh,
+                      capacity_ah,
                       type,
                       source,
-                      temperatureC,
-                      maxStateOfCharge,
-                      minStateOfCharge,
-                      depthOfDischarge,
-                      chargeCapacityRate,
-                      dischargeCapacityRate,
+                      temperature_c,
+                      max_state_of_charge,
+                      min_state_of_charge,
+                      depth_of_discharge,
+                      charge_capacity_rate,
+                      discharge_capacity_rate,
                     } = row;
                     const isItemSelected = selected.indexOf(id) !== -1;
 
@@ -335,19 +335,19 @@ export default function AllBatteryCells() {
                               dispatch(
                                 setEditBatteryCell({
                                   id,
-                                  cellNameId,
+                                  cell_name_id,
                                   cycles,
                                   cathode,
                                   anode,
-                                  capacityAh,
+                                  capacity_ah,
                                   type,
                                   source,
-                                  temperatureC,
-                                  maxStateOfCharge,
-                                  minStateOfCharge,
-                                  depthOfDischarge,
-                                  chargeCapacityRate,
-                                  dischargeCapacityRate,
+                                  temperature_c,
+                                  max_state_of_charge,
+                                  min_state_of_charge,
+                                  depth_of_discharge,
+                                  charge_capacity_rate,
+                                  discharge_capacity_rate,
                                 })
                               );
                             }}
@@ -360,24 +360,24 @@ export default function AllBatteryCells() {
                             {id}
                           </Typography>
                         </TableCell>
-                        <TableCell align="left">{cellNameId}</TableCell>
+                        <TableCell align="left">{cell_name_id}</TableCell>
                         <TableCell align="left">{cycles}</TableCell>
                         <TableCell align="left">{cathode.toUpperCase()}</TableCell>
                         <TableCell align="left">{capitalCase(anode)}</TableCell>
-                        <TableCell align="left">{capacityAh}</TableCell>
+                        <TableCell align="left">{capacity_ah}</TableCell>
                         <TableCell align="left">{capitalCase(type)}</TableCell>
                         <TableCell align="left">{source.toUpperCase()}</TableCell>
 
                         <TableCell align="left">
-                          <Label variant="ghost" color={(temperatureC >= '25.00' && 'error') || 'warning'}>
-                            {temperatureC}
+                          <Label variant="ghost" color={(temperature_c >= '25.00' && 'error') || 'warning'}>
+                            {temperature_c}
                           </Label>
                         </TableCell>
-                        <TableCell align="left">{maxStateOfCharge}</TableCell>
-                        <TableCell align="left">{minStateOfCharge}</TableCell>
-                        <TableCell align="left">{depthOfDischarge}</TableCell>
-                        <TableCell align="left">{chargeCapacityRate}</TableCell>
-                        <TableCell align="left">{dischargeCapacityRate}</TableCell>
+                        <TableCell align="left">{max_state_of_charge}</TableCell>
+                        <TableCell align="left">{min_state_of_charge}</TableCell>
+                        <TableCell align="left">{depth_of_discharge}</TableCell>
+                        <TableCell align="left">{charge_capacity_rate}</TableCell>
+                        <TableCell align="left">{discharge_capacity_rate}</TableCell>
                       </TableRow>
                     );
                   })}

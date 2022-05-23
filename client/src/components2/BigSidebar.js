@@ -10,19 +10,19 @@ const BigSidebar = () => {
   const toggle = () => {
     dispatch(
       setCreateBatteryCell({
-        cellNameId: '',
+        cell_name_id: '',
         cycles: '',
         cathode: 'LCO',
         anode: 'graphite',
-        capacityAh: '',
+        capacity_ah: '',
         type: '18650',
         source: 'HNEI',
-        temperatureC: '',
-        maxStateOfCharge: '',
-        minStateOfCharge: '',
-        depthOfDischarge: '',
-        chargeCapacityRate: '',
-        dischargeCapacityRate: '',
+        temperature_c: '',
+        max_state_of_charge: '',
+        min_state_of_charge: '',
+        depth_of_discharge: '',
+        charge_capacity_rate: '',
+        discharge_capacity_rate: '',
       })
     );
   };

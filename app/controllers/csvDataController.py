@@ -115,6 +115,14 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
     if "Unnamed: 0" in df:
         df = df.drop("Unnamed: 0", 1)
 
+        # def create_post_model(battery_cell):
+        #         return entities.Battery_Cells(**battery_cell)
+
+        #     battery_cells_map = map(create_post_model, df)
+        #     battery_cells = list(battery_cells_map)
+
+        #    db.add_all(battery_cells)
+
     for i in range(len(df)):
         query = entities.Csv_Cycle_Data(
             cycle_index=df["Cycle_Index"][i],

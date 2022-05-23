@@ -6,7 +6,7 @@ import { createBatteryCellThunk, deleteBatteryCellThunk, editBatteryCellThunk } 
 const initialState = {
   id: '',
   isLoading: false,
-  cellNameId: '',
+  cell_name_id: '',
   cycles: '',
   // cathodeOptions: ['LCO', 'LFP', 'NCA', 'NMC', 'NMC-LCO'],
   cathodeOptions: [
@@ -35,7 +35,7 @@ const initialState = {
     },
   ],
   anode: 'graphite',
-  capacityAh: '',
+  capacity_ah: '',
   // typeOptions: ['18650', 'pouch', 'prismatic'],
   typeOptions: [
     {
@@ -76,12 +76,12 @@ const initialState = {
     },
   ],
   source: 'HNEI',
-  temperatureC: '',
-  maxStateOfCharge: '',
-  minStateOfCharge: '',
-  depthOfDischarge: '',
-  chargeCapacityRate: '',
-  dischargeCapacityRate: '',
+  temperature_c: '',
+  max_state_of_charge: '',
+  min_state_of_charge: '',
+  depth_of_discharge: '',
+  charge_capacity_rate: '',
+  discharge_capacity_rate: '',
   editBatteryCellId: '',
 };
 

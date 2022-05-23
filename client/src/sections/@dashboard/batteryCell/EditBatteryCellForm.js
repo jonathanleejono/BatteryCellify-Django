@@ -20,59 +20,59 @@ import {
 export default function EditBatteryCellForm() {
   const {
     id,
-    cellNameId,
+    cell_name_id,
     cycles,
     cathode,
     cathodeOptions,
     anode,
     anodeOptions,
-    capacityAh,
+    capacity_ah,
     type,
     typeOptions,
     source,
     sourceOptions,
-    temperatureC,
-    maxStateOfCharge,
-    minStateOfCharge,
-    depthOfDischarge,
-    chargeCapacityRate,
-    dischargeCapacityRate,
+    temperature_c,
+    max_state_of_charge,
+    min_state_of_charge,
+    depth_of_discharge,
+    charge_capacity_rate,
+    discharge_capacity_rate,
   } = useSelector((store) => store.batteryCell);
 
   const dispatch = useDispatch();
 
   const EditBatteryCellSchema = Yup.object().shape({
-    cellNameId: Yup.string().min(2, 'Too Short!').max(100, 'Too Long!').required('Cell Name ID is required'),
+    cell_name_id: Yup.string().min(2, 'Too Short!').max(100, 'Too Long!').required('Cell Name ID is required'),
     cycles: Yup.string().max(100, 'Too Long!').required('Cycles required'),
-    capacityAh: Yup.string().max(100, 'Too Long!').required('Capacity (Ah) is required'),
-    temperatureC: Yup.string().max(100, 'Too Long!').required('Temperature (C) is required'),
-    maxStateOfCharge: Yup.string().max(100, 'Too Long!').required('Max State of Charge is required'),
-    minStateOfCharge: Yup.string().max(100, 'Too Long!').required('Min State of Charge is required'),
-    depthOfDischarge: Yup.string().max(100, 'Too Long!').required('Depth of Discharge is required'),
-    chargeCapacityRate: Yup.string().max(100, 'Too Long!').required('Charge Capacity Rate required'),
-    dischargeCapacityRate: Yup.string().max(100, 'Too Long!').required('Discharge Capacity Rate is required'),
+    capacity_ah: Yup.string().max(100, 'Too Long!').required('Capacity (Ah) is required'),
+    temperature_c: Yup.string().max(100, 'Too Long!').required('Temperature (C) is required'),
+    max_state_of_charge: Yup.string().max(100, 'Too Long!').required('Max State of Charge is required'),
+    min_state_of_charge: Yup.string().max(100, 'Too Long!').required('Min State of Charge is required'),
+    depth_of_discharge: Yup.string().max(100, 'Too Long!').required('Depth of Discharge is required'),
+    charge_capacity_rate: Yup.string().max(100, 'Too Long!').required('Charge Capacity Rate required'),
+    discharge_capacity_rate: Yup.string().max(100, 'Too Long!').required('Discharge Capacity Rate is required'),
   });
 
   const formik = useFormik({
     initialValues: {
       id,
-      cellNameId,
+      cell_name_id,
       cycles,
       cathode,
       cathodeOptions,
       anode,
       anodeOptions,
-      capacityAh,
+      capacity_ah,
       type,
       typeOptions,
       source,
       sourceOptions,
-      temperatureC,
-      maxStateOfCharge,
-      minStateOfCharge,
-      depthOfDischarge,
-      chargeCapacityRate,
-      dischargeCapacityRate,
+      temperature_c,
+      max_state_of_charge,
+      min_state_of_charge,
+      depth_of_discharge,
+      charge_capacity_rate,
+      discharge_capacity_rate,
     },
     validationSchema: EditBatteryCellSchema,
     enableReinitialize: false,
@@ -82,19 +82,19 @@ export default function EditBatteryCellForm() {
         editBatteryCell({
           id,
           batteryCell: {
-            cellNameId: formik.values.cellNameId,
+            cell_name_id: formik.values.cell_name_id,
             cycles: formik.values.cycles,
             cathode,
             anode,
-            capacityAh: formik.values.capacityAh,
+            capacity_ah: formik.values.capacity_ah,
             type,
             source,
-            temperatureC: formik.values.temperatureC,
-            maxStateOfCharge: formik.values.maxStateOfCharge,
-            minStateOfCharge: formik.values.minStateOfCharge,
-            depthOfDischarge: formik.values.depthOfDischarge,
-            chargeCapacityRate: formik.values.chargeCapacityRate,
-            dischargeCapacityRate: formik.values.dischargeCapacityRate,
+            temperature_c: formik.values.temperature_c,
+            max_state_of_charge: formik.values.max_state_of_charge,
+            min_state_of_charge: formik.values.min_state_of_charge,
+            depth_of_discharge: formik.values.depth_of_discharge,
+            charge_capacity_rate: formik.values.charge_capacity_rate,
+            discharge_capacity_rate: formik.values.discharge_capacity_rate,
           },
         })
       );
@@ -114,12 +114,12 @@ export default function EditBatteryCellForm() {
         <Stack spacing={3}>
           <TextField
             fullWidth
-            name="cellNameId"
+            name="cell_name_id"
             label="Cell Name ID"
-            {...getFieldProps('cellNameId')}
-            error={Boolean(touched.cellNameId && errors.cellNameId)}
-            helperText={touched.cellNameId && errors.cellNameId}
-            value={formik.values.cellNameId}
+            {...getFieldProps('cell_name_id')}
+            error={Boolean(touched.cell_name_id && errors.cell_name_id)}
+            helperText={touched.cell_name_id && errors.cell_name_id}
+            value={formik.values.cell_name_id}
           />
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
@@ -156,10 +156,10 @@ export default function EditBatteryCellForm() {
             <TextField
               fullWidth
               label="Capacity (Ah)"
-              {...getFieldProps('capacityAh')}
-              error={Boolean(touched.capacityAh && errors.capacityAh)}
-              helperText={touched.capacityAh && errors.capacityAh}
-              value={formik.values.capacityAh}
+              {...getFieldProps('capacity_ah')}
+              error={Boolean(touched.capacity_ah && errors.capacity_ah)}
+              helperText={touched.capacity_ah && errors.capacity_ah}
+              value={formik.values.capacity_ah}
             />
             <TextField fullWidth name="type" label="Type" select value={type} onChange={handleBatteryCellInput}>
               {typeOptions.map((option) => (
@@ -180,52 +180,52 @@ export default function EditBatteryCellForm() {
             <TextField
               fullWidth
               label="Temperature (C)"
-              {...getFieldProps('temperatureC')}
-              error={Boolean(touched.temperatureC && errors.temperatureC)}
-              helperText={touched.temperatureC && errors.temperatureC}
-              value={formik.values.temperatureC}
+              {...getFieldProps('temperature_c')}
+              error={Boolean(touched.temperature_c && errors.temperature_c)}
+              helperText={touched.temperature_c && errors.temperature_c}
+              value={formik.values.temperature_c}
             />
             <TextField
               fullWidth
               label="Max State of Charge"
-              {...getFieldProps('maxStateOfCharge')}
-              error={Boolean(touched.maxStateOfCharge && errors.maxStateOfCharge)}
-              helperText={touched.maxStateOfCharge && errors.maxStateOfCharge}
-              value={formik.values.maxStateOfCharge}
+              {...getFieldProps('max_state_of_charge')}
+              error={Boolean(touched.max_state_of_charge && errors.max_state_of_charge)}
+              helperText={touched.max_state_of_charge && errors.max_state_of_charge}
+              value={formik.values.max_state_of_charge}
             />
             <TextField
               fullWidth
               label="Min State of Charge"
-              {...getFieldProps('minStateOfCharge')}
-              error={Boolean(touched.minStateOfCharge && errors.minStateOfCharge)}
-              helperText={touched.minStateOfCharge && errors.minStateOfCharge}
-              value={formik.values.minStateOfCharge}
+              {...getFieldProps('min_state_of_charge')}
+              error={Boolean(touched.min_state_of_charge && errors.min_state_of_charge)}
+              helperText={touched.min_state_of_charge && errors.min_state_of_charge}
+              value={formik.values.min_state_of_charge}
             />
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
               label="Depth of Discharge"
-              {...getFieldProps('depthOfDischarge')}
-              error={Boolean(touched.depthOfDischarge && errors.depthOfDischarge)}
-              helperText={touched.depthOfDischarge && errors.depthOfDischarge}
-              value={formik.values.depthOfDischarge}
+              {...getFieldProps('depth_of_discharge')}
+              error={Boolean(touched.depth_of_discharge && errors.depth_of_discharge)}
+              helperText={touched.depth_of_discharge && errors.depth_of_discharge}
+              value={formik.values.depth_of_discharge}
             />
             <TextField
               fullWidth
               label="Charge Capacity Rate"
-              {...getFieldProps('chargeCapacityRate')}
-              error={Boolean(touched.chargeCapacityRate && errors.chargeCapacityRate)}
-              helperText={touched.chargeCapacityRate && errors.chargeCapacityRate}
-              value={formik.values.chargeCapacityRate}
+              {...getFieldProps('charge_capacity_rate')}
+              error={Boolean(touched.charge_capacity_rate && errors.charge_capacity_rate)}
+              helperText={touched.charge_capacity_rate && errors.charge_capacity_rate}
+              value={formik.values.charge_capacity_rate}
             />
             <TextField
               fullWidth
               label="Discharge Capacity Rate"
-              {...getFieldProps('dischargeCapacityRate')}
-              error={Boolean(touched.dischargeCapacityRate && errors.dischargeCapacityRate)}
-              helperText={touched.dischargeCapacityRate && errors.dischargeCapacityRate}
-              value={formik.values.dischargeCapacityRate}
+              {...getFieldProps('discharge_capacity_rate')}
+              error={Boolean(touched.discharge_capacity_rate && errors.discharge_capacity_rate)}
+              helperText={touched.discharge_capacity_rate && errors.discharge_capacity_rate}
+              value={formik.values.discharge_capacity_rate}
             />
           </Stack>
 

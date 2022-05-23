@@ -27,19 +27,19 @@ import { deleteBatteryCell, setEditBatteryCell } from '../../../features/battery
 
 export default function BatteryCellMoreMenu(
   id,
-  cellNameId,
+  cell_name_id,
   cycles,
   cathode,
   anode,
-  capacityAh,
+  capacity_ah,
   type,
   source,
-  temperatureC,
-  maxStateOfCharge,
-  minStateOfCharge,
-  depthOfDischarge,
-  chargeCapacityRate,
-  dischargeCapacityRate
+  temperature_c,
+  max_state_of_charge,
+  min_state_of_charge,
+  depth_of_discharge,
+  charge_capacity_rate,
+  discharge_capacity_rate
 ) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -79,19 +79,19 @@ export default function BatteryCellMoreMenu(
             dispatch(
               setEditBatteryCell({
                 id,
-                cellNameId,
+                cell_name_id,
                 cycles,
                 cathode,
                 anode,
-                capacityAh,
+                capacity_ah,
                 type,
                 source,
-                temperatureC,
-                maxStateOfCharge,
-                minStateOfCharge,
-                depthOfDischarge,
-                chargeCapacityRate,
-                dischargeCapacityRate,
+                temperature_c,
+                max_state_of_charge,
+                min_state_of_charge,
+                depth_of_discharge,
+                charge_capacity_rate,
+                discharge_capacity_rate,
               })
             );
           }}

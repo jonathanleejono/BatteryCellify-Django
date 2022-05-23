@@ -61,7 +61,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
 
     query = select(entities.Users).where(entities.Users.id == int(token.id))
     users = await db.execute(query)
-    (user,) = users.first()
+    user = users.first()[0]
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"user was not found")

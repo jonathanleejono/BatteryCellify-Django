@@ -6,7 +6,7 @@ const EfficenciesGraph = ({
   cycle_numbers_energy,
   energy_efficiency,
   coulombic_efficiency,
-  batteryCellNameId,
+  batterycell_name_id,
 }) => {
   // cycle numbers and the effiencies do not have the same length right now
 
@@ -20,16 +20,16 @@ const EfficenciesGraph = ({
             x: cycle_numbers_capacity,
             y: coulombic_efficiency,
             marker: { color: 'blue' },
-            text: `ah_eff: ${batteryCellNameId}`,
-            name: `ah_eff: ${batteryCellNameId}`,
+            text: `ah_eff: ${batterycell_name_id}`,
+            name: `ah_eff: ${batterycell_name_id}`,
           },
           {
             type: 'line',
             x: cycle_numbers_energy,
             y: energy_efficiency,
             marker: { color: 'red' },
-            text: `wh_eff: ${batteryCellNameId}`,
-            name: `wh_eff: ${batteryCellNameId}`,
+            text: `wh_eff: ${batterycell_name_id}`,
+            name: `wh_eff: ${batterycell_name_id}`,
           },
         ]}
         // -------------------------------------------------

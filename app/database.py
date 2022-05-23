@@ -10,7 +10,7 @@ SQLALCHEMY_DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{s
 
 database = databases.Database(SQLALCHEMY_DATABASE_URL)
 
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL, future=True, echo=True)
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL, future=True)
 
 AsyncDatabaseSession = sessionmaker(
     engine, expire_on_commit=False, class_=AsyncSession)

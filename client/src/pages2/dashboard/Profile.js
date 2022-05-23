@@ -11,13 +11,13 @@ const Profile = () => {
   const [userData, setUserData] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    lastName: user?.lastName || '',
+    last_name: user?.last_name || '',
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email, lastName } = userData;
-    if (!name || !email || !lastName) {
+    const { name, email, last_name } = userData;
+    if (!name || !email || !last_name) {
       toast.error('please fill out all fields');
       return;
     }
@@ -39,8 +39,8 @@ const Profile = () => {
           <FormRow
             type="text"
             labelText="last name"
-            name="lastName"
-            value={userData.lastName}
+            name="last_name"
+            value={userData.last_name}
             handleChange={handleChange}
           />
           <FormRow type="email" name="email" value={userData.email} handleChange={handleChange} />

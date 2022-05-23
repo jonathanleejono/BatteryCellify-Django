@@ -7,23 +7,23 @@ import { handleChange, clearValues, editBatteryCell } from '../../features/batte
 const EditBatteryCell = () => {
   const {
     isLoading,
-    cellNameId,
+    cell_name_id,
     cycles,
     cathode,
     cathodeOptions,
     anode,
     anodeOptions,
-    capacityAh,
+    capacity_ah,
     type,
     typeOptions,
     source,
     sourceOptions,
-    temperatureC,
-    maxStateOfCharge,
-    minStateOfCharge,
-    depthOfDischarge,
-    chargeCapacityRate,
-    dischargeCapacityRate,
+    temperature_c,
+    max_state_of_charge,
+    min_state_of_charge,
+    depth_of_discharge,
+    charge_capacity_rate,
+    discharge_capacity_rate,
     id,
   } = useSelector((store) => store.batteryCell);
   const { user } = useSelector((store) => store.user);
@@ -33,15 +33,15 @@ const EditBatteryCell = () => {
     e.preventDefault();
 
     if (
-      !cellNameId ||
+      !cell_name_id ||
       !cycles ||
-      !capacityAh ||
-      !temperatureC ||
-      !maxStateOfCharge ||
-      !minStateOfCharge ||
-      !depthOfDischarge ||
-      !chargeCapacityRate ||
-      !dischargeCapacityRate
+      !capacity_ah ||
+      !temperature_c ||
+      !max_state_of_charge ||
+      !min_state_of_charge ||
+      !depth_of_discharge ||
+      !charge_capacity_rate ||
+      !discharge_capacity_rate
     ) {
       toast.error('Please fill out all fields');
       return;
@@ -50,24 +50,24 @@ const EditBatteryCell = () => {
       editBatteryCell({
         id,
         batteryCell: {
-          cellNameId,
+          cell_name_id,
           cycles,
           cathode,
           anode,
-          capacityAh,
+          capacity_ah,
           type,
           source,
-          temperatureC,
-          maxStateOfCharge,
-          minStateOfCharge,
-          depthOfDischarge,
-          chargeCapacityRate,
-          dischargeCapacityRate,
+          temperature_c,
+          max_state_of_charge,
+          min_state_of_charge,
+          depth_of_discharge,
+          charge_capacity_rate,
+          discharge_capacity_rate,
         },
       })
     );
     console.log('id: ', id);
-    console.log('cellNameId, cycles: ', cellNameId, cycles);
+    console.log('cell_name_id, cycles: ', cell_name_id, cycles);
   };
 
   const handleBatteryCellInput = (e) => {
@@ -83,9 +83,9 @@ const EditBatteryCell = () => {
         <div className="form-center">
           <FormRow
             type="text"
-            name="cellNameId"
+            name="cell_name_id"
             labelText="Cell Name Id"
-            value={cellNameId}
+            value={cell_name_id}
             handleChange={handleBatteryCellInput}
           />
           <FormRow type="text" name="cycles" labelText="Cycles" value={cycles} handleChange={handleBatteryCellInput} />
@@ -105,9 +105,9 @@ const EditBatteryCell = () => {
           />
           <FormRow
             type="text"
-            name="capacityAh"
+            name="capacity_ah"
             labelText="Capacity (Ah)"
-            value={capacityAh}
+            value={capacity_ah}
             handleChange={handleBatteryCellInput}
           />
           <FormRowSelect
@@ -126,44 +126,44 @@ const EditBatteryCell = () => {
           />
           <FormRow
             type="text"
-            name="temperatureC"
+            name="temperature_c"
             labelText="Temperature (C)"
-            value={temperatureC}
+            value={temperature_c}
             handleChange={handleBatteryCellInput}
           />
           <FormRow
             type="text"
-            name="maxStateOfCharge"
+            name="max_state_of_charge"
             labelText="Max State of Charge"
-            value={maxStateOfCharge}
+            value={max_state_of_charge}
             handleChange={handleBatteryCellInput}
           />
           <FormRow
             type="text"
-            name="minStateOfCharge"
+            name="min_state_of_charge"
             labelText="Min State of Charge"
-            value={minStateOfCharge}
+            value={min_state_of_charge}
             handleChange={handleBatteryCellInput}
           />
           <FormRow
             type="text"
-            name="depthOfDischarge"
+            name="depth_of_discharge"
             labelText="Depth of Discharge"
-            value={depthOfDischarge}
+            value={depth_of_discharge}
             handleChange={handleBatteryCellInput}
           />
           <FormRow
             type="text"
-            name="chargeCapacityRate"
+            name="charge_capacity_rate"
             labelText="Charge Capacity Rate"
-            value={chargeCapacityRate}
+            value={charge_capacity_rate}
             handleChange={handleBatteryCellInput}
           />
           <FormRow
             type="text"
-            name="dischargeCapacityRate"
+            name="discharge_capacity_rate"
             labelText="Discharge Capacity Rate"
-            value={dischargeCapacityRate}
+            value={discharge_capacity_rate}
             handleChange={handleBatteryCellInput}
           />
           <div className="btn-container">

@@ -172,7 +172,7 @@ const EnhancedTable = () => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, batteryCell.id, batteryCell.cellNameId)}
+                      onClick={(event) => handleClick(event, batteryCell.id, batteryCell.cell_name_id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -207,19 +207,19 @@ const EnhancedTable = () => {
                                 dispatch(
                                   setEditBatteryCell({
                                     id: batteryCell.id,
-                                    cellNameId: batteryCell.cellNameId,
+                                    cell_name_id: batteryCell.cell_name_id,
                                     cycles: batteryCell.cycles,
                                     cathode: batteryCell.cathode,
                                     anode: batteryCell.anode,
-                                    capacityAh: batteryCell.capacityAh,
+                                    capacity_ah: batteryCell.capacity_ah,
                                     type: batteryCell.type,
                                     source: batteryCell.source,
-                                    temperatureC: batteryCell.temperatureC,
-                                    maxStateOfCharge: batteryCell.maxStateOfCharge,
-                                    minStateOfCharge: batteryCell.minStateOfCharge,
-                                    depthOfDischarge: batteryCell.depthOfDischarge,
-                                    chargeCapacityRate: batteryCell.chargeCapacityRate,
-                                    dischargeCapacityRate: batteryCell.dischargeCapacityRate,
+                                    temperature_c: batteryCell.temperature_c,
+                                    max_state_of_charge: batteryCell.max_state_of_charge,
+                                    min_state_of_charge: batteryCell.min_state_of_charge,
+                                    depth_of_discharge: batteryCell.depth_of_discharge,
+                                    charge_capacity_rate: batteryCell.charge_capacity_rate,
+                                    discharge_capacity_rate: batteryCell.discharge_capacity_rate,
                                   })
                                 );
                               }}
@@ -281,19 +281,19 @@ const EnhancedTable = () => {
                       >
                         {batteryCell.id}
                       </TableCell>
-                      <TableCell align="left">{batteryCell.cellNameId}</TableCell>
+                      <TableCell align="left">{batteryCell.cell_name_id}</TableCell>
                       <TableCell align="left">{batteryCell.cycles}</TableCell>
                       <TableCell align="left">{batteryCell.cathode}</TableCell>
                       <TableCell align="left">{batteryCell.anode}</TableCell>
-                      <TableCell align="left">{batteryCell.capacityAh}</TableCell>
+                      <TableCell align="left">{batteryCell.capacity_ah}</TableCell>
                       <TableCell align="left">{batteryCell.type}</TableCell>
                       <TableCell align="left">{batteryCell.source}</TableCell>
-                      <TableCell align="left">{batteryCell.temperatureC}</TableCell>
-                      <TableCell align="left">{batteryCell.maxStateOfCharge}</TableCell>
-                      <TableCell align="left">{batteryCell.minStateOfCharge}</TableCell>
-                      <TableCell align="left">{batteryCell.depthOfDischarge}</TableCell>
-                      <TableCell align="left">{batteryCell.chargeCapacityRate}</TableCell>
-                      <TableCell align="left">{batteryCell.dischargeCapacityRate}</TableCell>
+                      <TableCell align="left">{batteryCell.temperature_c}</TableCell>
+                      <TableCell align="left">{batteryCell.max_state_of_charge}</TableCell>
+                      <TableCell align="left">{batteryCell.min_state_of_charge}</TableCell>
+                      <TableCell align="left">{batteryCell.depth_of_discharge}</TableCell>
+                      <TableCell align="left">{batteryCell.charge_capacity_rate}</TableCell>
+                      <TableCell align="left">{batteryCell.discharge_capacity_rate}</TableCell>
                     </TableRow>
                   );
                 })}

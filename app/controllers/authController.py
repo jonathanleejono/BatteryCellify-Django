@@ -36,17 +36,20 @@ async def create_user(user: entities.UserCreate, request: Request, db: AsyncSess
 
     new_user = entities.Users(**user.dict())
     db.add(new_user)
-    registered_user_id = await db.commit()
-    print("registered_user_id: ", registered_user_id)
+    await db.commit()
+    # print("registered_user_id: ", registered_user_id)
+    # print("new_user: ", new_user)
+    # # print("new_user['id']: ", new_user["id"])
+    # print("new_user.id7: ", new_user.id)
     await db.refresh(new_user)
 
     access_token = oauth2.create_access_token(
-        data={"user_id": registered_user_id})
+        data={"user_id": new_user.id})
 
     registered_user = {"email": user.email,
-                       "first_name": user.first_name, "last_name": "lastName"}
+                       "first_name": user.first_name, "last_name": "last_name"}
 
-    return {"user": registered_user, "token": access_token}
+    return {"id": new_user.id, "user": registered_user, "token": access_token}
 
 
 @router.post('/login', response_model=entities.UserOut)
@@ -75,10 +78,10 @@ async def login_user(request: Request, logging_in_user: entities.UserLogin, db: 
 
     access_token = oauth2.create_access_token(data={"user_id": user.id})
 
-    logged_in_user = {"email": user.email, "firstName": user.first_name,
-                      "lastName": user.last_name}
+    logged_in_user = {"email": user.email, "first_name": user.first_name,
+                      "last_name": user.last_name}
 
-    return {"user": logged_in_user, "token": access_token}
+    return {"id": user.id, "user": logged_in_user, "token": access_token}
 
 
 @router.patch('/updateUser', response_model=entities.UserOut)
@@ -97,6 +100,8 @@ async def update_user(request: Request, updating_user: entities.UserUpdate, db: 
     for key, value in user_data.items():
         setattr(user, key, value)
 
+    print("updating_user7: ", updating_user)
+
     # user = entities.Users(**updating_user.dict())
 
     db.add(user)
@@ -107,4 +112,4 @@ async def update_user(request: Request, updating_user: entities.UserUpdate, db: 
     access_token = oauth2.create_access_token(
         data={"user_id": current_user.id})
 
-    return {"user": updating_user, "token": access_token}
+    return {"id": current_user.id, "user": updating_user, "token": access_token}

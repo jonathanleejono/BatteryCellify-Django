@@ -19,15 +19,15 @@ export default function ProfileForm() {
   const { user, isLoading } = useSelector((store) => store.user);
 
   const ProfileSchema = Yup.object().shape({
-    firstName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
-    lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
+    first_name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
+    last_name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
   });
 
   const formik = useFormik({
     initialValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
+      first_name: user?.first_name || '',
+      last_name: user?.last_name || '',
       email: user?.email || '',
     },
     validationSchema: ProfileSchema,
@@ -46,19 +46,19 @@ export default function ProfileForm() {
             <TextField
               fullWidth
               label="First name"
-              {...getFieldProps('firstName')}
-              error={Boolean(touched.firstName && errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
-              value={formik.values.firstName}
+              {...getFieldProps('first_name')}
+              error={Boolean(touched.first_name && errors.first_name)}
+              helperText={touched.first_name && errors.first_name}
+              value={formik.values.first_name}
             />
 
             <TextField
               fullWidth
               label="Last name"
-              {...getFieldProps('lastName')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-              value={formik.values.lastName}
+              {...getFieldProps('last_name')}
+              error={Boolean(touched.last_name && errors.last_name)}
+              helperText={touched.last_name && errors.last_name}
+              value={formik.values.last_name}
             />
           </Stack>
 

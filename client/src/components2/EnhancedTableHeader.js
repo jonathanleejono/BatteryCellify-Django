@@ -1,115 +1,108 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { visuallyHidden } from "@mui/utils";
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { visuallyHidden } from '@mui/utils';
 
 const headCells = [
   {
-    id: "edit",
+    id: 'edit',
     numeric: false,
     disablePadding: false,
-    label: "Edit",
+    label: 'Edit',
   },
   {
-    id: "id",
+    id: 'id',
     numeric: false,
     disablePadding: false,
-    label: "Id",
+    label: 'Id',
   },
   {
-    id: "cellNameId",
+    id: 'cell_name_id',
     numeric: false,
     disablePadding: false,
-    label: "Cell Name Id",
+    label: 'Cell Name Id',
   },
   {
-    id: "cycles",
+    id: 'cycles',
     numeric: false,
     disablePadding: false,
-    label: "Cycles",
+    label: 'Cycles',
   },
   {
-    id: "cathode",
+    id: 'cathode',
     numeric: false,
     disablePadding: false,
-    label: "Cathode",
+    label: 'Cathode',
   },
   {
-    id: "anode",
+    id: 'anode',
     numeric: false,
     disablePadding: false,
-    label: "Anode",
+    label: 'Anode',
   },
   {
-    id: "capacityAh",
+    id: 'capacity_ah',
     numeric: false,
     disablePadding: false,
-    label: "Capacity (Ah)",
+    label: 'Capacity (Ah)',
   },
   {
-    id: "type",
+    id: 'type',
     numeric: false,
     disablePadding: false,
-    label: "Type",
+    label: 'Type',
   },
   {
-    id: "source",
+    id: 'source',
     numeric: false,
     disablePadding: false,
-    label: "Source",
+    label: 'Source',
   },
   {
-    id: "temperatureC",
+    id: 'temperature_c',
     numeric: false,
     disablePadding: false,
-    label: "Temp (C)",
+    label: 'Temp (C)',
   },
   {
-    id: "maxStateOfCharge",
+    id: 'max_state_of_charge',
     numeric: false,
     disablePadding: false,
-    label: "Max SoC",
+    label: 'Max SoC',
   },
   {
-    id: "minStateOfCharge",
+    id: 'min_state_of_charge',
     numeric: false,
     disablePadding: false,
-    label: "Min SoC",
+    label: 'Min SoC',
   },
   {
-    id: "depthOfDischarge",
+    id: 'depth_of_discharge',
     numeric: false,
     disablePadding: false,
-    label: "DoD",
+    label: 'DoD',
   },
   {
-    id: "chargeCapacityRate",
+    id: 'charge_capacity_rate',
     numeric: false,
     disablePadding: false,
-    label: "Charge C Rate",
+    label: 'Charge C Rate',
   },
   {
-    id: "dischargeCapacityRate",
+    id: 'discharge_capacity_rate',
     numeric: false,
     disablePadding: false,
-    label: "Discharge C Rate",
+    label: 'Discharge C Rate',
   },
 ];
 
 function EnhancedTableHeader(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -124,7 +117,7 @@ function EnhancedTableHeader(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              'aria-label': 'select all desserts',
             }}
           />
         </TableCell>
@@ -133,18 +126,18 @@ function EnhancedTableHeader(props) {
             key={headCell.id}
             // align={headCell.numeric ? "right" : "left"}
             align="left"
-            padding={headCell.disablePadding ? "none" : "normal"}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
+              direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -159,7 +152,7 @@ EnhancedTableHeader.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };

@@ -26,11 +26,14 @@ class UserLogin(SQLModel):
     password: str
 
 
-class UserUpdate(UserBase):
-    pass
+class UserUpdate(SQLModel):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    email: Optional[EmailStr]
 
 
 class UserOut(SQLModel):
+    id: int
     user: dict
     token: str
 
@@ -51,20 +54,25 @@ class Users(UserCreate, table=True):
 class BatteryCellBase(SQLModel):
     cell_name_id: str
     cycles: float
-    cathode: str = Field(default="LCO", sa_column=sqlmodel.Enum('LCO', 'LFP', 'NCA', 'NMC',
-                                                                'NMC-LCO', name="cathode_enum"),
+    cathode: str = Field(default="LCO",
+                         sa_column=sqlmodel.Enum('LCO', 'LFP', 'NCA', 'NMC',
+                                                 'NMC-LCO', name="cathode_enum"),
                          nullable=False)
 
-    anode: str = Field(default="graphite", sa_column=sqlmodel.Enum('graphite', name="anode_enum"),
+    anode: str = Field(default="graphite",
+                       sa_column=sqlmodel.Enum('graphite', name="anode_enum"),
                        nullable=False)
 
     capacity_ah: float
 
-    type: str = Field(default="18650", sa_column=sqlmodel.Enum('18650', 'pouch', 'prismatic', name="type_enum"),
+    type: str = Field(default="18650",
+                      sa_column=sqlmodel.Enum(
+                          '18650', 'pouch', 'prismatic', name="type_enum"),
                       nullable=False)
 
-    source: str = Field(default="HNEI", sa_column=sqlmodel.Enum('HNEI', 'UL-PUR', 'calce',
-                                                                'oxford', 'snl', name="source_enum"),
+    source: str = Field(default="HNEI",
+                        sa_column=sqlmodel.Enum('HNEI', 'UL-PUR', 'calce',
+                                                'oxford', 'snl', name="source_enum"),
                         nullable=False)
     temperature_c: float
     max_state_of_charge: float
@@ -109,7 +117,8 @@ class Battery_Cells(BatteryCellBase, table=True):
         sqlmodel.Integer,
         nullable=False, primary_key=True)
     )
-    created_at: datetime = Field(default=datetime.now(timezone.utc), sa_column=sqlmodel.Column(
+    created_at: datetime = Field(default=datetime.now(timezone.utc),
+                                 sa_column=sqlmodel.Column(
         sqlmodel.DateTime(timezone=True),
         nullable=False)
     )
@@ -151,7 +160,8 @@ class Csv_Cycle_Data(Csv_Cycle_Data_Base, table=True):
         sqlmodel.Integer,
         nullable=False, primary_key=True)
     )
-    created_at: datetime = Field(default=datetime.now(timezone.utc), sa_column=sqlmodel.Column(
+    created_at: datetime = Field(default=datetime.now(timezone.utc),
+                                 sa_column=sqlmodel.Column(
         sqlmodel.DateTime(timezone=True),
         nullable=False)
     )
