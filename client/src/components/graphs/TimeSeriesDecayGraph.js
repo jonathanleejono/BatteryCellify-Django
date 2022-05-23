@@ -2,9 +2,9 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 const TimeSeriesDecayGraph = ({
-  testTime,
-  timeSeriesDischargeCapacityAh,
-  timeSeriesDischargeEnergyWh,
+  test_time_seconds,
+  time_series_discharge_capacity_ah,
+  time_series_discharge_energy_wh,
   batteryCellNameId,
 }) => {
   return (
@@ -14,8 +14,8 @@ const TimeSeriesDecayGraph = ({
         data={[
           {
             type: 'scatter',
-            x: testTime,
-            y: timeSeriesDischargeCapacityAh,
+            x: test_time_seconds,
+            y: time_series_discharge_capacity_ah,
             mode: 'markers',
             marker: { color: 'blue' },
             text: `ah_d: ${batteryCellNameId}`,
@@ -23,8 +23,8 @@ const TimeSeriesDecayGraph = ({
           },
           {
             type: 'scatter',
-            x: testTime,
-            y: timeSeriesDischargeEnergyWh,
+            x: test_time_seconds,
+            y: time_series_discharge_energy_wh,
             mode: 'markers',
             marker: { color: 'red' },
             text: `wh_d: ${batteryCellNameId}`,

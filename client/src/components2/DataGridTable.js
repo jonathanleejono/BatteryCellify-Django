@@ -1,26 +1,23 @@
-import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import Loading from "./Loading";
-import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
-import {
-  deleteBatteryCell,
-  setEditBatteryCell,
-} from "../features/batteryCell/batteryCellSlice";
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import Box from "@mui/material/Box";
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import Loading from './Loading';
+import { getAllBatteryCells } from '../features/allBatteryCells/allBatteryCellsSlice';
+import { deleteBatteryCell, setEditBatteryCell } from '../features/batteryCell/batteryCellSlice';
+import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Box from '@mui/material/Box';
 
 const DataGridTable = () => {
   const {
     batteryCells,
     isLoading,
-    totalBatteryCells,
+    total_battery_cells,
     numOfPages,
     search,
     searchCathode,
@@ -43,22 +40,22 @@ const DataGridTable = () => {
 
   const columns = [
     {
-      field: "edit",
-      headerName: "Edit",
+      field: 'edit',
+      headerName: 'Edit',
       width: 110,
       renderCell: (params) => {
         return (
           <Box
             sx={{
               // backgroundColor: "whitesmoke",
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "left",
-              alignItems: "center",
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'left',
+              alignItems: 'center',
             }}
           >
-            {" "}
+            {' '}
             <Link to="/edit-battery-cell">
               <IconButton
                 onClick={() => {
@@ -97,39 +94,39 @@ const DataGridTable = () => {
       },
       disableClickEventBubbling: true,
     },
-    { field: "id", headerName: "ID", width: 90 },
+    { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: "cellNameId",
-      headerName: "cellNameId",
+      field: 'cellNameId',
+      headerName: 'cellNameId',
       width: 400,
     },
     {
-      field: "cycles",
-      headerName: "cycles",
+      field: 'cycles',
+      headerName: 'cycles',
       width: 150,
     },
     {
-      field: "cathode",
-      headerName: "cathode",
-      type: "number",
+      field: 'cathode',
+      headerName: 'cathode',
+      type: 'number',
       width: 110,
     },
     {
-      field: "anode",
-      headerName: "anode",
-      description: "This is an anode.",
+      field: 'anode',
+      headerName: 'anode',
+      description: 'This is an anode.',
       sortable: false,
       width: 160,
     },
     {
-      field: "type",
-      headerName: "type",
+      field: 'type',
+      headerName: 'type',
       sortable: false,
       width: 160,
     },
     {
-      field: "source",
-      headerName: "source",
+      field: 'source',
+      headerName: 'source',
       sortable: false,
       width: 160,
     },
@@ -138,11 +135,8 @@ const DataGridTable = () => {
   const [arrIds, setArrIds] = useState([]);
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      <button
-        onClick={handleDeleteMany}
-        style={{ margin: "20px", background: "red", color: "white" }}
-      >
+    <div style={{ height: 400, width: '100%' }}>
+      <button onClick={handleDeleteMany} style={{ margin: '20px', background: 'red', color: 'white' }}>
         Delete
       </button>
       <DataGrid
@@ -157,13 +151,13 @@ const DataGridTable = () => {
           setArrIds(ids);
         }}
         onRowClick={(data) => {
-          console.log("row prop click: ", data);
-          console.log("row prop click _ data.row: ", data.row);
+          console.log('row prop click: ', data);
+          console.log('row prop click _ data.row: ', data.row);
         }}
         sx={{
           //   backgroundColor: "primary.main",
-          "& .MuiDataGrid-cell:hover": {
-            color: "primary.main",
+          '& .MuiDataGrid-cell:hover': {
+            color: 'primary.main',
           },
         }}
       />

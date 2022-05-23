@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .database import database
+from .database import init_db
 from .controllers import authController, batteryCellController, csvDataController
 from slowapi.errors import RateLimitExceeded
 from slowapi import _rate_limit_exceeded_handler
@@ -24,14 +24,14 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 @app.on_event("startup")
-async def startup():
-    print("Database is starting...")
-    await database.connect()
+async def on_startup():
+    print("Database is starting up...")
+    await init_db()
 
 
-@app.on_event("shutdown")
-async def shutdown():
-    await database.disconnect()
+# @app.on_event("shutdown")
+# async def shutdown():
+#     await database.disconnect()
 
 
 app.include_router(authController.router)

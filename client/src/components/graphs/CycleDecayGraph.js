@@ -1,7 +1,12 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-const CycleDecayGraph = ({ cycleNumbers, cycleDischargeCapacityAh, cycleDischargeEnergyWh, batteryCellNameId }) => {
+const CycleDecayGraph = ({
+  cycle_numbers,
+  cycle_discharge_capacity_ah,
+  cycle_discharge_energy_wh,
+  batteryCellNameId,
+}) => {
   return (
     <div>
       <Plot
@@ -9,16 +14,16 @@ const CycleDecayGraph = ({ cycleNumbers, cycleDischargeCapacityAh, cycleDischarg
         data={[
           {
             type: 'line',
-            x: cycleNumbers,
-            y: cycleDischargeCapacityAh,
+            x: cycle_numbers,
+            y: cycle_discharge_capacity_ah,
             marker: { color: 'blue' },
             text: `ah_d: ${batteryCellNameId}`,
             name: `ah_d: ${batteryCellNameId}`,
           },
           {
             type: 'line',
-            x: cycleNumbers,
-            y: cycleDischargeEnergyWh,
+            x: cycle_numbers,
+            y: cycle_discharge_energy_wh,
             marker: { color: 'red' },
             text: `wh_d: ${batteryCellNameId}`,
             name: `wh_d: ${batteryCellNameId}`,

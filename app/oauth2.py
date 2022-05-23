@@ -1,11 +1,13 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from . import schemas, models
-from .models import users
-from .database import database
+from . import schemas, models, entities
+# from .models import users
+from .database import get_db
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from .config import settings
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
@@ -44,7 +46,7 @@ def verify_access_token(token: str, credentials_exception):
     return token_data
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail=f"Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
 
@@ -52,10 +54,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
     # super important to put 'int' around token.id when using databases+asyncpg
 
-    user_query = users.select().where(
-        users.c.id == int(token.id))
+    # user_query = users.select().where(
+    #     users.c.id == int(token.id))
 
-    user = await database.fetch_one(user_query)
+    # user = await database.fetch_one(user_query)
+
+    query = select(entities.Users).where(entities.Users.id == int(token.id))
+    users = await db.execute(query)
+    (user,) = users.first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"user was not found")
 
     # user = db.query(models.User).filter(models.User.id == token.id).first()
 

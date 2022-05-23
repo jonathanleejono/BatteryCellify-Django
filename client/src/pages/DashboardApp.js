@@ -31,27 +31,27 @@ export default function DashboardApp() {
   const theme = useTheme();
 
   const {
-    totalBatteryCells,
-    averageCapacity,
-    averageDepthOfDischarge,
-    averageTemperatureC,
-    totalCathodeLCOCells,
-    totalCathodeLFPCells,
-    totalCathodeNCACells,
-    totalCathodeNMCCells,
-    totalCathodeNMCLCOCells,
-    avgCyclesLC0Cells,
-    avgCyclesLFPCells,
-    avgCyclesNCACells,
-    avgCyclesNMCCells,
-    avgCyclesNMCLCOCells,
+    total_battery_cells,
+    avg_capacity,
+    avg_depth_of_discharge,
+    avg_temperature_c,
+    total_cathode_lco_cells,
+    total_cathode_lfp_cells,
+    total_cathode_nca_cells,
+    total_cathode_nmc_cells,
+    total_cathode_nmclco_cells,
+    avg_cycles_lco_cells,
+    avg_cycles_lfp_cells,
+    avg_cycles_nca_cells,
+    avg_cycles_nmc_cells,
+    avg_cycles_nmclco_cells,
   } = useSelector((store) => store.allBatteryCells);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllBatteryCells());
-  }, [dispatch, totalBatteryCells, averageCapacity, averageDepthOfDischarge, averageTemperatureC]);
+  }, [dispatch, total_battery_cells, avg_capacity, avg_depth_of_discharge, avg_temperature_c]);
 
   return (
     <Page title="Dashboard">
@@ -66,7 +66,7 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Total No. Battery Cells"
-              total={totalBatteryCells}
+              total={total_battery_cells}
               icon={'ant-design:android-filled'}
             />
           </Grid>
@@ -74,7 +74,7 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Avg. Capacity (Ah)"
-              total={averageCapacity}
+              total={avg_capacity}
               color="info"
               icon={'ant-design:apple-filled'}
             />
@@ -83,7 +83,7 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Avg. Depth of Discharge"
-              total={averageDepthOfDischarge}
+              total={avg_depth_of_discharge}
               color="warning"
               icon={'ant-design:windows-filled'}
             />
@@ -92,7 +92,7 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Avg. Temperature (C)"
-              total={averageTemperatureC}
+              total={avg_temperature_c}
               color="error"
               icon={'ant-design:bug-filled'}
             />
@@ -103,11 +103,11 @@ export default function DashboardApp() {
               title="Average Cycles Per Cathode"
               // subheader="(+43%) than last year"
               chartData={[
-                { label: 'LCO', value: avgCyclesLC0Cells },
-                { label: 'LFP', value: avgCyclesLFPCells },
-                { label: 'NCA', value: avgCyclesNCACells },
-                { label: 'NMC', value: avgCyclesNMCCells },
-                { label: 'NMC-LCO', value: avgCyclesNMCLCOCells },
+                { label: 'LCO', value: avg_cycles_lco_cells },
+                { label: 'LFP', value: avg_cycles_lfp_cells },
+                { label: 'NCA', value: avg_cycles_nca_cells },
+                { label: 'NMC', value: avg_cycles_nmc_cells },
+                { label: 'NMC-LCO', value: avg_cycles_nmclco_cells },
               ]}
             />
           </Grid>
@@ -118,11 +118,11 @@ export default function DashboardApp() {
             <AppCurrentVisits
               title="Battery Cell Cathodes"
               chartData={[
-                { label: 'LCO', value: totalCathodeLCOCells },
-                { label: 'LFP', value: totalCathodeLFPCells },
-                { label: 'NCA', value: totalCathodeNCACells },
-                { label: 'NMC', value: totalCathodeNMCCells },
-                { label: 'NMC-LCO', value: totalCathodeNMCLCOCells },
+                { label: 'LCO', value: total_cathode_lco_cells },
+                { label: 'LFP', value: total_cathode_lfp_cells },
+                { label: 'NCA', value: total_cathode_nca_cells },
+                { label: 'NMC', value: total_cathode_nmc_cells },
+                { label: 'NMC-LCO', value: total_cathode_nmclco_cells },
               ]}
               chartColors={[
                 theme.palette.primary.main,

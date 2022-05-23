@@ -1,14 +1,17 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter, Request
 from typing import Optional, List
-from .. import models, schemas, oauth2
-from ..database import database
-from ..models import batteryCells, csvCycleData
-from ..database import database
+from .. import models, schemas, oauth2, entities
+from ..database import database, get_db
+from ..utils import (search_query_battery_cell,
+                     calc_float_avg,
+                     get_total_cells_by_value,
+                     get_avg_attr_by_another_attr_value)
+# from ..models import batteryCells, csvCycleData
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
-import math
-import statistics
 import re
 
 router = APIRouter(
@@ -18,158 +21,107 @@ router = APIRouter(
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.get("/", response_model=schemas.BatteryCellsManyOut)
-async def get_batteryCells(
-        current_user: int = Depends(oauth2.get_current_user),
-        limit: int = 10,
-        search: Optional[str] = "",
-        cathode: Optional[str] = "",
-        anode: Optional[str] = "",
-        type: Optional[str] = "",
-        source: Optional[str] = "",
-        page: int = 1,
-        skip: int = 0):
+@router.get("/", response_model=entities.BatteryCellsManyOut)
+async def get_batteryCells(db: AsyncSession = Depends(get_db),
+                           current_user: int = Depends(
+                               oauth2.get_current_user),
+                           limit: Optional[int] = 10,
+                           search: Optional[str] = "",
+                           cathode: Optional[str] = "",
+                           anode: Optional[str] = "",
+                           type: Optional[str] = "",
+                           source: Optional[str] = "",
+                           page: Optional[int] = 1,
+                           skip: Optional[int] = 0):
 
-    batteryCells_query = batteryCells.select().where(
-        batteryCells.c.owner_id == current_user.id)
+    query = await db.execute(select(entities.Battery_Cells).where(
+        entities.Battery_Cells.owner_id == current_user.id))
 
-    result = batteryCells_query
-
-    # result = result.skip(skip).limit(limit)
-
-    all_batteryCells = await database.fetch_all(result)
+    all_batteryCells = query.scalars().all()
 
     if search and search != None:
         all_batteryCells = list(filter(lambda x: re.search(
-            search, x["cellNameId"]), all_batteryCells))
+            search, x.cell_name_id), all_batteryCells))
 
-    if cathode and cathode != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['cathode'] == cathode]
-    if anode and anode != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['anode'] == anode]
-    if type and type != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['type'] == type]
-    if source and source != "all":
-        all_batteryCells = [
-            batteryCell for batteryCell in all_batteryCells
-            if batteryCell['source'] == source]
+    all_batteryCells = search_query_battery_cell(
+        cathode, 'cathode', all_batteryCells)
+    all_batteryCells = search_query_battery_cell(
+        anode, 'anode', all_batteryCells)
+    all_batteryCells = search_query_battery_cell(
+        type, 'type', all_batteryCells)
+    all_batteryCells = search_query_battery_cell(
+        source, 'source', all_batteryCells)
 
-    totalBatteryCells = len(all_batteryCells)
+    total_battery_cells = len(all_batteryCells)
 
-    averageCapacity = statistics.fmean([batteryCell["capacityAh"]
-                                        for batteryCell in all_batteryCells])
-    averageDepthOfDischarge = statistics.fmean([batteryCell["depthOfDischarge"]
-                                               for batteryCell in all_batteryCells])
-    averageTemperatureC = statistics.fmean([batteryCell["temperatureC"]
-                                           for batteryCell in all_batteryCells])
+    avg_capacity = calc_float_avg("capacity_ah", all_batteryCells)
+    avg_depth_of_discharge = calc_float_avg(
+        "depth_of_discharge", all_batteryCells)
+    avg_temperature_c = calc_float_avg("temperature_c", all_batteryCells)
 
-    totalCathodeLCOCells = len([
-        batteryCell for batteryCell in all_batteryCells
-        if batteryCell['cathode'] == 'LCO'])
-    totalCathodeLFPCells = len([
-        batteryCell for batteryCell in all_batteryCells
-        if batteryCell['cathode'] == 'LFP'])
-    totalCathodeNCACells = len([
-        batteryCell for batteryCell in all_batteryCells
-        if batteryCell['cathode'] == 'NCA'])
-    totalCathodeNMCCells = len([
-        batteryCell for batteryCell in all_batteryCells
-        if batteryCell['cathode'] == 'NMC'])
-    totalCathodeNMCLCOCells = len([
-        batteryCell for batteryCell in all_batteryCells
-        if batteryCell['cathode'] == 'NMC-LCO'])
+    total_cathode_lco_cells = get_total_cells_by_value(
+        'cathode', 'LCO', all_batteryCells)
+    total_cathode_lfp_cells = get_total_cells_by_value(
+        'cathode', 'LFP', all_batteryCells)
+    total_cathode_nca_cells = get_total_cells_by_value(
+        'cathode', 'NCA', all_batteryCells)
+    total_cathode_nmc_cells = get_total_cells_by_value(
+        'cathode', 'NMC', all_batteryCells)
+    total_cathode_nmclco_cells = get_total_cells_by_value(
+        'cathode', 'NMC-LCO', all_batteryCells)
 
-    lcoCycles = [batteryCell["cycles"]
-                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "LCO"]
-    lfpCycles = [batteryCell["cycles"]
-                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "LFP"]
-    ncaCycles = [batteryCell["cycles"]
-                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "NCA"]
-    nmcCycles = [batteryCell["cycles"]
-                 for batteryCell in all_batteryCells if batteryCell["cathode"] == "NMC"]
-    nmcLcoCycles = [batteryCell["cycles"]
-                    for batteryCell in all_batteryCells if batteryCell["cathode"] == "NMC-LCO"]
+    avg_cycles_lco_cells = get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "LCO", all_batteryCells)
+    avg_cycles_lfp_cells = get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "LFP", all_batteryCells)
+    avg_cycles_nca_cells = get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "NCA", all_batteryCells)
+    avg_cycles_nmc_cells = get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "NMC", all_batteryCells)
+    avg_cycles_nmclco_cells = get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "NMC-LCO", all_batteryCells)
 
-    # the if statement checks if a battery cell with that specific cathode exists, if not, return 0 for the average
-
-    if len(lcoCycles) > 0:
-        avgCyclesLC0Cells = statistics.fmean(lcoCycles)
-    else:
-        avgCyclesLC0Cells = 0.0
-
-    if len(lfpCycles) > 0:
-        avgCyclesLFPCells = statistics.fmean(lfpCycles)
-    else:
-        avgCyclesLFPCells = 0.0
-
-    if len(ncaCycles) > 0:
-        avgCyclesNCACells = statistics.fmean(ncaCycles)
-    else:
-        avgCyclesNCACells = 0.0
-
-    if len(nmcCycles) > 0:
-        avgCyclesNMCCells = statistics.fmean(nmcCycles)
-    else:
-        avgCyclesNMCCells = 0.0
-
-    if len(nmcLcoCycles) > 0:
-        avgCyclesNMCLCOCells = statistics.fmean(nmcLcoCycles)
-    else:
-        avgCyclesNMCLCOCells = 0.0
-
-    return {"batteryCells": all_batteryCells,
-            "totalBatteryCells": totalBatteryCells,
-            "averageCapacity": averageCapacity,
-            "averageDepthOfDischarge": averageDepthOfDischarge,
-            "averageTemperatureC": averageTemperatureC,
-            "totalCathodeLCOCells": totalCathodeLCOCells,
-            "totalCathodeLFPCells": totalCathodeLFPCells,
-            "totalCathodeNCACells": totalCathodeNCACells,
-            "totalCathodeNMCCells": totalCathodeNMCCells,
-            "totalCathodeNMCLCOCells": totalCathodeNMCLCOCells,
-            "avgCyclesLC0Cells": avgCyclesLC0Cells,
-            "avgCyclesLFPCells": avgCyclesLFPCells,
-            "avgCyclesNCACells": avgCyclesNCACells,
-            "avgCyclesNMCCells": avgCyclesNMCCells,
-            "avgCyclesNMCLCOCells": avgCyclesNMCLCOCells,
-            "lcoCycles": lcoCycles,
+    return {"battery_cells": all_batteryCells,
+            "total_battery_cells": total_battery_cells,
+            "avg_capacity": avg_capacity,
+            "avg_depth_of_discharge": avg_depth_of_discharge,
+            "avg_temperature_c": avg_temperature_c,
+            "total_cathode_lco_cells": total_cathode_lco_cells,
+            "total_cathode_lfp_cells": total_cathode_lfp_cells,
+            "total_cathode_nca_cells": total_cathode_nca_cells,
+            "total_cathode_nmc_cells": total_cathode_nmc_cells,
+            "total_cathode_nmclco_cells": total_cathode_nmclco_cells,
+            "avg_cycles_lco_cells": avg_cycles_lco_cells,
+            "avg_cycles_lfp_cells": avg_cycles_lfp_cells,
+            "avg_cycles_nca_cells": avg_cycles_nca_cells,
+            "avg_cycles_nmc_cells": avg_cycles_nmc_cells,
+            "avg_cycles_nmclco_cells": avg_cycles_nmclco_cells,
             }
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BatteryCellOut)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=entities.BatteryCellOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Request, current_user: int = Depends(oauth2.get_current_user)):
+async def create_batteryCell(batteryCell: entities.BatteryCellCreate, request: Request, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
-    if not batteryCell:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"Please fill out all values")
+    try:
+        created_batteryCell = entities.Battery_Cells(
+            **batteryCell.dict(), owner_id=current_user.id)
+        db.add(created_batteryCell)
+        await db.commit()
+        await db.refresh(created_batteryCell)
+        return created_batteryCell
 
-    query = batteryCells.insert(
-        values={**batteryCell.dict(), "owner_id": current_user.id})
-
-    # the database.execute(query) is what inserts the object into the db, while also retrieving the id at the same time
-    created_batteryCellId = await database.execute(query)
-
-    created_batteryCell = {
-        **batteryCell.dict(), "id": created_batteryCellId}
-
-    return created_batteryCell
+    except Exception as e:
+        print('Error! Code: {c}, Message, {m}'.format(
+            c=type(e).__name__, m=str(e)))
 
 
-@router.patch("/{id}", response_model=schemas.BatteryCellOut)
+@router.patch("/{id}", response_model=entities.BatteryCellOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def update_batteryCell(request: Request, id: int, updating_batteryCell: schemas.BatteryCellUpdate, current_user: int = Depends(oauth2.get_current_user)):
+async def update_batteryCell(request: Request, id: int, updating_batteryCell: entities.BatteryCellUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
-
-    batteryCell = await database.fetch_one(batteryCell_query)
+    batteryCell = await db.get(entities.Battery_Cells, id)
 
     if not batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -179,23 +131,26 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: sc
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    updated_batteryCell_query = batteryCells.update().where(batteryCells.c.id == id).values(
-        **updating_batteryCell.dict())
+    batteryCell_data = updating_batteryCell.dict(exclude_unset=True)
+    for key, value in batteryCell_data.items():
+        setattr(batteryCell, key, value)
 
-    await database.execute(updated_batteryCell_query)
+    db.add(batteryCell)
+    await db.commit()
+    await db.refresh(batteryCell)
 
-    updated_batteryCell = {**updating_batteryCell.dict(), "id": id}
-
-    return updated_batteryCell
+    return batteryCell
 
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def delete_batteryCell(request: Request, id: int, current_user: int = Depends(oauth2.get_current_user)):
+async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
+    # batteryCell_query = batteryCells.select().where(batteryCells.c.id == id)
 
-    batteryCell = await database.fetch_one(batteryCell_query)
+    # batteryCell = await database.fetch_one(batteryCell_query)
+
+    batteryCell = await db.get(entities.Battery_Cells, id)
 
     if not batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -205,15 +160,33 @@ async def delete_batteryCell(request: Request, id: int, current_user: int = Depe
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    delete_batteryCell = batteryCells.delete().where(batteryCells.c.id == id)
-
-    await database.execute(delete_batteryCell)
+    await db.delete(batteryCell)
+    await db.commit()
 
     # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
 
-    delete_csvCycleData_batteryCell = csvCycleData.delete().where(
-        csvCycleData.c.batteryCell_id == id)
+    cycle_query = await db.execute(select(entities.Csv_Cycle_Data).where(
+        entities.Csv_Cycle_Data.battery_cell_id == id))
 
-    await database.execute(delete_csvCycleData_batteryCell)
+    csv_cycle_data = cycle_query.scalars().all()
+
+    if csv_cycle_data:
+        for row in csv_cycle_data:
+            await db.delete(row)
+        await db.commit()
+    else:
+        pass
+
+    time_series_query = await db.execute(select(entities.Csv_Time_Series_Data).where(
+        entities.Csv_Time_Series_Data.battery_cell_id == id))
+
+    csv_time_series_data = time_series_query.scalars().all()
+
+    if csv_time_series_data:
+        for row in csv_time_series_data:
+            await db.delete(row)
+        await db.commit()
+    else:
+        pass
 
     return {"msg": "Success! Battery cell removed", "id": id}

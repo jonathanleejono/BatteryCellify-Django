@@ -1,16 +1,16 @@
-import { useEffect } from "react";
-import BatteryCell from "./BatteryCell";
-import Wrapper from "../assets/wrappers/BatteryCellsContainer";
-import { useSelector, useDispatch } from "react-redux";
-import Loading from "./Loading";
-import { getAllBatteryCells } from "../features/allBatteryCells/allBatteryCellsSlice";
-import PageBtnContainer from "./PageBtnContainer";
+import { useEffect } from 'react';
+import BatteryCell from './BatteryCell';
+import Wrapper from '../assets/wrappers/BatteryCellsContainer';
+import { useSelector, useDispatch } from 'react-redux';
+import Loading from './Loading';
+import { getAllBatteryCells } from '../features/allBatteryCells/allBatteryCellsSlice';
+import PageBtnContainer from './PageBtnContainer';
 const BatteryCellsContainer = () => {
   const {
     batteryCells,
     isLoading,
     page,
-    totalBatteryCells,
+    total_battery_cells,
     numOfPages,
     search,
     searchCathode,
@@ -22,15 +22,7 @@ const BatteryCellsContainer = () => {
 
   useEffect(() => {
     dispatch(getAllBatteryCells());
-  }, [
-    dispatch,
-    page,
-    search,
-    searchCathode,
-    searchAnode,
-    searchType,
-    searchSource,
-  ]);
+  }, [dispatch, page, search, searchCathode, searchAnode, searchType, searchSource]);
 
   if (isLoading) {
     return <Loading />;
@@ -47,7 +39,7 @@ const BatteryCellsContainer = () => {
   return (
     <Wrapper>
       <h5>
-        {totalBatteryCells} battery cell{batteryCells.length > 1 && "s"} found
+        {total_battery_cells} battery cell{batteryCells.length > 1 && 's'} found
       </h5>
       <div className="battery-cells">
         {batteryCells.map((batteryCell) => {

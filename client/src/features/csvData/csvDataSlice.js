@@ -12,49 +12,49 @@ import {
 const initialState = {
   isLoading: false,
   selectedBatteryCell: '',
-  cycleNumbers: [],
-  cycleDischargeCapacityAh: [],
-  cycleDischargeEnergyWh: [],
-  energyEfficiency: [],
-  coulombicEfficiency: [],
-  cycleNumbersAdjustedCapacity: [],
-  cycleNumbersAdjustedEnergy: [],
-  testTime: [],
-  timeSeriesDischargeCapacityAh: [],
-  timeSeriesDischargeEnergyWh: [],
-  voltageCycles100Step: [],
-  voltageCycles200Step: [],
-  voltageCycles300Step: [],
-  voltageCycles400Step: [],
-  voltageCycles500Step: [],
-  voltageCycles600Step: [],
-  voltageCycles700Step: [],
-  voltageCycles800Step: [],
-  voltageCycles900Step: [],
-  voltageCycles1000Step: [],
-  voltageCycles1100Step: [],
-  chargeCapacityCycles100Step: [],
-  chargeCapacityCycles200Step: [],
-  chargeCapacityCycles300Step: [],
-  chargeCapacityCycles400Step: [],
-  chargeCapacityCycles500Step: [],
-  chargeCapacityCycles600Step: [],
-  chargeCapacityCycles700Step: [],
-  chargeCapacityCycles800Step: [],
-  chargeCapacityCycles900Step: [],
-  chargeCapacityCycles1000Step: [],
-  chargeCapacityCycles1100Step: [],
-  dischargeCapacityCycles100Step: [],
-  dischargeCapacityCycles200Step: [],
-  dischargeCapacityCycles300Step: [],
-  dischargeCapacityCycles400Step: [],
-  dischargeCapacityCycles500Step: [],
-  dischargeCapacityCycles600Step: [],
-  dischargeCapacityCycles700Step: [],
-  dischargeCapacityCycles800Step: [],
-  dischargeCapacityCycles900Step: [],
-  dischargeCapacityCycles1000Step: [],
-  dischargeCapacityCycles1100Step: [],
+  cycle_numbers: [],
+  cycle_discharge_capacity_ah: [],
+  cycle_discharge_energy_wh: [],
+  energy_efficiency: [],
+  coulombic_efficiency: [],
+  cycle_numbers_capacity: [],
+  cycle_numbers_energy: [],
+  test_time_seconds: [],
+  time_series_discharge_capacity_ah: [],
+  time_series_discharge_energy_wh: [],
+  voltage_cycles_100_step: [],
+  voltage_cycles_200_step: [],
+  voltage_cycles_300_step: [],
+  voltage_cycles_400_step: [],
+  voltage_cycles_500_step: [],
+  voltage_cycles_600_step: [],
+  voltage_cycles_700_step: [],
+  voltage_cycles_800_step: [],
+  voltage_cycles_900_step: [],
+  voltage_cycles_1000_step: [],
+  voltage_cycles_1100_step: [],
+  charge_capacity_cycles_100_step: [],
+  charge_capacity_cycles_200_step: [],
+  charge_capacity_cycles_300_step: [],
+  charge_capacity_cycles_400_step: [],
+  charge_capacity_cycles_500_step: [],
+  charge_capacity_cycles_600_step: [],
+  charge_capacity_cycles_700_step: [],
+  charge_capacity_cycles_800_step: [],
+  charge_capacity_cycles_900_step: [],
+  charge_capacity_cycles_1000_step: [],
+  charge_capacity_cycles_1100_step: [],
+  discharge_capacity_cycles_100_step: [],
+  discharge_capacity_cycles_200_step: [],
+  discharge_capacity_cycles_300_step: [],
+  discharge_capacity_cycles_400_step: [],
+  discharge_capacity_cycles_500_step: [],
+  discharge_capacity_cycles_600_step: [],
+  discharge_capacity_cycles_700_step: [],
+  discharge_capacity_cycles_800_step: [],
+  discharge_capacity_cycles_900_step: [],
+  discharge_capacity_cycles_1000_step: [],
+  discharge_capacity_cycles_1100_step: [],
 };
 
 export const uploadCycleData = createAsyncThunk('csvData/uploadCycleData', uploadCycleDataThunk);
@@ -117,13 +117,13 @@ const csvDataSlice = createSlice({
     [getCycleData.fulfilled]: (state, { payload }) => {
       toast.dismiss();
       state.isLoading = false;
-      state.cycleNumbers = payload.cycleNumbers;
-      state.cycleDischargeCapacityAh = payload.cycleDischargeCapacityAh;
-      state.cycleDischargeEnergyWh = payload.cycleDischargeEnergyWh;
-      state.energyEfficiency = payload.energyEfficiency;
-      state.coulombicEfficiency = payload.coulombicEfficiency;
-      state.cycleNumbersAdjustedCapacity = payload.cycleNumbersAdjustedCapacity;
-      state.cycleNumbersAdjustedEnergy = payload.cycleNumbersAdjustedEnergy;
+      state.cycle_numbers = payload.cycle_numbers;
+      state.cycle_discharge_capacity_ah = payload.cycle_discharge_capacity_ah;
+      state.cycle_discharge_energy_wh = payload.cycle_discharge_energy_wh;
+      state.energy_efficiency = payload.energy_efficiency;
+      state.coulombic_efficiency = payload.coulombic_efficiency;
+      state.cycle_numbers_capacity = payload.cycle_numbers_capacity;
+      state.cycle_numbers_energy = payload.cycle_numbers_energy;
     },
     [getCycleData.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -164,42 +164,42 @@ const csvDataSlice = createSlice({
     [getTimeSeriesData.fulfilled]: (state, { payload }) => {
       toast.dismiss();
       state.isLoading = false;
-      state.testTime = payload.testTime;
-      state.timeSeriesDischargeCapacityAh = payload.timeSeriesDischargeCapacityAh;
-      state.timeSeriesDischargeEnergyWh = payload.timeSeriesDischargeEnergyWh;
-      state.voltageCycles100Step = payload.voltageCycles100Step;
-      state.voltageCycles200Step = payload.voltageCycles200Step;
-      state.voltageCycles300Step = payload.voltageCycles300Step;
-      state.voltageCycles400Step = payload.voltageCycles400Step;
-      state.voltageCycles500Step = payload.voltageCycles500Step;
-      state.voltageCycles600Step = payload.voltageCycles600Step;
-      state.voltageCycles700Step = payload.voltageCycles700Step;
-      state.voltageCycles800Step = payload.voltageCycles800Step;
-      state.voltageCycles900Step = payload.voltageCycles900Step;
-      state.voltageCycles1000Step = payload.voltageCycles1000Step;
-      state.voltageCycles1100Step = payload.voltageCycles1100Step;
-      state.chargeCapacityCycles100Step = payload.chargeCapacityCycles100Step;
-      state.chargeCapacityCycles200Step = payload.chargeCapacityCycles200Step;
-      state.chargeCapacityCycles300Step = payload.chargeCapacityCycles300Step;
-      state.chargeCapacityCycles400Step = payload.chargeCapacityCycles400Step;
-      state.chargeCapacityCycles500Step = payload.chargeCapacityCycles500Step;
-      state.chargeCapacityCycles600Step = payload.chargeCapacityCycles600Step;
-      state.chargeCapacityCycles700Step = payload.chargeCapacityCycles700Step;
-      state.chargeCapacityCycles800Step = payload.chargeCapacityCycles800Step;
-      state.chargeCapacityCycles900Step = payload.chargeCapacityCycles900Step;
-      state.chargeCapacityCycles1000Step = payload.chargeCapacityCycles1000Step;
-      state.chargeCapacityCycles1100Step = payload.chargeCapacityCycles1100Step;
-      state.dischargeCapacityCycles100Step = payload.dischargeCapacityCycles100Step;
-      state.dischargeCapacityCycles200Step = payload.dischargeCapacityCycles200Step;
-      state.dischargeCapacityCycles300Step = payload.dischargeCapacityCycles300Step;
-      state.dischargeCapacityCycles400Step = payload.dischargeCapacityCycles400Step;
-      state.dischargeCapacityCycles500Step = payload.dischargeCapacityCycles500Step;
-      state.dischargeCapacityCycles600Step = payload.dischargeCapacityCycles600Step;
-      state.dischargeCapacityCycles700Step = payload.dischargeCapacityCycles700Step;
-      state.dischargeCapacityCycles800Step = payload.dischargeCapacityCycles800Step;
-      state.dischargeCapacityCycles900Step = payload.dischargeCapacityCycles900Step;
-      state.dischargeCapacityCycles1000Step = payload.dischargeCapacityCycles1000Step;
-      state.dischargeCapacityCycles1100Step = payload.dischargeCapacityCycles1100Step;
+      state.test_time_seconds = payload.test_time_seconds;
+      state.time_series_discharge_capacity_ah = payload.time_series_discharge_capacity_ah;
+      state.time_series_discharge_energy_wh = payload.time_series_discharge_energy_wh;
+      state.voltage_cycles_100_step = payload.voltage_cycles_100_step;
+      state.voltage_cycles_200_step = payload.voltage_cycles_200_step;
+      state.voltage_cycles_300_step = payload.voltage_cycles_300_step;
+      state.voltage_cycles_400_step = payload.voltage_cycles_400_step;
+      state.voltage_cycles_500_step = payload.voltage_cycles_500_step;
+      state.voltage_cycles_600_step = payload.voltage_cycles_600_step;
+      state.voltage_cycles_700_step = payload.voltage_cycles_700_step;
+      state.voltage_cycles_800_step = payload.voltage_cycles_800_step;
+      state.voltage_cycles_900_step = payload.voltage_cycles_900_step;
+      state.voltage_cycles_1000_step = payload.voltage_cycles_1000_step;
+      state.voltage_cycles_1100_step = payload.voltage_cycles_1100_step;
+      state.charge_capacity_cycles_100_step = payload.charge_capacity_cycles_100_step;
+      state.charge_capacity_cycles_200_step = payload.charge_capacity_cycles_200_step;
+      state.charge_capacity_cycles_300_step = payload.charge_capacity_cycles_300_step;
+      state.charge_capacity_cycles_400_step = payload.charge_capacity_cycles_400_step;
+      state.charge_capacity_cycles_500_step = payload.charge_capacity_cycles_500_step;
+      state.charge_capacity_cycles_600_step = payload.charge_capacity_cycles_600_step;
+      state.charge_capacity_cycles_700_step = payload.charge_capacity_cycles_700_step;
+      state.charge_capacity_cycles_800_step = payload.charge_capacity_cycles_800_step;
+      state.charge_capacity_cycles_900_step = payload.charge_capacity_cycles_900_step;
+      state.charge_capacity_cycles_1000_step = payload.charge_capacity_cycles_1000_step;
+      state.charge_capacity_cycles_1100_step = payload.charge_capacity_cycles_1100_step;
+      state.discharge_capacity_cycles_100_step = payload.discharge_capacity_cycles_100_step;
+      state.discharge_capacity_cycles_200_step = payload.discharge_capacity_cycles_200_step;
+      state.discharge_capacity_cycles_300_step = payload.discharge_capacity_cycles_300_step;
+      state.discharge_capacity_cycles_400_step = payload.discharge_capacity_cycles_400_step;
+      state.discharge_capacity_cycles_500_step = payload.discharge_capacity_cycles_500_step;
+      state.discharge_capacity_cycles_600_step = payload.discharge_capacity_cycles_600_step;
+      state.discharge_capacity_cycles_700_step = payload.discharge_capacity_cycles_700_step;
+      state.discharge_capacity_cycles_800_step = payload.discharge_capacity_cycles_800_step;
+      state.discharge_capacity_cycles_900_step = payload.discharge_capacity_cycles_900_step;
+      state.discharge_capacity_cycles_1000_step = payload.discharge_capacity_cycles_1000_step;
+      state.discharge_capacity_cycles_1100_step = payload.discharge_capacity_cycles_1100_step;
     },
     [getTimeSeriesData.rejected]: (state, { payload }) => {
       state.isLoading = false;

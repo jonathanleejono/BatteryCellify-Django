@@ -1,11 +1,13 @@
 from fastapi import status, Depends, HTTPException, APIRouter, Request
 from sqlalchemy.orm import Session
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from .. import schemas, models, utils, oauth2
-from ..database import database
-from ..models import users
+from .. import schemas, models, utils, oauth2, entities
+from ..database import get_db
+# from ..models import users
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 
 router = APIRouter()
@@ -13,14 +15,13 @@ router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=entities.UserOut)
 @limiter.limit("5/minute", error_message="Too many requests, please try again later")
-async def create_user(user: schemas.UserCreate, request: Request):
-    if not user.email or not user.firstName or not user.password:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Please provide all values")
+async def create_user(user: entities.UserCreate, request: Request, db: AsyncSession = Depends(get_db)):
 
-    emailAlreadyExists = await database.fetch_one(users.select().where(users.c.email == user.email))
+    query = select(entities.Users).where(entities.Users.email == user.email)
+    existing_email = await db.execute(query)
+    emailAlreadyExists = existing_email.first()
 
     if emailAlreadyExists:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -29,82 +30,81 @@ async def create_user(user: schemas.UserCreate, request: Request):
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
 
-    query = users.insert(values={**user.dict()})
+    if not user.email or not user.first_name or user.password is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Please provide all values")
 
-    registered_user_id = await database.execute(query)
+    new_user = entities.Users(**user.dict())
+    db.add(new_user)
+    registered_user_id = await db.commit()
+    print("registered_user_id: ", registered_user_id)
+    await db.refresh(new_user)
 
     access_token = oauth2.create_access_token(
         data={"user_id": registered_user_id})
 
     registered_user = {"email": user.email,
-                       "firstName": user.firstName, "lastName": "lastName"}
+                       "first_name": user.first_name, "last_name": "lastName"}
 
     return {"user": registered_user, "token": access_token}
 
 
-@router.post('/login', response_model=schemas.UserOut)
+@router.post('/login', response_model=entities.UserOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def login_user(request: Request, logging_in_user: schemas.UserLogin):
-    try:
-        # user_credentials: OAuth2PasswordRequestForm = Depends()
+async def login_user(request: Request, logging_in_user: entities.UserLogin, db: AsyncSession = Depends(get_db)):
 
-        if not logging_in_user.email or not logging_in_user.password:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="Please provide all values")
-
-        query = users.select().where(
-            users.c.email == logging_in_user.email)
-
-        user = await database.fetch_one(query)
-
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
-
-        if not utils.verify(logging_in_user.password, user.password):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
-
-        access_token = oauth2.create_access_token(data={"user_id": user.id})
-
-        logged_in_user = {"email": user.email, "firstName": user.firstName,
-                          "lastName": user.lastName}
-
-        return {"user": logged_in_user, "token": access_token}
-
-    except:
+    if not logging_in_user.email or not logging_in_user.password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+                            detail="Please provide all values")
+
+    query = select(entities.Users).where(
+        entities.Users.email == logging_in_user.email)
+
+    user_exists = await db.execute(query)
+
+    # using the 0 index is important to access attributes (eg. user.password)
+    user = user_exists.first()[0]
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
+
+    if not utils.verify(logging_in_user.password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
+
+    access_token = oauth2.create_access_token(data={"user_id": user.id})
+
+    logged_in_user = {"email": user.email, "firstName": user.first_name,
+                      "lastName": user.last_name}
+
+    return {"user": logged_in_user, "token": access_token}
 
 
-@router.patch('/updateUser', response_model=schemas.UserOut)
+@router.patch('/updateUser', response_model=entities.UserOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def update_user(request: Request, updated_user: schemas.UserUpdate, current_user: int = Depends(oauth2.get_current_user)):
-    try:
-        user_query = users.select().where(users.c.id == current_user.id)
+async def update_user(request: Request, updating_user: entities.UserUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-        user = await database.fetch_one(user_query)
+    user = await db.get(entities.Users, current_user.id)
 
-        if not user:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"Invalid Credentials")
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid Credentials")
 
-        if not updated_user.email or not updated_user.firstName or not updated_user.lastName:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="Please provide all values")
+    # the exclude_unset = True tells Pydantic to only include the values that were sent by the client
+    # ^ this avoids updating the user with "None" values unintentionally
+    user_data = updating_user.dict(exclude_unset=True)
+    for key, value in user_data.items():
+        setattr(user, key, value)
 
-        query = users.update().where(
-            users.c.id == current_user.id).values(**updated_user.dict())
+    # user = entities.Users(**updating_user.dict())
 
-        # updated_user_id = await database.execute(query)
-        await database.execute(query)
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
 
-        # use the current_user.id and not the updated_user_id for JWT to avoid auth issues
-        access_token = oauth2.create_access_token(
-            data={"user_id": current_user.id})
+    # use the current_user.id and not the db.commit for JWT to avoid auth issues
+    access_token = oauth2.create_access_token(
+        data={"user_id": current_user.id})
 
-        return {"user": updated_user, "token": access_token}
-
-    except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="An error occurred")
+    return {"user": updating_user, "token": access_token}

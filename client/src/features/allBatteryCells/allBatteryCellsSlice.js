@@ -13,20 +13,20 @@ const initialFiltersState = {
 const initialState = {
   isLoading: true,
   batteryCells: [],
-  totalBatteryCells: 0,
-  averageCapacity: 0,
-  averageDepthOfDischarge: 0,
-  averageTemperatureC: 0,
-  totalCathodeLCOCells: 0,
-  totalCathodeLFPCells: 0,
-  totalCathodeNCACells: 0,
-  totalCathodeNMCCells: 0,
-  totalCathodeNMCLCOCells: 0,
-  avgCyclesLC0Cells: 0,
-  avgCyclesLFPCells: 0,
-  avgCyclesNCACells: 0,
-  avgCyclesNMCCells: 0,
-  avgCyclesNMCLCOCells: 0,
+  total_battery_cells: 0,
+  avg_capacity: 0,
+  avg_depth_of_discharge: 0,
+  avg_temperature_c: 0,
+  total_cathode_lco_cells: 0,
+  total_cathode_lfp_cells: 0,
+  total_cathode_nca_cells: 0,
+  total_cathode_nmc_cells: 0,
+  total_cathode_nmclco_cells: 0,
+  avg_cycles_lco_cells: 0,
+  avg_cycles_lfp_cells: 0,
+  avg_cycles_nca_cells: 0,
+  avg_cycles_nmc_cells: 0,
+  avg_cycles_nmclco_cells: 0,
   page: 1,
   stats: {},
   monthlyApplications: [],
@@ -69,20 +69,20 @@ const allBatteryCellsSlice = createSlice({
     [getAllBatteryCells.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
       state.batteryCells = payload.batteryCells;
-      state.totalBatteryCells = payload.totalBatteryCells;
-      state.averageCapacity = payload.averageCapacity;
-      state.averageDepthOfDischarge = payload.averageDepthOfDischarge;
-      state.averageTemperatureC = payload.averageTemperatureC;
-      state.totalCathodeLCOCells = payload.totalCathodeLCOCells;
-      state.totalCathodeLFPCells = payload.totalCathodeLFPCells;
-      state.totalCathodeNCACells = payload.totalCathodeNCACells;
-      state.totalCathodeNMCCells = payload.totalCathodeNMCCells;
-      state.totalCathodeNMCLCOCells = payload.totalCathodeNMCLCOCells;
-      state.avgCyclesLC0Cells = payload.avgCyclesLC0Cells;
-      state.avgCyclesLFPCells = payload.avgCyclesLFPCells;
-      state.avgCyclesNCACells = payload.avgCyclesNCACells;
-      state.avgCyclesNMCCells = payload.avgCyclesNMCCells;
-      state.avgCyclesNMCLCOCells = payload.avgCyclesNMCLCOCells;
+      state.total_battery_cells = payload.total_battery_cells;
+      state.avg_capacity = payload.avg_capacity;
+      state.avg_depth_of_discharge = payload.avg_depth_of_discharge;
+      state.avg_temperature_c = payload.avg_temperature_c;
+      state.total_cathode_lco_cells = payload.total_cathode_lco_cells;
+      state.total_cathode_lfp_cells = payload.total_cathode_lfp_cells;
+      state.total_cathode_nca_cells = payload.total_cathode_nca_cells;
+      state.total_cathode_nmc_cells = payload.total_cathode_nmc_cells;
+      state.total_cathode_nmclco_cells = payload.total_cathode_nmclco_cells;
+      state.avg_cycles_lco_cells = payload.avg_cycles_lco_cells;
+      state.avg_cycles_lfp_cells = payload.avg_cycles_lfp_cells;
+      state.avg_cycles_nca_cells = payload.avg_cycles_nca_cells;
+      state.avg_cycles_nmc_cells = payload.avg_cycles_nmc_cells;
+      state.avg_cycles_nmclco_cells = payload.avg_cycles_nmclco_cells;
     },
     [getAllBatteryCells.rejected]: (state, { payload }) => {
       state.isLoading = false;

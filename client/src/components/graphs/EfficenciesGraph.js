@@ -2,10 +2,10 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 const EfficenciesGraph = ({
-  cycleNumbersAdjustedCapacity,
-  cycleNumbersAdjustedEnergy,
-  energyEfficiency,
-  coulombicEfficiency,
+  cycle_numbers_capacity,
+  cycle_numbers_energy,
+  energy_efficiency,
+  coulombic_efficiency,
   batteryCellNameId,
 }) => {
   // cycle numbers and the effiencies do not have the same length right now
@@ -17,16 +17,16 @@ const EfficenciesGraph = ({
         data={[
           {
             type: 'line',
-            x: cycleNumbersAdjustedCapacity,
-            y: coulombicEfficiency,
+            x: cycle_numbers_capacity,
+            y: coulombic_efficiency,
             marker: { color: 'blue' },
             text: `ah_eff: ${batteryCellNameId}`,
             name: `ah_eff: ${batteryCellNameId}`,
           },
           {
             type: 'line',
-            x: cycleNumbersAdjustedEnergy,
-            y: energyEfficiency,
+            x: cycle_numbers_energy,
+            y: energy_efficiency,
             marker: { color: 'red' },
             text: `wh_eff: ${batteryCellNameId}`,
             name: `wh_eff: ${batteryCellNameId}`,
