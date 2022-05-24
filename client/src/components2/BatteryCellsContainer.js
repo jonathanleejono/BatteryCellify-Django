@@ -7,7 +7,7 @@ import { getAllBatteryCells } from '../features/allBatteryCells/allBatteryCellsS
 import PageBtnContainer from './PageBtnContainer';
 const BatteryCellsContainer = () => {
   const {
-    batteryCells,
+    battery_cells,
     isLoading,
     page,
     total_battery_cells,
@@ -28,7 +28,7 @@ const BatteryCellsContainer = () => {
     return <Loading />;
   }
 
-  if (batteryCells.length === 0) {
+  if (battery_cells.length === 0) {
     return (
       <Wrapper>
         <h2>No battery cells to display...</h2>
@@ -39,10 +39,10 @@ const BatteryCellsContainer = () => {
   return (
     <Wrapper>
       <h5>
-        {total_battery_cells} battery cell{batteryCells.length > 1 && 's'} found
+        {total_battery_cells} battery cell{battery_cells.length > 1 && 's'} found
       </h5>
       <div className="battery-cells">
-        {batteryCells.map((batteryCell) => {
+        {battery_cells.map((batteryCell) => {
           return <BatteryCell key={batteryCell.id} {...batteryCell} />;
         })}
       </div>

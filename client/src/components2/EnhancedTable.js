@@ -60,7 +60,7 @@ function stableSort(array, comparator) {
 
 const EnhancedTable = () => {
   const {
-    batteryCells,
+    battery_cells,
     isLoading,
     total_battery_cells,
     numOfPages,
@@ -91,7 +91,7 @@ const EnhancedTable = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = batteryCells.map((n) => n.id);
+      const newSelecteds = battery_cells.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -144,7 +144,7 @@ const EnhancedTable = () => {
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - batteryCells.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - battery_cells.length) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -158,12 +158,12 @@ const EnhancedTable = () => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={batteryCells.length}
+              rowCount={battery_cells.length}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(batteryCells, getComparator(order, orderBy))
+              {stableSort(battery_cells, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((batteryCell, index) => {
                   const isItemSelected = isSelected(batteryCell.id);
@@ -312,7 +312,7 @@ const EnhancedTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={batteryCells.length}
+          count={battery_cells.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

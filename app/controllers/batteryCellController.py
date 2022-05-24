@@ -6,7 +6,7 @@ from ..utils import (search_query_battery_cell,
                      calc_float_avg,
                      get_total_cells_by_value,
                      get_avg_attr_by_another_attr_value)
-# from ..models import batteryCells, csvCycleData
+# from ..models import battery_cells, csvCycleData
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.ext.asyncio import AsyncSession

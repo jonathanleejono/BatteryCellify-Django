@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 
 const DataGridTable = () => {
   const {
-    batteryCells,
+    battery_cells,
     isLoading,
     total_battery_cells,
     numOfPages,
@@ -140,7 +140,7 @@ const DataGridTable = () => {
         Delete
       </button>
       <DataGrid
-        rows={batteryCells}
+        rows={battery_cells}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}

@@ -37,7 +37,7 @@ def upgrade():
                               sa.Float(), nullable=False),
                     sa.Column('cell_temp_celsius', sa.Float(), nullable=False),
                     sa.Column("battery_cell_id", sa.Integer, sa.ForeignKey(
-                        "batteryCells.id", ondelete="CASCADE"), nullable=False),
+                        "battery_cells.id", ondelete="CASCADE"), nullable=False),
                     sa.Column("owner_id", sa.Integer, sa.ForeignKey(
                         "users.id", ondelete="CASCADE"), nullable=False),
                     sa.Column("created_at", sa.TIMESTAMP(

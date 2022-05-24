@@ -28,8 +28,8 @@
 # )
 
 
-# batteryCells = Table(
-#     "batteryCells",
+# battery_cells = Table(
+#     "battery_cells",
 #     metadata,
 #     Column("id", Integer,
 #            primary_key=True, nullable=False),
@@ -39,7 +39,7 @@
 #            nullable=False, default="LCO", server_default="LCO"),
 #     Column("anode", Enum('graphite', name="anode_enum"),
 #            nullable=False, default="graphite", server_default="graphite"),
-#     Column("capacityAh", Float, nullable=False),
+#     Column("capacity_ah", Float, nullable=False),
 #     Column("type", Enum('18650', 'pouch', 'prismatic', name="type_enum"),
 #            nullable=False, default="18650", server_default="18650"),
 #     Column("source", Enum('HNEI', 'UL-PUR', 'calce', 'oxford', 'snl', name="source_enum"),
@@ -76,7 +76,7 @@
 #     Column("created_at", TIMESTAMP(
 #         timezone=True), nullable=False, server_default=text('now()')),
 #     Column("battery_cell_id", Integer, ForeignKey(
-#         "batteryCells.id", ondelete="CASCADE"), nullable=False),
+#         "battery_cells.id", ondelete="CASCADE"), nullable=False),
 #     Column("owner_id", Integer, ForeignKey(
 #         "users.id", ondelete="CASCADE"), nullable=False)
 # )
@@ -99,7 +99,7 @@
 #     Column("created_at", TIMESTAMP(
 #         timezone=True), nullable=False, server_default=text('now()')),
 #     Column("battery_cell_id", Integer, ForeignKey(
-#         "batteryCells.id", ondelete="CASCADE"), nullable=False),
+#         "battery_cells.id", ondelete="CASCADE"), nullable=False),
 #     Column("owner_id", Integer, ForeignKey(
 #         "users.id", ondelete="CASCADE"), nullable=False)
 # )

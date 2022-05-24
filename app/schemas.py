@@ -30,7 +30,12 @@ class UserLogin(BaseModel):
 
 
 class UserUpdate(UserBase):
-    pass
+    first_name: Optional[constr(min_length=2, max_length=20)]
+    last_name: Optional[constr(min_length=2, max_length=20)]
+    email: Optional[EmailStr]
+
+    class Config:
+        orm_mode = True
 
 # -----------------------------------------
 
@@ -40,7 +45,7 @@ class BatteryCellBase(BaseModel):
     cycles: float
     cathode: str
     anode: str
-    capacityAh: float
+    capacity_ah: float
     type: str
     source: str
     temperature_c: float
@@ -61,25 +66,29 @@ class BatteryCellUpdate(BatteryCellBase):
 
 class BatteryCellOut(BatteryCellBase):
     id: int
+    owner_id: int
+
+# leave this here if the error "value is not valid dict"
+    class Config:
+        orm_mode = True
 
 
 class BatteryCellsManyOut(BaseModel):
-    batteryCells: List[BatteryCellOut]
-    totalBatteryCells: int
-    averageCapacity: float
-    averageDepthOfDischarge: float
-    averageTemperatureC: float
-    totalCathodeLCOCells: int
-    totalCathodeLFPCells: int
-    totalCathodeNCACells: int
-    totalCathodeNMCCells: int
-    totalCathodeNMCLCOCells: int
-    avgCyclesLC0Cells: float
-    avgCyclesLFPCells: float
-    avgCyclesNCACells: float
-    avgCyclesNMCCells: float
-    avgCyclesNMCLCOCells: float
-    lcoCycles: List
+    battery_cells: List[BatteryCellOut]
+    total_battery_cells: int
+    avg_capacity: float
+    avg_depth_of_discharge: float
+    avg_temperature_c: float
+    total_cathode_lco_cells: int
+    total_cathode_lfp_cells: int
+    total_cathode_nca_cells: int
+    total_cathode_nmc_cells: int
+    total_cathode_nmclco_cells: int
+    avg_cycles_lco_cells: float
+    avg_cycles_lfp_cells: float
+    avg_cycles_nca_cells: float
+    avg_cycles_nmc_cells: float
+    avg_cycles_nmclco_cells: float
 
     class Config:
         orm_mode = True

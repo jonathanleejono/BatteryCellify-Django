@@ -12,7 +12,7 @@ const initialFiltersState = {
 
 const initialState = {
   isLoading: true,
-  batteryCells: [],
+  battery_cells: [],
   total_battery_cells: 0,
   avg_capacity: 0,
   avg_depth_of_discharge: 0,
@@ -68,7 +68,7 @@ const allBatteryCellsSlice = createSlice({
     },
     [getAllBatteryCells.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.batteryCells = payload.batteryCells;
+      state.battery_cells = payload.battery_cells;
       state.total_battery_cells = payload.total_battery_cells;
       state.avg_capacity = payload.avg_capacity;
       state.avg_depth_of_discharge = payload.avg_depth_of_discharge;

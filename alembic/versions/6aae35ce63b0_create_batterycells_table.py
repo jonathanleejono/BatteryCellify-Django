@@ -1,4 +1,4 @@
-"""create batteryCells table
+"""create battery_cells table
 
 Revision ID: 6aae35ce63b0
 Revises: 40691b721479
@@ -18,7 +18,7 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table('batteryCells',
+    op.create_table('battery_cells',
                     sa.Column('id', sa.Integer(), nullable=False,
                               primary_key=True),
                     sa.Column('cell_name_id', sa.String(), nullable=False),
@@ -52,5 +52,5 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('batteryCells')
+    op.drop_table('battery_cells')
     pass

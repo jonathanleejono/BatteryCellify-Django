@@ -38,7 +38,7 @@ class Battery_Cells(Base):
                      nullable=False, default="LCO", server_default="LCO")
     anode = Column(Enum('graphite', name="anode_enum"),
                    nullable=False, default="graphite", server_default="graphite")
-    capacityAh = Column(Float, nullable=False)
+    capacity_ah = Column(Float, nullable=False)
     type = Column(Enum('18650', 'pouch', 'prismatic', name="type_enum"),
                   nullable=False, default="18650", server_default="18650")
     source = Column(Enum('HNEI', 'UL-PUR', 'calce', 'oxford', 'snl', name="source_enum"),

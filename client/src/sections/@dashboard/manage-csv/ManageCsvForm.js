@@ -49,7 +49,7 @@ import {
 export default function ManageCsvForm() {
   const dispatch = useDispatch();
 
-  const { batteryCells, search, searchCathode, searchAnode, searchType, searchSource } = useSelector(
+  const { battery_cells, search, searchCathode, searchAnode, searchType, searchSource } = useSelector(
     (store) => store.allBatteryCells
   );
 
@@ -130,7 +130,7 @@ export default function ManageCsvForm() {
           onChange={handleSelect}
           label="Select Battery Cell"
         >
-          {batteryCells.map((option) => (
+          {battery_cells.map((option) => (
             <MenuItem key={option.id} value={option}>
               {option.cell_name_id}
             </MenuItem>

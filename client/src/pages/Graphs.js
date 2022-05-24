@@ -23,7 +23,7 @@ export default function Graphs() {
 
   const dispatch = useDispatch();
 
-  const { batteryCells } = useSelector((store) => store.allBatteryCells);
+  const { battery_cells } = useSelector((store) => store.allBatteryCells);
 
   const {
     isLoading,
@@ -109,7 +109,7 @@ export default function Graphs() {
               onChange={handleSelect}
               label="Select Battery Cell"
             >
-              {batteryCells.map((option) => (
+              {battery_cells.map((option) => (
                 <MenuItem key={option.id} value={option}>
                   {option.cell_name_id}
                 </MenuItem>

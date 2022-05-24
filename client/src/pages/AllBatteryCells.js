@@ -108,7 +108,7 @@ function applySortFilter(array, comparator, query) {
 // ----------------------------------------------------------------------
 
 export default function AllBatteryCells() {
-  const { batteryCells, search, searchCathode, searchAnode, searchType, searchSource } = useSelector(
+  const { battery_cells, search, searchCathode, searchAnode, searchType, searchSource } = useSelector(
     (store) => store.allBatteryCells
   );
 
@@ -142,7 +142,7 @@ export default function AllBatteryCells() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = batteryCells.map((n) => n.id);
+      const newSelecteds = battery_cells.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -177,9 +177,9 @@ export default function AllBatteryCells() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - batteryCells.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - battery_cells.length) : 0;
 
-  const filteredBatteryCells = applySortFilter(batteryCells, getComparator(order, orderBy), filterName);
+  const filteredBatteryCells = applySortFilter(battery_cells, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredBatteryCells.length === 0;
 
@@ -289,7 +289,7 @@ export default function AllBatteryCells() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={batteryCells.length}
+                  rowCount={battery_cells.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -404,7 +404,7 @@ export default function AllBatteryCells() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
-            count={batteryCells.length}
+            count={battery_cells.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
