@@ -52,9 +52,7 @@ export default function LandingForm() {
 
   useEffect(() => {
     if (user) {
-      // setTimeout(() => {
-      navigate('/app/dashboard');
-      // }, 1);
+      navigate('/app/dashboard', { replace: true });
     }
   }, [user, navigate]);
 

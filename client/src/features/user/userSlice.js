@@ -17,7 +17,7 @@ const initialState = {
 export const registerUser = createAsyncThunk('user/registerUser', async (user, thunkAPI) => {
   return registerUserThunk('/register', user, thunkAPI);
 });
-// used to be /auth/something
+
 export const loginUser = createAsyncThunk('user/loginUser', async (user, thunkAPI) => {
   return loginUserThunk('/login', user, thunkAPI);
 });

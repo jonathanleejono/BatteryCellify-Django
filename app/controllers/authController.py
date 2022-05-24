@@ -16,7 +16,7 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
-@limiter.limit("30/minute", error_message="Too many requests, please try again later")
+@limiter.limit("100/hour", error_message="Too many requests, please try again later")
 async def create_user(user: schemas.UserCreate, request: Request, db: AsyncSession = Depends(get_db)):
 
     query = select(models.Users).where(models.Users.email == user.email)

@@ -7,7 +7,6 @@ import { addUserToLocalStorage } from '../../utils/localStorage';
 export const registerUserThunk = async (url, newUser, thunkAPI) => {
   try {
     const resp = await customFetch.post(url, newUser);
-    console.log('registerUserThunk2: ', resp.data);
     const { user, token } = resp.data;
     addUserToLocalStorage({ user, token });
     return resp.data;
@@ -22,7 +21,6 @@ export const registerUserThunk = async (url, newUser, thunkAPI) => {
 export const loginUserThunk = async (url, loginUser, thunkAPI) => {
   try {
     const resp = await customFetch.post(url, loginUser);
-    // console.log("loginUserThunk: ", resp.data);
     const { user, token } = resp.data;
     addUserToLocalStorage({ user, token });
     return resp.data;

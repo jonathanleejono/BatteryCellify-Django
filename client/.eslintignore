@@ -6,3 +6,8 @@ src/serviceWorkerRegistration.js
 src/setupTests.js
 src/reportWebVitals.js
 src/components2
+src/components/graphs
+src/features
+src/pages
+src/sections
+src/utils

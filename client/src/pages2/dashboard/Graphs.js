@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { StatsContainer, Loading, ChartsContainer, PlotlyComponent, PlotTest } from '../../components2';
+import { Loading, ChartsContainer, PlotlyComponent, PlotTest } from '../../components2';
 import { useDispatch, useSelector } from 'react-redux';
-import { showStats } from '../../features/allBatteryCells/allBatteryCellsSlice';
 
 const Graphs = () => {
   const { isLoading, monthlyApplications } = useSelector((store) => store.allBatteryCells);
@@ -15,7 +14,7 @@ const Graphs = () => {
       <h2>Graphs</h2>
       <PlotlyComponent />
       <PlotTest />
-      {/* <StatsContainer />
+      {/* <StatsContainer />s
       {monthlyApplications.length > 0 && <ChartsContainer />} */}
     </>
   );

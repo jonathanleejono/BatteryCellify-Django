@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllBatteryCellsThunk, showStatsThunk } from './allBatteryCellsThunk';
+import { getAllBatteryCellsThunk } from './allBatteryCellsThunk';
 
 const initialFiltersState = {
   search: '',
@@ -28,14 +28,11 @@ const initialState = {
   avg_cycles_nmc_cells: 0,
   avg_cycles_nmclco_cells: 0,
   page: 1,
-  stats: {},
   monthlyApplications: [],
   ...initialFiltersState,
 };
 
 export const getAllBatteryCells = createAsyncThunk('allBatteryCells/getBatteryCells', getAllBatteryCellsThunk);
-
-export const showStats = createAsyncThunk('allBatteryCells/showStats', showStatsThunk);
 
 const allBatteryCellsSlice = createSlice({
   name: 'allBatteryCells',
@@ -85,18 +82,6 @@ const allBatteryCellsSlice = createSlice({
       state.avg_cycles_nmclco_cells = payload.avg_cycles_nmclco_cells;
     },
     [getAllBatteryCells.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
-    [showStats.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [showStats.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.stats = payload.defaultStats;
-      state.monthlyApplications = payload.monthlyApplications;
-    },
-    [showStats.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload);
     },

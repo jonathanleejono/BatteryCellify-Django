@@ -20,8 +20,10 @@ export const createBatteryCellThunk = async (
   },
   thunkAPI
 ) => {
+  // very important to add slashs at end of path (eg. '/battery-cells/')
+  // this is so urls can navigate properly
   try {
-    const resp = await customFetch.post('/battery-cells', {
+    const resp = await customFetch.post('/battery-cells/', {
       cell_name_id,
       cycles,
       cathode,

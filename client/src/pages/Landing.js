@@ -1,4 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, Link, Container, Typography, Button } from '@mui/material';
@@ -7,6 +9,7 @@ import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
 import Logo from '../components/Logo';
+import { useDispatch, useSelector } from 'react-redux';
 // sections
 import { LandingForm } from '../sections/landing';
 import AuthSocial from '../sections/auth/AuthSocial';
@@ -61,6 +64,16 @@ export default function Landing() {
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
+
+  const { user, isLoading } = useSelector((store) => store.user);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/app/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   return (
     <Page title="Landing">

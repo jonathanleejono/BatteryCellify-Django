@@ -8,7 +8,7 @@ import {
   AddBatteryCell,
   EditBatteryCell,
   AllBatteryCells,
-  Stats,
+  // Stats,
   SharedLayout,
   Graphs,
 } from './pages2/dashboard';
@@ -25,7 +25,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Stats />} />
+          {/* <Route index element={<Stats />} /> */}
           <Route path="all-battery-cells" element={<AllBatteryCells />} />
           <Route path="add-battery-cell" element={<AddBatteryCell />} />
           <Route path="graphs" element={<Graphs />} />

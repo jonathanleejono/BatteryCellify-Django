@@ -186,6 +186,10 @@ async def test_csv_cycle_data(session, test_user, test_battery_cells):
     if "Unnamed: 0" in df:
         df = df.drop("Unnamed: 0", 1)
 
+    # can't do the mapping thing to add each pandas df row to the DB because
+    # when converting the df to json, each object is a giant list of all the values for the key,
+    # and not one by one for each key for each row
+
     for i in range(len(df)):
         query = models.Csv_Cycle_Data(
             cycle_index=df["Cycle_Index"][i],
