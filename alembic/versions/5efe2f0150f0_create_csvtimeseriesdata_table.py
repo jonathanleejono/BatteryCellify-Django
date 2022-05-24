@@ -21,10 +21,10 @@ def upgrade():
     op.create_table('csvTimeSeriesData',
                     sa.Column('id', sa.Integer(), nullable=False,
                               primary_key=True),
-                    sa.Column('dateTime', sa.String(), nullable=False),
+                    sa.Column('date_time', sa.String(), nullable=False),
                     sa.Column('test_time_seconds', sa.Float(), nullable=False),
                     sa.Column('cycle_index', sa.Integer(), nullable=False),
-                    sa.Column('currentA', sa.Float(), nullable=False),
+                    sa.Column('current_a', sa.Float(), nullable=False),
                     sa.Column('voltage_v', sa.Float(), nullable=False),
                     sa.Column('charge_capacity_ah',
                               sa.Float(), nullable=False),
@@ -33,10 +33,10 @@ def upgrade():
                     sa.Column('charge_energy_wh', sa.Float(), nullable=False),
                     sa.Column('discharge_energy_wh',
                               sa.Float(), nullable=False),
-                    sa.Column('environmentTempCelsius',
+                    sa.Column('environment_temp_celsius',
                               sa.Float(), nullable=False),
-                    sa.Column('cellTempCelsius', sa.Float(), nullable=False),
-                    sa.Column("batteryCell_id", sa.Integer, sa.ForeignKey(
+                    sa.Column('cell_temp_celsius', sa.Float(), nullable=False),
+                    sa.Column("battery_cell_id", sa.Integer, sa.ForeignKey(
                         "batteryCells.id", ondelete="CASCADE"), nullable=False),
                     sa.Column("owner_id", sa.Integer, sa.ForeignKey(
                         "users.id", ondelete="CASCADE"), nullable=False),

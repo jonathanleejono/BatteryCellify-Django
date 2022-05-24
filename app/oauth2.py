@@ -52,20 +52,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
 
     token = verify_access_token(token, credentials_exception)
 
-    # super important to put 'int' around token.id when using databases+asyncpg
+    # super important to put 'int' around token.id when using asyncpg
 
-    # user_query = users.select().where(
-    #     users.c.id == int(token.id))
-
-    # user = await database.fetch_one(user_query)
-
-    query = select(entities.Users).where(entities.Users.id == int(token.id))
+    query = select(models.Users).where(models.Users.id == int(token.id))
     users = await db.execute(query)
     user = users.first()[0]
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"user was not found")
-
-    # user = db.query(models.User).filter(models.User.id == token.id).first()
 
     return user

@@ -7,6 +7,8 @@ from pydantic.types import conint, constr
 from sqlmodel import SQLModel, Field
 from datetime import datetime, timezone
 
+import sqlalchemy as sa
+
 
 class UserBase(SQLModel):
     first_name: constr(min_length=2, max_length=20)
@@ -54,26 +56,26 @@ class Users(UserCreate, table=True):
 class BatteryCellBase(SQLModel):
     cell_name_id: str
     cycles: float
-    cathode: str = Field(default="LCO",
-                         sa_column=sqlmodel.Enum('LCO', 'LFP', 'NCA', 'NMC',
-                                                 'NMC-LCO', name="cathode_enum"),
-                         nullable=False)
+    cathode: str = Field(
+        sa_column=sqlmodel.Column(sa.Enum('LCO', 'LFP', 'NCA', 'NMC',
+                                          'NMC-LCO', name="cathode_enum"),
+                                  nullable=False))
 
-    anode: str = Field(default="graphite",
-                       sa_column=sqlmodel.Enum('graphite', name="anode_enum"),
-                       nullable=False)
+    anode: str = Field(
+        sa_column=sqlmodel.Enum('graphite', name="anode_enum"),
+        nullable=False)
 
     capacity_ah: float
 
-    type: str = Field(default="18650",
-                      sa_column=sqlmodel.Enum(
-                          '18650', 'pouch', 'prismatic', name="type_enum"),
-                      nullable=False)
+    type: str = Field(
+        sa_column=sqlmodel.Enum(
+            '18650', 'pouch', 'prismatic', name="type_enum"),
+        nullable=False)
 
-    source: str = Field(default="HNEI",
-                        sa_column=sqlmodel.Enum('HNEI', 'UL-PUR', 'calce',
-                                                'oxford', 'snl', name="source_enum"),
-                        nullable=False)
+    source: str = Field(
+        sa_column=sqlmodel.Enum('HNEI', 'UL-PUR', 'calce',
+                                'oxford', 'snl', name="source_enum"),
+        nullable=False)
     temperature_c: float
     max_state_of_charge: float
     min_state_of_charge: float

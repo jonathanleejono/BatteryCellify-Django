@@ -26,8 +26,8 @@ limiter = Limiter(key_func=get_remote_address)
 @router.get("/cycleData/{id}", status_code=status.HTTP_200_OK)
 async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    query = await db.execute(select(entities.Csv_Cycle_Data).where(
-        entities.Csv_Cycle_Data.battery_cell_id == id))
+    query = await db.execute(select(models.Csv_Cycle_Data).where(
+        models.Csv_Cycle_Data.battery_cell_id == id))
 
     csv_cycle_data = query.scalars().all()
 
@@ -76,14 +76,14 @@ async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), curren
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    battery_cell = await db.get(entities.Battery_Cells, id)
+    battery_cell = await db.get(models.Battery_Cells, id)
 
     if not battery_cell:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Battery cell does not exist")
 
-    query = await db.execute(select(entities.Csv_Cycle_Data).where(
-        entities.Csv_Cycle_Data.battery_cell_id == id))
+    query = await db.execute(select(models.Csv_Cycle_Data).where(
+        models.Csv_Cycle_Data.battery_cell_id == id))
 
     csvCycleDataAlreadyExists = query.fetchone()
 
@@ -116,7 +116,7 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
         df = df.drop("Unnamed: 0", 1)
 
         # def create_post_model(battery_cell):
-        #         return entities.Battery_Cells(**battery_cell)
+        #         return models.Battery_Cells(**battery_cell)
 
         #     battery_cells_map = map(create_post_model, df)
         #     battery_cells = list(battery_cells_map)
@@ -124,7 +124,7 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
         #    db.add_all(battery_cells)
 
     for i in range(len(df)):
-        query = entities.Csv_Cycle_Data(
+        query = models.Csv_Cycle_Data(
             cycle_index=df["Cycle_Index"][i],
             start_time=df["Start_Time"][i],
             end_time=df["End_Time"][i],
@@ -149,8 +149,8 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
 @limiter.limit("3/minute", error_message="Too many requests, please try again later")
 async def delete_csv_cycle_data(request: Request, id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    query = await db.execute(select(entities.Csv_Cycle_Data).where(
-        entities.Csv_Cycle_Data.battery_cell_id == id))
+    query = await db.execute(select(models.Csv_Cycle_Data).where(
+        models.Csv_Cycle_Data.battery_cell_id == id))
 
     csv_cycle_data = query.scalars().all()
 
@@ -172,8 +172,8 @@ async def delete_csv_cycle_data(request: Request, id: int, db: AsyncSession = De
 @router.get("/timeSeriesData/{id}", status_code=status.HTTP_200_OK)
 async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    query = await db.execute(select(entities.Csv_Time_Series_Data).where(
-        entities.Csv_Time_Series_Data.battery_cell_id == id))
+    query = await db.execute(select(models.Csv_Time_Series_Data).where(
+        models.Csv_Time_Series_Data.battery_cell_id == id))
 
     time_series_all_battery_cells = query.scalars().all()
 
@@ -303,14 +303,14 @@ async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), 
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def upload_csv_time_series_data(id: int, request: Request, uploadFile: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    battery_cell = await db.get(entities.Battery_Cells, id)
+    battery_cell = await db.get(models.Battery_Cells, id)
 
     if not battery_cell:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Battery cell does not exist")
 
-    query = await db.execute(select(entities.Csv_Time_Series_Data).where(
-        entities.Csv_Time_Series_Data.battery_cell_id == id))
+    query = await db.execute(select(models.Csv_Time_Series_Data).where(
+        models.Csv_Time_Series_Data.battery_cell_id == id))
 
     csvTimeSeriesDataAlreadyExists = query.fetchone()
 
@@ -348,11 +348,11 @@ async def upload_csv_time_series_data(id: int, request: Request, uploadFile: Upl
     # df = df.head(100)
 
     for i in range(len(df)):
-        query = entities.Csv_Time_Series_Data(
-            dateTime=df["Date_Time"][i],
+        query = models.Csv_Time_Series_Data(
+            date_time=df["Date_Time"][i],
             test_time_seconds=df["Test_Time (s)"][i],
             cycle_index=df["Cycle_Index"][i],
-            currentA=df["Current (A)"][i],
+            current_a=df["Current (A)"][i],
             voltage_v=df["Voltage (V)"][i],
             charge_capacity_ah=df["Charge_Capacity (Ah)"][i],
             discharge_capacity_ah=df["Discharge_Capacity (Ah)"][i],
@@ -372,8 +372,8 @@ async def upload_csv_time_series_data(id: int, request: Request, uploadFile: Upl
 @limiter.limit("3/minute", error_message="Too many requests, please try again later")
 async def delete_csv_time_series_data(request: Request, id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    query = await db.execute(select(entities.Csv_Time_Series_Data).where(
-        entities.Csv_Time_Series_Data.battery_cell_id == id))
+    query = await db.execute(select(models.Csv_Time_Series_Data).where(
+        models.Csv_Time_Series_Data.battery_cell_id == id))
 
     csv_time_series_data = query.scalars().all()
 

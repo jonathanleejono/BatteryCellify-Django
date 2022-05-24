@@ -1,176 +1,102 @@
-# import enum
-# import sqlalchemy
-# from sqlalchemy.dialects import postgresql
-# from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table, Enum, Float
-# from sqlalchemy.sql.expression import text
-# from sqlalchemy.sql.sqltypes import TIMESTAMP
-# from sqlalchemy.orm import relationship
-# from .database import SQLALCHEMY_DATABASE_URL
+import enum
+import sqlalchemy
+from sqlalchemy.dialects import postgresql
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table, Enum, Float
+from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.sqltypes import TIMESTAMP
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
 
-# # you can import MetaData from sqlalchemy or just leave the 'sqlalchemy.' in the front
+Base = declarative_base()
 
-# metadata = sqlalchemy.MetaData()
-
-# # capitalization of variable and table name must match
-
-# users = Table(
-#     "users",
-#     metadata,
-#     Column("id", Integer,
-#            primary_key=True, nullable=False),
-#     Column("firstName", String, nullable=False),
-#     Column("lastName", String, nullable=True, server_default="lastName"),
-#     Column("email", String, nullable=False, unique=True),
-#     Column("password", String, nullable=False),
-#     Column("created_at", TIMESTAMP(
-#         timezone=True), nullable=False, server_default=text('now()')),
-# )
+# do not add commas at the end of the columns
 
 
-# batteryCells = Table(
-#     "batteryCells",
-#     metadata,
-#     Column("id", Integer,
-#            primary_key=True, nullable=False),
-#     Column("cellNameId", String, nullable=False),
-#     Column("cycles", Float, nullable=False),
-#     Column("cathode", Enum('LCO', 'LFP', 'NCA', 'NMC', 'NMC-LCO', name="cathode_enum"),
-#            nullable=False, default="LCO", server_default="LCO"),
-#     Column("anode", Enum('graphite', name="anode_enum"),
-#            nullable=False, default="graphite", server_default="graphite"),
-#     Column("capacityAh", Float, nullable=False),
-#     Column("type", Enum('18650', 'pouch', 'prismatic', name="type_enum"),
-#            nullable=False, default="18650", server_default="18650"),
-#     Column("source", Enum('HNEI', 'UL-PUR', 'calce', 'oxford', 'snl', name="source_enum"),
-#            nullable=False, default="HNEI", server_default="HNEI"),
-#     Column("temperatureC", Float, nullable=False),
-#     Column("maxStateOfCharge", Float, nullable=False),
-#     Column("minStateOfCharge", Float, nullable=False),
-#     Column("depthOfDischarge", Float, nullable=False),
-#     Column("chargeCapacityRate", Float, nullable=False),
-#     Column("dischargeCapacityRate", Float, nullable=False),
-#     Column("created_at", TIMESTAMP(
-#         timezone=True), nullable=False, server_default=text('now()')),
-#     Column("owner_id", Integer, ForeignKey(
-#         "users.id", ondelete="CASCADE"), nullable=False)
-# )
+class Users(Base):
+    __tablename__ = "users"
 
-# csvCycleData = Table(
-#     "csvCycleData",
-#     metadata,
-#     Column("id", Integer,
-#            primary_key=True, nullable=False),
-#     Column("cycleIndex", Integer, nullable=False),
-#     Column("startTime", Float, nullable=False),
-#     Column("endTime", Float, nullable=False),
-#     Column("testTimeSeconds", Float, nullable=False),
-#     Column("minCurrentA", Float, nullable=False),
-#     Column("maxCurrentA", Float, nullable=False),
-#     Column("minVoltageV", Float, nullable=False),
-#     Column("maxVoltageV", Float, nullable=False),
-#     Column("chargeCapacityAh", Float, nullable=False),
-#     Column("dischargeCapacityAh", Float, nullable=False),
-#     Column("chargeEnergyWh", Float, nullable=False),
-#     Column("dischargeEnergyWh", Float, nullable=False),
-#     Column("created_at", TIMESTAMP(
-#         timezone=True), nullable=False, server_default=text('now()')),
-#     Column("batteryCell_id", Integer, ForeignKey(
-#         "batteryCells.id", ondelete="CASCADE"), nullable=False),
-#     Column("owner_id", Integer, ForeignKey(
-#         "users.id", ondelete="CASCADE"), nullable=False)
-# )
-# csvTimeSeriesData = Table(
-#     "csvTimeSeriesData",
-#     metadata,
-#     Column("id", Integer,
-#            primary_key=True, nullable=False),
-#     Column("dateTime", String, nullable=False),
-#     Column("testTimeSeconds", Float, nullable=False),
-#     Column("cycleIndex", Integer, nullable=False),
-#     Column("currentA", Float, nullable=False),
-#     Column("voltageV", Float, nullable=False),
-#     Column("chargeCapacityAh", Float, nullable=False),
-#     Column("dischargeCapacityAh", Float, nullable=False),
-#     Column("chargeEnergyWh", Float, nullable=False),
-#     Column("dischargeEnergyWh", Float, nullable=False),
-#     Column("environmentTempCelsius", Float, nullable=False),
-#     Column("cellTempCelsius", Float, nullable=False),
-#     Column("created_at", TIMESTAMP(
-#         timezone=True), nullable=False, server_default=text('now()')),
-#     Column("batteryCell_id", Integer, ForeignKey(
-#         "batteryCells.id", ondelete="CASCADE"), nullable=False),
-#     Column("owner_id", Integer, ForeignKey(
-#         "users.id", ondelete="CASCADE"), nullable=False)
-# )
+    id = Column(Integer, primary_key=True, nullable=False)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=True,)
+    email = Column(String, nullable=False, unique=True)
+    password = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(
+        timezone=True), nullable=False, server_default=text('now()'))
 
 
-# # the order matters
-# # engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URL)
+class Battery_Cells(Base):
+    __tablename__ = "battery_cells"
 
-# # metadata.create_all(engine)
-
-
-# # class PostBase(SQLModel):
-# #     title: str
-# #     content: str
-# #     colour: str
-# #     published: bool = True
-
-
-# # class PostCreate(PostBase):
-# #     pass
-
-
-# # class UserCreate(SQLModel):
-# #     email: EmailStr = Field(default=None, nullable=False)
-# #     password: str = Field(default=None, nullable=False)
-
-# # Column("source", Enum('HNEI', 'UL-PUR', 'calce', 'oxford', 'snl', name="source_enum"),
-# #        nullable=False, default="HNEI", server_default="HNEI"),
-
-# #  Column("created_at", TIMESTAMP(
-# #         timezone=True), nullable=False, server_default=text('now()')),
-
-
-# # class UserOut(SQLModel):
-# #     # id: int
-# #     email: EmailStr
-# #     # created_at: datetime
-
-# #     class Config:
-# #         orm_mode = True
+    id = Column(Integer,
+                primary_key=True, nullable=False)
+    owner_id = Column(Integer, ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
+    cell_name_id = Column(String, nullable=False)
+    cycles = Column(Float, nullable=False)
+    cathode = Column(Enum('LCO', 'LFP', 'NCA', 'NMC', 'NMC-LCO', name="cathode_enum"),
+                     nullable=False, default="LCO", server_default="LCO")
+    anode = Column(Enum('graphite', name="anode_enum"),
+                   nullable=False, default="graphite", server_default="graphite")
+    capacityAh = Column(Float, nullable=False)
+    type = Column(Enum('18650', 'pouch', 'prismatic', name="type_enum"),
+                  nullable=False, default="18650", server_default="18650")
+    source = Column(Enum('HNEI', 'UL-PUR', 'calce', 'oxford', 'snl', name="source_enum"),
+                    nullable=False, default="HNEI", server_default="HNEI")
+    temperature_c = Column(Float, nullable=False)
+    max_state_of_charge = Column(Float, nullable=False)
+    min_state_of_charge = Column(Float, nullable=False)
+    depth_of_discharge = Column(Float, nullable=False)
+    charge_capacity_rate = Column(Float, nullable=False)
+    discharge_capacity_rate = Column(Float, nullable=False)
+    created_at = Column(TIMESTAMP(
+        timezone=True), nullable=False, server_default=text('now()'))
 
 
-# # class User(SQLModel, table=True):
-# #     id: int = Field(default=None, primary_key=True)
-# #     email: EmailStr
-# #     password: str
+class Csv_Cycle_Data(Base):
+    __tablename__ = "csv_cycle_data"
+
+    id = Column(Integer,
+                primary_key=True, nullable=False)
+    owner_id = Column(Integer, ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
+    battery_cell_id = Column(Integer, ForeignKey(
+        "battery_cells.id", ondelete="CASCADE"), nullable=False)
+    cycle_index = Column(Integer, nullable=False)
+    start_time = Column(Float, nullable=False)
+    end_time = Column(Float, nullable=False)
+    test_time_seconds = Column(Float, nullable=False)
+    min_current_a = Column(Float, nullable=False)
+    max_current_a = Column(Float, nullable=False)
+    min_voltage_v = Column(Float, nullable=False)
+    max_voltage_v = Column(Float, nullable=False)
+    charge_capacity_ah = Column(Float, nullable=False)
+    discharge_capacity_ah = Column(Float, nullable=False)
+    charge_energy_wh = Column(Float, nullable=False)
+    discharge_energy_wh = Column(Float, nullable=False)
+    created_at = Column(TIMESTAMP(
+        timezone=True), nullable=False, server_default=text('now()'))
 
 
-# # # class PostOut(PostBase):
-# # #     post: PostBase
-# # #     # votes: int
+class Csv_Time_Series_Data(Base):
+    __tablename__ = "csv_time_series_data"
 
-# # #     class Config:
-# # #         orm_mode = True
-
-
-# # class Post_Test(PostBase, table=True):
-# #     id: int = Field(sa_column=sqlmodel.Column(
-# #         sqlmodel.Integer,
-# #         nullable=False, primary_key=True)
-# #     )
-# #     created_at: datetime = Field(default=datetime.now(timezone.utc), sa_column=sqlmodel.Column(
-# #         sqlmodel.DateTime(timezone=True),
-# #         nullable=False)
-# #     )
-
-
-# # class Token(SQLModel):
-# #     access_token: str
-# #     token_type: str
-
-
-# # class TokenData(SQLModel):
-# #     id: Optional[str] = None
+    id = Column(Integer,
+                primary_key=True, nullable=False)
+    owner_id = Column(Integer, ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
+    battery_cell_id = Column(Integer, ForeignKey(
+        "battery_cells.id", ondelete="CASCADE"), nullable=False)
+    date_time = Column(String, nullable=False)
+    test_time_seconds = Column(Float, nullable=False)
+    cycle_index = Column(Integer, nullable=False)
+    current_a = Column(Float, nullable=False)
+    voltage_v = Column(Float, nullable=False)
+    charge_capacity_ah = Column(Float, nullable=False)
+    discharge_capacity_ah = Column(Float, nullable=False)
+    charge_energy_wh = Column(Float, nullable=False)
+    discharge_energy_wh = Column(Float, nullable=False)
+    environment_temp_celsius = Column(Float, nullable=False)
+    cell_temp_celsius = Column(Float, nullable=False)
+    created_at = Column(TIMESTAMP(
+        timezone=True), nullable=False, server_default=text('now()'))

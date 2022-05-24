@@ -5,20 +5,50 @@ from typing import Optional, List
 from pydantic.types import conint, constr
 
 
+class UserBase(BaseModel):
+    first_name: constr(min_length=2, max_length=20)
+    last_name: constr(min_length=2, max_length=20)
+    email: EmailStr
+
+    class Config:
+        anystr_strip_whitespace = True
+
+
+class UserCreate(UserBase):
+    password: constr(min_length=7)
+
+
+class UserOut(BaseModel):
+    id: int
+    user: dict
+    token: str
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserUpdate(UserBase):
+    pass
+
+# -----------------------------------------
+
+
 class BatteryCellBase(BaseModel):
-    cellNameId: str
+    cell_name_id: str
     cycles: float
     cathode: str
     anode: str
     capacityAh: float
     type: str
     source: str
-    temperatureC: float
-    maxStateOfCharge: float
-    minStateOfCharge: float
-    depthOfDischarge: float
-    chargeCapacityRate: float
-    dischargeCapacityRate: float
+    temperature_c: float
+    max_state_of_charge: float
+    min_state_of_charge: float
+    depth_of_discharge: float
+    charge_capacity_rate: float
+    discharge_capacity_rate: float
 
 
 class BatteryCellCreate(BatteryCellBase):
@@ -31,9 +61,6 @@ class BatteryCellUpdate(BatteryCellBase):
 
 class BatteryCellOut(BatteryCellBase):
     id: int
-
-    class Config:
-        orm_mode = True
 
 
 class BatteryCellsManyOut(BaseModel):
@@ -69,39 +96,3 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 
 # -----------------------------------------
-
-
-class UserCreate(BaseModel):
-    firstName: constr(min_length=2, max_length=20)
-    email: EmailStr
-    password: constr(min_length=7)
-
-    class Config:
-        anystr_strip_whitespace = True
-
-
-class UserOut(BaseModel):
-    user: dict
-    token: str
-
-    class Config:
-        orm_mode = True
-
-
-class UserLoginOut(BaseModel):
-    email: EmailStr
-    password: str
-
-    class Config:
-        orm_mode = True
-
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-
-class UserUpdate(BaseModel):
-    firstName: str
-    email: EmailStr
-    lastName: str

@@ -21,7 +21,7 @@ router = APIRouter(
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.get("/", response_model=entities.BatteryCellsManyOut)
+@router.get("/", response_model=schemas.BatteryCellsManyOut)
 async def get_batteryCells(db: AsyncSession = Depends(get_db),
                            current_user: int = Depends(
                                oauth2.get_current_user),
@@ -34,8 +34,8 @@ async def get_batteryCells(db: AsyncSession = Depends(get_db),
                            page: Optional[int] = 1,
                            skip: Optional[int] = 0):
 
-    query = await db.execute(select(entities.Battery_Cells).where(
-        entities.Battery_Cells.owner_id == current_user.id))
+    query = await db.execute(select(models.Battery_Cells).where(
+        models.Battery_Cells.owner_id == current_user.id))
 
     all_batteryCells = query.scalars().all()
 
@@ -99,14 +99,14 @@ async def get_batteryCells(db: AsyncSession = Depends(get_db),
             }
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=entities.Battery_Cells)
-@limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def create_batteryCell(batteryCell: entities.BatteryCellCreate, request: Request, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BatteryCellOut)
+@limiter.limit("30/minute", error_message="Too many requests, please try again later")
+async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Request, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     # make sure the response_model = the table itself for pytest
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
 
-    created_batteryCell = entities.Battery_Cells(
+    created_batteryCell = models.Battery_Cells(
         **batteryCell.dict(), owner_id=current_user.id)
 
     db.add(created_batteryCell)
@@ -116,11 +116,11 @@ async def create_batteryCell(batteryCell: entities.BatteryCellCreate, request: R
     return created_batteryCell
 
 
-@router.patch("/{id}", response_model=entities.BatteryCellOut)
+@router.patch("/{id}", response_model=schemas.BatteryCellOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def update_batteryCell(request: Request, id: int, updating_batteryCell: entities.BatteryCellUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def update_batteryCell(request: Request, id: int, updating_batteryCell: schemas.BatteryCellUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    batteryCell = await db.get(entities.Battery_Cells, id)
+    batteryCell = await db.get(models.Battery_Cells, id)
 
     if not batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -145,7 +145,7 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: en
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
 async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    batteryCell = await db.get(entities.Battery_Cells, id)
+    batteryCell = await db.get(models.Battery_Cells, id)
 
     if not batteryCell:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -160,8 +160,8 @@ async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depe
 
     # if the battery cell gets deleted, then the csv data associated with that same battery cell should be deleted
 
-    cycle_query = await db.execute(select(entities.Csv_Cycle_Data).where(
-        entities.Csv_Cycle_Data.battery_cell_id == id))
+    cycle_query = await db.execute(select(models.Csv_Cycle_Data).where(
+        models.Csv_Cycle_Data.battery_cell_id == id))
 
     csv_cycle_data = cycle_query.scalars().all()
 
@@ -172,8 +172,8 @@ async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depe
     else:
         pass
 
-    time_series_query = await db.execute(select(entities.Csv_Time_Series_Data).where(
-        entities.Csv_Time_Series_Data.battery_cell_id == id))
+    time_series_query = await db.execute(select(models.Csv_Time_Series_Data).where(
+        models.Csv_Time_Series_Data.battery_cell_id == id))
 
     csv_time_series_data = time_series_query.scalars().all()
 

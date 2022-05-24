@@ -15,11 +15,11 @@ router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=entities.UserOut)
-@limiter.limit("5/minute", error_message="Too many requests, please try again later")
-async def create_user(user: entities.UserCreate, request: Request, db: AsyncSession = Depends(get_db)):
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+@limiter.limit("15/minute", error_message="Too many requests, please try again later")
+async def create_user(user: schemas.UserCreate, request: Request, db: AsyncSession = Depends(get_db)):
 
-    query = select(entities.Users).where(entities.Users.email == user.email)
+    query = select(models.Users).where(models.Users.email == user.email)
     existing_email = await db.execute(query)
     emailAlreadyExists = existing_email.first()
 
@@ -34,39 +34,35 @@ async def create_user(user: entities.UserCreate, request: Request, db: AsyncSess
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Please provide all values")
 
-    new_user = entities.Users(**user.dict())
+    new_user = models.Users(**user.dict())
     db.add(new_user)
     await db.commit()
-    # print("registered_user_id: ", registered_user_id)
-    # print("new_user: ", new_user)
-    # # print("new_user['id']: ", new_user["id"])
-    # print("new_user.id7: ", new_user.id)
     await db.refresh(new_user)
 
     access_token = oauth2.create_access_token(
         data={"user_id": new_user.id})
 
     registered_user = {"email": user.email,
-                       "first_name": user.first_name, "last_name": "last_name"}
+                       "first_name": user.first_name, "last_name": user.last_name}
 
     return {"id": new_user.id, "user": registered_user, "token": access_token}
 
 
-@router.post('/login', response_model=entities.UserOut)
-@limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def login_user(request: Request, logging_in_user: entities.UserLogin, db: AsyncSession = Depends(get_db)):
+@router.post('/login', response_model=schemas.UserOut)
+@limiter.limit("20/minute", error_message="Too many requests, please try again later")
+async def login_user(request: Request, logging_in_user: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
 
     if not logging_in_user.email or not logging_in_user.password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Please provide all values")
 
-    query = select(entities.Users).where(
-        entities.Users.email == logging_in_user.email)
+    query = select(models.Users).where(
+        models.Users.email == logging_in_user.email)
 
     user_exists = await db.execute(query)
 
     # using the 0 index is important to access attributes (eg. user.password)
-    user = user_exists.first()[0]
+    user = user_exists.scalar_one()
 
     if not user:
         raise HTTPException(
@@ -84,11 +80,11 @@ async def login_user(request: Request, logging_in_user: entities.UserLogin, db: 
     return {"id": user.id, "user": logged_in_user, "token": access_token}
 
 
-@router.patch('/updateUser', response_model=entities.UserOut)
-@limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def update_user(request: Request, updating_user: entities.UserUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.patch('/updateUser', response_model=schemas.UserOut)
+@limiter.limit("20/minute", error_message="Too many requests, please try again later")
+async def update_user(request: Request, updating_user: schemas.UserUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-    user = await db.get(entities.Users, current_user.id)
+    user = await db.get(models.Users, current_user.id)
 
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -99,10 +95,6 @@ async def update_user(request: Request, updating_user: entities.UserUpdate, db: 
     user_data = updating_user.dict(exclude_unset=True)
     for key, value in user_data.items():
         setattr(user, key, value)
-
-    print("updating_user7: ", updating_user)
-
-    # user = entities.Users(**updating_user.dict())
 
     db.add(user)
     await db.commit()

@@ -1,5 +1,5 @@
 import pytest
-from app import entities
+from app import models
 
 
 # async def test_get_all_battery_cells(authorized_client, test_battery_cells):
@@ -89,7 +89,7 @@ async def test_create_battery_cell(authorized_client, test_user, cell_name_id, c
 
     #  very important to add the forward slash "/" after the /battery-cells/ for JSONDecodeError
 
-    created_battery_cell = entities.Battery_Cells(**res.json())
+    created_battery_cell = models.Battery_Cells(**res.json())
 
     assert res.status_code == 201
     assert created_battery_cell.cell_name_id == cell_name_id
@@ -106,6 +106,77 @@ async def test_create_battery_cell(authorized_client, test_user, cell_name_id, c
     assert created_battery_cell.charge_capacity_rate == charge_capacity_rate
     assert created_battery_cell.discharge_capacity_rate == discharge_capacity_rate
     assert created_battery_cell.owner_id == test_user['id']
+
+
+@pytest.mark.parametrize("cell_name_id, cycles, cathode, anode, capacity_ah, type, source, temperature_c, max_state_of_charge, min_state_of_charge, depth_of_discharge, charge_capacity_rate, discharge_capacity_rate", [
+    (
+        "PPPCALCE_CX2-16_prism_LCO_25C_0-100_0.5/0.5C_a",
+        1014.00,
+        "LCO1",
+        "graphite1",
+        2.35,
+        "prismatic1",
+        "calce1",
+        25.00,
+        4,
+        2.0,
+        100.00,
+        1.80,
+        0.60,
+
+    ),
+    (
+        "HHHHCALCE_CX2-16_prism_LCO_25C_0-100_0.5/0.5C_a",
+        1014.00,
+        "LCO1",
+        "graphite1",
+        2.35,
+        "prismatic1",
+        "HNEI1",
+        25.00,
+        4,
+        2.0,
+        100.00,
+        1.80,
+        0.60,
+    )
+])
+async def test_create_battery_cell_invalid_enums(authorized_client, test_user, cell_name_id, cycles, cathode, anode, capacity_ah, type, source, temperature_c, max_state_of_charge, min_state_of_charge, depth_of_discharge, charge_capacity_rate, discharge_capacity_rate):
+    res = await authorized_client.post(
+        "/battery-cells/", json={"cell_name_id": cell_name_id,
+                                 "cycles": cycles,
+                                 "cathode": cathode,
+                                 "anode": anode,
+                                 "capacity_ah": capacity_ah,
+                                 "type": type,
+                                 "source": source,
+                                 "temperature_c": temperature_c,
+                                 "max_state_of_charge": max_state_of_charge,
+                                 "min_state_of_charge": min_state_of_charge,
+                                 "depth_of_discharge": depth_of_discharge,
+                                 "charge_capacity_rate": charge_capacity_rate,
+                                 "discharge_capacity_rate": discharge_capacity_rate,
+                                 })
+
+    #  very important to add the forward slash "/" after the /battery-cells/ for JSONDecodeError
+
+    created_battery_cell = models.Battery_Cells(**res.json())
+
+    assert res.status_code == 422
+    # assert created_battery_cell.cell_name_id == cell_name_id
+    # assert created_battery_cell.cycles == cycles
+    # assert created_battery_cell.cathode == cathode
+    # assert created_battery_cell.anode == anode
+    # assert created_battery_cell.capacity_ah == capacity_ah
+    # assert created_battery_cell.type == type
+    # assert created_battery_cell.source == source
+    # assert created_battery_cell.temperature_c == temperature_c
+    # assert created_battery_cell.max_state_of_charge == max_state_of_charge
+    # assert created_battery_cell.min_state_of_charge == min_state_of_charge
+    # assert created_battery_cell.depth_of_discharge == depth_of_discharge
+    # assert created_battery_cell.charge_capacity_rate == charge_capacity_rate
+    # assert created_battery_cell.discharge_capacity_rate == discharge_capacity_rate
+    # assert created_battery_cell.owner_id == test_user['id']
 
 
 # async def test_create_post_default_published_true(authorized_client, test_user, test_posts):
