@@ -1,19 +1,64 @@
 import pytest
-from app import models, schemas
+from app import models, schemas, utils
 
 
 async def test_get_all_battery_cells(authorized_client, test_battery_cells):
     print("Get All Battery Cells")
     res = await authorized_client.get("/battery-cells/")
 
-    def validate(battery_cell):
-        return schemas.BatteryCellOut(**battery_cell)
-    battery_cells_map = map(validate, res.json())
+    battery_cells_res = schemas.BatteryCellsManyOut(**res.json())
 
+    test_user1_battery_cells = [test_battery_cells[0], test_battery_cells[1]]
+
+    avg_capacity = utils.calc_float_avg(
+        "capacity_ah", test_user1_battery_cells)
+    avg_depth_of_discharge = utils.calc_float_avg(
+        "depth_of_discharge", test_user1_battery_cells)
+    avg_temperature_c = utils.calc_float_avg(
+        "temperature_c", test_user1_battery_cells)
+
+    total_cathode_lco_cells = utils.get_total_cells_by_value(
+        'cathode', 'LCO', test_user1_battery_cells)
+    total_cathode_lfp_cells = utils.get_total_cells_by_value(
+        'cathode', 'LFP', test_user1_battery_cells)
+    total_cathode_nca_cells = utils.get_total_cells_by_value(
+        'cathode', 'NCA', test_user1_battery_cells)
+    total_cathode_nmc_cells = utils.get_total_cells_by_value(
+        'cathode', 'NMC', test_user1_battery_cells)
+    total_cathode_nmclco_cells = utils.get_total_cells_by_value(
+        'cathode', 'NMC-LCO', test_user1_battery_cells)
+
+    avg_cycles_lco_cells = utils.get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "LCO", test_user1_battery_cells)
+    avg_cycles_lfp_cells = utils.get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "LFP", test_user1_battery_cells)
+    avg_cycles_nca_cells = utils.get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "NCA", test_user1_battery_cells)
+    avg_cycles_nmc_cells = utils.get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "NMC", test_user1_battery_cells)
+    avg_cycles_nmclco_cells = utils.get_avg_attr_by_another_attr_value(
+        "cycles", "cathode", "NMC-LCO", test_user1_battery_cells)
+
+    # the -1 for len(test_battery_cells) is because one of the 3 test battery cells
+    # was made by test user 2
+    assert len(battery_cells_res.battery_cells) == len(test_battery_cells) - 1
+    assert avg_capacity == battery_cells_res.avg_capacity
+    assert avg_depth_of_discharge == battery_cells_res.avg_depth_of_discharge
+    assert avg_temperature_c == battery_cells_res.avg_temperature_c
+    assert total_cathode_lco_cells == battery_cells_res.total_cathode_lco_cells
+    assert total_cathode_lfp_cells == battery_cells_res.total_cathode_lfp_cells
+    assert total_cathode_nca_cells == battery_cells_res.total_cathode_nca_cells
+    assert total_cathode_nmc_cells == battery_cells_res.total_cathode_nmc_cells
+    assert total_cathode_nmclco_cells == battery_cells_res.total_cathode_nmclco_cells
+    assert avg_cycles_lco_cells == battery_cells_res.avg_cycles_lco_cells
+    assert avg_cycles_lfp_cells == battery_cells_res.avg_cycles_lfp_cells
+    assert avg_cycles_nca_cells == battery_cells_res.avg_cycles_nca_cells
+    assert avg_cycles_nmc_cells == battery_cells_res.avg_cycles_nmc_cells
+    assert avg_cycles_nmclco_cells == battery_cells_res.avg_cycles_nmclco_cells
     assert res.status_code == 200
 
 
-async def test_unauthorized_user_get_all_battery_cellss(client):
+async def test_unauthorized_user_get_all_battery_cells(client):
     print("Unauthorized User Get All Battery Cells")
     res = await client.get("/battery-cells/")
     assert res.status_code == 401
@@ -144,6 +189,7 @@ async def test_update_battery_cell(authorized_client, test_user, test_battery_ce
         f"/battery-cells/{test_battery_cells[0].id}", json=data)
 
     updated_battery_cell = schemas.BatteryCellOut(**res.json())
+
     assert res.status_code == 200
     assert updated_battery_cell.cell_name_id == data['cell_name_id']
     assert updated_battery_cell.cycles == data['cycles']
@@ -195,6 +241,7 @@ async def test_unauthorized_user_create_cell(client):
 
 async def test_unauthorized_user_update_battery_cell(client, test_battery_cells):
     print("Unauthorized user update battery cell")
+
     data = {
         "cell_name_id": "HNEI_18650_LCO_25C_0-100_0.5/1.5C_b",
         "cycles": 1113.00,
@@ -252,8 +299,9 @@ async def test_update_other_user_battery_cell(authorized_client, test_battery_ce
         "discharge_capacity_rate": 1.50,
         "id": test_battery_cells[2].id,
     }
+
     # the 2 index (third battery cell) was created by test user 2, but test user 1 is logged in
-    # test user 1 is 403 forbidden from accessing another user's battery cell
+    # so test user 1 is 403 forbidden from accessing another user's battery cell
     res = await authorized_client.patch(
         f"/battery-cells/{test_battery_cells[2].id}", json=data)
 

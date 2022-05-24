@@ -73,6 +73,13 @@ class BatteryCellOut(BatteryCellBase):
         orm_mode = True
 
 
+class BatteryCellsTest(BaseModel):
+    battery_cells: list
+
+    class Config:
+        orm_mode = True
+
+
 class BatteryCellsManyOut(BaseModel):
     battery_cells: List[BatteryCellOut]
     total_battery_cells: int
@@ -105,3 +112,16 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 
 # -----------------------------------------
+
+
+class CsvCycleDataOut(BaseModel):
+    cycle_numbers: list
+    cycle_discharge_capacity_ah: list
+    cycle_discharge_energy_wh: list
+    energy_efficiency: list
+    coulombic_efficiency: list
+    cycle_numbers_capacity: list
+    cycle_numbers_energy: list
+
+    class Config:
+        orm_mode = True

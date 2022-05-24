@@ -21,7 +21,7 @@ def search_query_battery_cell(query_param, attr: str, list: list):
 
 def calc_float_avg(attr: str, list: list):
     avg = statistics.fmean([getattr(obj, attr) for obj in list])
-    return avg
+    return round(avg, 2)
 
 
 def get_total_cells_by_value(attr: str, value, list: list):
@@ -30,7 +30,7 @@ def get_total_cells_by_value(attr: str, value, list: list):
     return total
 
 
-def get_total_cells_by_attr(attr: str, list: list):
+def get_list_total_cells_by_attr(attr: str, list: list):
     total = [getattr(obj, attr) for obj in list]
     return total
 
@@ -93,4 +93,4 @@ def get_avg_attr_by_another_attr_value(attr1: str, attr2: str, valueForAttr2, li
     if len(totalattr) > 0:
         avg_totalattr = statistics.fmean(totalattr)
 
-    return avg_totalattr
+    return round(avg_totalattr, 2)

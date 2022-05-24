@@ -185,3 +185,29 @@ async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depe
         pass
 
     return {"msg": "Success! Battery cell removed", "id": id}
+
+
+# @router.get("/testing")
+# async def get_batteryCells(db: AsyncSession = Depends(get_db),
+#                            current_user: int = Depends(
+#                                oauth2.get_current_user),
+#                            limit: Optional[int] = 10,
+#                            search: Optional[str] = "",
+#                            cathode: Optional[str] = "",
+#                            anode: Optional[str] = "",
+#                            type: Optional[str] = "",
+#                            source: Optional[str] = "",
+#                            page: Optional[int] = 1,
+#                            skip: Optional[int] = 0):
+
+#     query = await db.execute(select(models.Battery_Cells).where(
+#         models.Battery_Cells.owner_id == current_user.id))
+
+#     all_batteryCells = query.fetchall()
+
+#     # res = [dict(battery_cell) for battery_cell in all_batteryCells]
+
+#     # print("res: ", res)
+#     # print("res[0]: ", res[0])
+
+#     return {"battery_cells": all_batteryCells}

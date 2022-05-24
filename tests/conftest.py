@@ -13,6 +13,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlmodel import SQLModel
 from app.models import Base
 from sqlalchemy.future import select
+import pandas as pd
+from io import StringIO
 
 
 DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}_test'
@@ -172,6 +174,43 @@ async def test_battery_cells(session, test_user, test_user2):
     test_battery_cells = all_battery_cells.scalars().all()
 
     return test_battery_cells
+
+
+@pytest.fixture
+async def test_csv_cycle_data(session, test_user, test_battery_cells):
+    print("Uploading test cycle data")
+    df = pd.read_csv(
+        'tests/HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_b_cycle_data.csv')
+
+    df = df.fillna(0)
+    if "Unnamed: 0" in df:
+        df = df.drop("Unnamed: 0", 1)
+
+    for i in range(len(df)):
+        query = models.Csv_Cycle_Data(
+            cycle_index=df["Cycle_Index"][i],
+            start_time=df["Start_Time"][i],
+            end_time=df["End_Time"][i],
+            test_time_seconds=df["Test_Time (s)"][i],
+            min_current_a=df["Min_Current (A)"][i],
+            max_current_a=df["Max_Current (A)"][i],
+            min_voltage_v=df["Min_Voltage (V)"][i],
+            max_voltage_v=df["Max_Voltage (V)"][i],
+            charge_capacity_ah=df["Charge_Capacity (Ah)"][i],
+            discharge_capacity_ah=df["Discharge_Capacity (Ah)"][i],
+            charge_energy_wh=df["Charge_Energy (Wh)"][i],
+            discharge_energy_wh=df["Discharge_Energy (Wh)"][i],
+            battery_cell_id=test_battery_cells[0].id,
+            owner_id=test_user["id"])
+        session.add(query)
+        await session.commit()
+
+    cell_csv_cycle_data = await session.execute(select(models.Csv_Cycle_Data).where(
+        models.Csv_Cycle_Data.battery_cell_id == test_battery_cells[0].id))
+
+    csv_cycle_data = cell_csv_cycle_data.scalars().all()
+
+    return csv_cycle_data
 
 
 @pytest.mark.anyio

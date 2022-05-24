@@ -76,7 +76,7 @@ export default function ManageCsvForm() {
   };
 
   const handleFile = (e) => {
-    formData.delete('uploadFile');
+    formData.delete('upload_file');
     if (e.target.files) setCsvFile(e.target.files[0]);
   };
 
@@ -91,13 +91,13 @@ export default function ManageCsvForm() {
       return toast.error('No CSV File Attached');
     }
 
-    formData.append('uploadFile', csvFile);
+    formData.append('upload_file', csvFile);
 
     if (selectedCsvType === 'cycleData') {
-      dispatch(uploadCycleData({ id: selectedBatteryCell.id, uploadFile: formData }));
+      dispatch(uploadCycleData({ id: selectedBatteryCell.id, upload_file: formData }));
     }
     if (selectedCsvType === 'timeSeriesData') {
-      dispatch(uploadTimeSeriesData({ id: selectedBatteryCell.id, uploadFile: formData }));
+      dispatch(uploadTimeSeriesData({ id: selectedBatteryCell.id, upload_file: formData }));
     }
   };
 
@@ -174,7 +174,7 @@ export default function ManageCsvForm() {
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} spacing={2}>
           <Button fullWidth size="large" variant="contained" component="label" disabled={isLoading} padding={5}>
             Attach CSV
-            <input type="file" hidden accept=".csv" onChange={handleFile} key="uploadFile" />
+            <input type="file" hidden accept=".csv" onChange={handleFile} key="upload_file" />
           </Button>
           <Button fullWidth size="large" variant="contained" type="submit" disabled={isLoading} ml={5}>
             Upload CSV

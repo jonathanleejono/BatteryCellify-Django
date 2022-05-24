@@ -2,9 +2,9 @@ import { toast } from 'react-toastify';
 import { showLoading, hideLoading, getAllBatteryCells } from '../allBatteryCells/allBatteryCellsSlice';
 import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
-export const uploadCycleDataThunk = async ({ id, uploadFile }, thunkAPI) => {
+export const uploadCycleDataThunk = async ({ id, upload_file }, thunkAPI) => {
   try {
-    const resp = await customFetch.post(`/csv-data/cycleData/${id}`, uploadFile);
+    const resp = await customFetch.post(`/csv/cycle-data/${id}`, upload_file);
 
     return resp.data;
   } catch (err) {
@@ -18,7 +18,7 @@ export const uploadCycleDataThunk = async ({ id, uploadFile }, thunkAPI) => {
 export const deleteCycleDataThunk = async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/csv-data/cycleData/${id}`);
+    const resp = await customFetch.delete(`/csv/cycle-data/${id}`);
     return resp.data.msg;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
@@ -30,7 +30,7 @@ export const deleteCycleDataThunk = async (id, thunkAPI) => {
 };
 export const getCycleDataThunk = async (id, thunkAPI) => {
   try {
-    const resp = await customFetch.get(`/csv-data/cycleData/${id}`);
+    const resp = await customFetch.get(`/csv/cycle-data/${id}`);
     return resp.data;
   } catch (err) {
     return (
@@ -40,9 +40,9 @@ export const getCycleDataThunk = async (id, thunkAPI) => {
   }
 };
 
-export const uploadTimeSeriesDataThunk = async ({ id, uploadFile }, thunkAPI) => {
+export const uploadTimeSeriesDataThunk = async ({ id, upload_file }, thunkAPI) => {
   try {
-    const resp = await customFetch.post(`/csv-data/timeSeriesData/${id}`, uploadFile);
+    const resp = await customFetch.post(`/csv/time-series-data/${id}`, upload_file);
     return resp.data;
   } catch (err) {
     return (
@@ -54,7 +54,7 @@ export const uploadTimeSeriesDataThunk = async ({ id, uploadFile }, thunkAPI) =>
 export const deleteTimeSeriesDataThunk = async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/csv-data/timeSeriesData/${id}`);
+    const resp = await customFetch.delete(`/csv/time-series-data/${id}`);
     return resp.data.msg;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
@@ -66,7 +66,7 @@ export const deleteTimeSeriesDataThunk = async (id, thunkAPI) => {
 };
 export const getTimeSeriesDataThunk = async (id, thunkAPI) => {
   try {
-    const resp = await customFetch.get(`/csv-data/timeSeriesData/${id}`);
+    const resp = await customFetch.get(`/csv/time-series-data/${id}`);
     return resp.data;
   } catch (err) {
     return (

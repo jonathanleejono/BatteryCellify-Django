@@ -2,7 +2,7 @@ from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from .. import models, schemas, oauth2, entities
 from ..database import database, get_db
 from ..utils import (
-    get_total_cells_by_attr,
+    get_list_total_cells_by_attr,
     get_cell_efficency,
     get_cycles_by_multiple_attr,
     get_attr_by_cycles_step
@@ -17,13 +17,13 @@ from sqlalchemy.future import select
 
 
 router = APIRouter(
-    prefix="/csv-data"
+    prefix="/csv"
 )
 
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.get("/cycleData/{id}", status_code=status.HTTP_200_OK)
+@router.get("/cycle-data/{id}", status_code=status.HTTP_200_OK)
 async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     query = await db.execute(select(models.Csv_Cycle_Data).where(
@@ -39,15 +39,15 @@ async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), curren
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    cycle_numbers = get_total_cells_by_attr(
+    cycle_numbers = get_list_total_cells_by_attr(
         "cycle_index", csv_cycle_data)
-    cycle_discharge_capacity_ah = get_total_cells_by_attr(
+    cycle_discharge_capacity_ah = get_list_total_cells_by_attr(
         "discharge_capacity_ah", csv_cycle_data)
-    cycle_discharge_energy_wh = get_total_cells_by_attr(
+    cycle_discharge_energy_wh = get_list_total_cells_by_attr(
         "discharge_energy_wh", csv_cycle_data)
-    cycle_charge_capacity_ah = get_total_cells_by_attr(
+    cycle_charge_capacity_ah = get_list_total_cells_by_attr(
         "charge_capacity_ah", csv_cycle_data)
-    cycle_charge_energy_wh = get_total_cells_by_attr(
+    cycle_charge_energy_wh = get_list_total_cells_by_attr(
         "charge_energy_wh", csv_cycle_data)
 
     # the greater than 1 and 0.1 is to remove outliers in the data:
@@ -72,9 +72,9 @@ async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), curren
             "cycle_numbers_energy": cycle_numbers_energy}
 
 
-@router.post("/cycleData/{id}", status_code=status.HTTP_201_CREATED)
+@router.post("/cycle-data/{id}", status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def upload_csv_cycle_data(id: int, request: Request, upload_file: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     battery_cell = await db.get(models.Battery_Cells, id)
 
@@ -91,7 +91,7 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Cycle data already exists")
 
-    contents = await uploadFile.read()
+    contents = await upload_file.read()
     s = str(contents, 'utf-8')
     data = StringIO(s)
     df = pd.read_csv(data)
@@ -115,14 +115,6 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
     if "Unnamed: 0" in df:
         df = df.drop("Unnamed: 0", 1)
 
-        # def create_post_model(battery_cell):
-        #         return models.Battery_Cells(**battery_cell)
-
-        #     battery_cells_map = map(create_post_model, df)
-        #     battery_cells = list(battery_cells_map)
-
-        #    db.add_all(battery_cells)
-
     for i in range(len(df)):
         query = models.Csv_Cycle_Data(
             cycle_index=df["Cycle_Index"][i],
@@ -145,7 +137,7 @@ async def upload_csv_cycle_data(id: int, request: Request, uploadFile: UploadFil
     return "Upload successful!"
 
 
-@router.delete("/cycleData/{id}", status_code=status.HTTP_200_OK)
+@router.delete("/cycle-data/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("3/minute", error_message="Too many requests, please try again later")
 async def delete_csv_cycle_data(request: Request, id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
@@ -169,7 +161,7 @@ async def delete_csv_cycle_data(request: Request, id: int, db: AsyncSession = De
     return {"msg": "Success! Cycle data for battery cell removed", "id": id}
 
 
-@router.get("/timeSeriesData/{id}", status_code=status.HTTP_200_OK)
+@router.get("/time-series-data/{id}", status_code=status.HTTP_200_OK)
 async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     query = await db.execute(select(models.Csv_Time_Series_Data).where(
@@ -185,11 +177,11 @@ async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), 
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
 
-    test_time_seconds = get_total_cells_by_attr(
+    test_time_seconds = get_list_total_cells_by_attr(
         "test_time_seconds", time_series_all_battery_cells)
-    time_series_discharge_capacity_ah = get_total_cells_by_attr(
+    time_series_discharge_capacity_ah = get_list_total_cells_by_attr(
         "discharge_capacity_ah", time_series_all_battery_cells)
-    time_series_discharge_energy_wh = get_total_cells_by_attr(
+    time_series_discharge_energy_wh = get_list_total_cells_by_attr(
         "discharge_energy_wh", time_series_all_battery_cells)
 
     voltage_cycles_100_step = get_attr_by_cycles_step(
@@ -299,9 +291,9 @@ async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), 
             "discharge_capacity_cycles_1100_step": discharge_capacity_cycles_1100_step, }
 
 
-@router.post("/timeSeriesData/{id}", status_code=status.HTTP_201_CREATED)
+@router.post("/time-series-data/{id}", status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def upload_csv_time_series_data(id: int, request: Request, uploadFile: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def upload_csv_time_series_data(id: int, request: Request, upload_file: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     battery_cell = await db.get(models.Battery_Cells, id)
 
@@ -318,7 +310,7 @@ async def upload_csv_time_series_data(id: int, request: Request, uploadFile: Upl
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Cycle data already exists")
 
-    contents = await uploadFile.read()
+    contents = await upload_file.read()
     s = str(contents, 'utf-8')
     data = StringIO(s)
     df = pd.read_csv(data)
@@ -336,7 +328,7 @@ async def upload_csv_time_series_data(id: int, request: Request, uploadFile: Upl
             or "Discharge_Energy (Wh)" not in df.columns
             or "Environment_Temperature (C)" not in df.columns
             or "Cell_Temperature (C)" not in df.columns
-            ):
+        ):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="CSV Cycle Data Incompatible")
 
@@ -368,7 +360,7 @@ async def upload_csv_time_series_data(id: int, request: Request, uploadFile: Upl
     return "Upload successful!"
 
 
-@router.delete("/timeSeriesData/{id}", status_code=status.HTTP_200_OK)
+@router.delete("/time-series-data/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("3/minute", error_message="Too many requests, please try again later")
 async def delete_csv_time_series_data(request: Request, id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
