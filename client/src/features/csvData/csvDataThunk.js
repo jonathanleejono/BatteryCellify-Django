@@ -4,7 +4,7 @@ import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
 export const uploadCycleDataThunk = async ({ id, upload_file }, thunkAPI) => {
   try {
-    const resp = await customFetch.post(`/csv/cycle-data/${id}`, upload_file);
+    const resp = await customFetch.post(`/api/csv/cycle-data/${id}`, upload_file);
 
     return resp.data;
   } catch (err) {
@@ -18,7 +18,7 @@ export const uploadCycleDataThunk = async ({ id, upload_file }, thunkAPI) => {
 export const deleteCycleDataThunk = async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/csv/cycle-data/${id}`);
+    const resp = await customFetch.delete(`/api/csv/cycle-data/${id}`);
     return resp.data.msg;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
@@ -30,7 +30,7 @@ export const deleteCycleDataThunk = async (id, thunkAPI) => {
 };
 export const getCycleDataThunk = async (id, thunkAPI) => {
   try {
-    const resp = await customFetch.get(`/csv/cycle-data/${id}`);
+    const resp = await customFetch.get(`/api/csv/cycle-data/${id}`);
     return resp.data;
   } catch (err) {
     return (

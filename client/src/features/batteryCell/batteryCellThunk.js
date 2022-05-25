@@ -23,7 +23,7 @@ export const createBatteryCellThunk = async (
   // very important to add slashs at end of path (eg. '/battery-cells/')
   // this is so urls can navigate properly
   try {
-    const resp = await customFetch.post('/battery-cells/', {
+    const resp = await customFetch.post('/api/battery-cells/', {
       cell_name_id,
       cycles,
       cathode,
@@ -50,7 +50,7 @@ export const createBatteryCellThunk = async (
 export const deleteBatteryCellThunk = async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/battery-cells/${id}`);
+    const resp = await customFetch.delete(`/api/battery-cells/${id}`);
     thunkAPI.dispatch(getAllBatteryCells());
     return resp.data.msg;
   } catch (err) {
@@ -63,7 +63,7 @@ export const deleteBatteryCellThunk = async (id, thunkAPI) => {
 };
 export const editBatteryCellThunk = async ({ id, batteryCell }, thunkAPI) => {
   try {
-    const resp = await customFetch.patch(`/battery-cells/${id}`, batteryCell);
+    const resp = await customFetch.patch(`/api/battery-cells/${id}`, batteryCell);
     thunkAPI.dispatch(clearValues());
     return resp.data;
   } catch (err) {

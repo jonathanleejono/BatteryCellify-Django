@@ -5,7 +5,7 @@ const TimeSeriesDecayGraph = ({
   test_time_seconds,
   time_series_discharge_capacity_ah,
   time_series_discharge_energy_wh,
-  batterycell_name_id,
+  battery_cell_name_id,
 }) => {
   return (
     <div>
@@ -18,8 +18,8 @@ const TimeSeriesDecayGraph = ({
             y: time_series_discharge_capacity_ah,
             mode: 'markers',
             marker: { color: 'blue' },
-            text: `ah_d: ${batterycell_name_id}`,
-            name: `ah_d: ${batterycell_name_id}`,
+            text: `ah_d: ${battery_cell_name_id}`,
+            name: `ah_d: ${battery_cell_name_id}`,
           },
           {
             type: 'scatter',
@@ -27,8 +27,8 @@ const TimeSeriesDecayGraph = ({
             y: time_series_discharge_energy_wh,
             mode: 'markers',
             marker: { color: 'red' },
-            text: `wh_d: ${batterycell_name_id}`,
-            name: `wh_d: ${batterycell_name_id}`,
+            text: `wh_d: ${battery_cell_name_id}`,
+            name: `wh_d: ${battery_cell_name_id}`,
           },
         ]}
         // -------------------------------------------------

@@ -15,7 +15,7 @@ from sqlalchemy.future import select
 import re
 
 router = APIRouter(
-    prefix="/battery-cells"
+    prefix="/api/battery-cells"
 )
 
 limiter = Limiter(key_func=get_remote_address)

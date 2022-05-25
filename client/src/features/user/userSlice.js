@@ -15,15 +15,15 @@ const initialState = {
 };
 
 export const registerUser = createAsyncThunk('user/registerUser', async (user, thunkAPI) => {
-  return registerUserThunk('/register', user, thunkAPI);
+  return registerUserThunk('/api/register', user, thunkAPI);
 });
 
 export const loginUser = createAsyncThunk('user/loginUser', async (user, thunkAPI) => {
-  return loginUserThunk('/login', user, thunkAPI);
+  return loginUserThunk('/api/login', user, thunkAPI);
 });
 
 export const updateUser = createAsyncThunk('user/updateUser', async (user, thunkAPI) => {
-  return updateUserThunk('/updateUser', user, thunkAPI);
+  return updateUserThunk('/api/updateUser', user, thunkAPI);
 });
 export const clearStore = createAsyncThunk('user/clearStore', clearStoreThunk);
 const userSlice = createSlice({

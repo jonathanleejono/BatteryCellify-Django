@@ -47,9 +47,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (user) {
-      // setTimeout(() => {
       navigate('/app/dashboard');
-      // }, 1);
     }
   }, [user, navigate]);
 

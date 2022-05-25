@@ -10,7 +10,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/api"
+)
 
 limiter = Limiter(key_func=get_remote_address)
 

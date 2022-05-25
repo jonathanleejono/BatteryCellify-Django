@@ -17,7 +17,7 @@ from sqlalchemy.future import select
 
 
 router = APIRouter(
-    prefix="/csv"
+    prefix="/api/csv"
 )
 
 limiter = Limiter(key_func=get_remote_address)

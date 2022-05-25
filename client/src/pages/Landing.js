@@ -1,6 +1,7 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, Link, Container, Typography, Button } from '@mui/material';
@@ -9,9 +10,7 @@ import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
 import Logo from '../components/Logo';
-import { useDispatch, useSelector } from 'react-redux';
 // sections
-import { LandingForm } from '../sections/landing';
 import AuthSocial from '../sections/auth/AuthSocial';
 
 // ----------------------------------------------------------------------
@@ -84,7 +83,7 @@ export default function Landing() {
               BatteryCellify
             </Typography>
 
-            <Typography sx={{ color: 'text.secondary', mb: 5 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 5 }}>
               Manage battery cells and research through a state of the art dashboard. Built on top of React, FastAPI,
               and PostgreSQL. Communicate to the database with the SQLAlchemy ORM. Visual data through Plotly.js, with
               the help of processing data with Pandas.

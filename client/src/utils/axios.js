@@ -4,7 +4,8 @@ import { getTokenFromLocalStorage } from './localStorage';
 
 const customFetch = axios.create({
   // baseURL: "https://batteryCellify-prod.herokuapp.com/",
-  baseURL: 'http://127.0.0.1:8000/',
+  baseURL: 'http://localhost:3000/',
+  // baseURL: 'http://127.0.0.1:8000/',
 });
 
 customFetch.interceptors.request.use((config) => {

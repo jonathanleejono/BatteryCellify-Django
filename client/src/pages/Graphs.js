@@ -127,7 +127,7 @@ export default function Graphs() {
               cycle_numbers={cycle_numbers}
               cycle_discharge_capacity_ah={cycle_discharge_capacity_ah}
               cycle_discharge_energy_wh={cycle_discharge_energy_wh}
-              batterycell_name_id={selectedBatteryCell.cell_name_id}
+              battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>
 
@@ -137,7 +137,7 @@ export default function Graphs() {
               cycle_numbers_energy={cycle_numbers_energy}
               energy_efficiency={energy_efficiency}
               coulombic_efficiency={coulombic_efficiency}
-              batterycell_name_id={selectedBatteryCell.cell_name_id}
+              battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>
 
@@ -146,7 +146,7 @@ export default function Graphs() {
               test_time_seconds={test_time_seconds}
               time_series_discharge_capacity_ah={time_series_discharge_capacity_ah}
               time_series_discharge_energy_wh={time_series_discharge_energy_wh}
-              batterycell_name_id={selectedBatteryCell.cell_name_id}
+              battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>
 
@@ -185,7 +185,7 @@ export default function Graphs() {
               discharge_capacity_cycles_900_step={discharge_capacity_cycles_900_step}
               discharge_capacity_cycles_1000_step={discharge_capacity_cycles_1000_step}
               discharge_capacity_cycles_1100_step={discharge_capacity_cycles_1100_step}
-              batterycell_name_id={selectedBatteryCell.cell_name_id}
+              battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>
         </Grid>
