@@ -73,5 +73,5 @@ logger.info("what is this4: %s", project_root_absolute)
 
 
 # this messes up creation of things, only use when deploying
-app.mount("/", StaticFiles(directory=f"{project_root_absolute}/client/build",
+app.mount("/", StaticFiles(directory=f"{project_root_absolute}/{current_file}/{current_file_dir}/{project_root}/{script_dir}",
           html=True), name="client/build")
