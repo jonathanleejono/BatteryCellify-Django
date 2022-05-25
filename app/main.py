@@ -51,8 +51,8 @@ app.include_router(authController.router)
 app.include_router(batteryCellController.router)
 app.include_router(csvDataController.router)
 
-# script_dir = os.path.dirname(__file__)
-# logger.info("relative path of script_dir: %s", script_dir)
+script_dir = os.path.dirname("./client/build")
+logger.info("relative path of script_dir: %s", script_dir)
 # # st_abs_file_path = os.path.join(script_dir, "./client/build")
 # # app.mount("/static", StaticFiles(directory=st_abs_file_path), name="static")
 
@@ -63,15 +63,15 @@ app.include_router(csvDataController.router)
 current_file = Path(__file__)
 current_file_dir = current_file.parent
 project_root = current_file_dir.parent
-project_root_parent = project_root.parent
+# project_root_parent = project_root.parent
 project_root_absolute = project_root.resolve()
+logger.info("what is this4: %s", project_root_absolute)
 # logger.info("what is this1: %s", current_file)
 # logger.info("what is this2: %s", current_file_dir)
 # logger.info("what is this3: %s", project_root)
 # logger.info("what is this5: %s", project_root.parent)
-# logger.info("what is this4: %s", project_root_absolute)
 
 
 # this messes up creation of things, only use when deploying
-app.mount("/", StaticFiles(directory=f"{project_root_parent}/client/build",
+app.mount("/", StaticFiles(directory=f"{project_root_absolute}/client/build",
           html=True), name="client/build")
