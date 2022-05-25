@@ -6,8 +6,7 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
 // components
 import MenuPopover from '../../components/MenuPopover';
-// mocks_
-import account from '../../_mock/account';
+// should occur after
 import { clearStore } from '../../features/user/userSlice';
 
 // ----------------------------------------------------------------------
@@ -64,7 +63,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
       </IconButton>
 
       <MenuPopover

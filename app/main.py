@@ -45,4 +45,4 @@ app.include_router(batteryCellController.router)
 app.include_router(csvDataController.router)
 
 # this messes up creation of things, only use when deploying
-# app.mount("/", StaticFiles(directory="client/build", html=True), name="static")
+app.mount("/", StaticFiles(directory="client/build", html=True), name="static")

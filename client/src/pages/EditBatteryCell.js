@@ -3,24 +3,11 @@ import { useState } from 'react';
 import { Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 import { EditBatteryCellForm } from '../sections/@dashboard/batteryCell';
-// mock
-import PRODUCTS from '../_mock/products';
 
 // ----------------------------------------------------------------------
 
 export default function EditBatteryCell() {
-  const [openFilter, setOpenFilter] = useState(false);
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
   return (
     <Page title="Dashboard: Products">
       <Container>

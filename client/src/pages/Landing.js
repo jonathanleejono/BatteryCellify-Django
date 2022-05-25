@@ -79,17 +79,17 @@ export default function Landing() {
       <RootStyle>
         <Container>
           <ContentStyle>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h2" gutterBottom>
               BatteryCellify
             </Typography>
 
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 5 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 5, fontSize: 18 }}>
               Manage battery cells and research through a state of the art dashboard. Built on top of React, FastAPI,
               and PostgreSQL. Communicate to the database with the SQLAlchemy ORM. Visual data through Plotly.js, with
               the help of processing data with Pandas.
             </Typography>
 
-            <Button variant="contained" component={RouterLink} to="/register">
+            <Button variant="contained" component={RouterLink} to="/register" size="large">
               Enter
             </Button>
 

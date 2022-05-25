@@ -51,7 +51,6 @@ import {
   setCreateBatteryCell,
   handleChange,
 } from '../features/batteryCell/batteryCellSlice';
-// import USERLIST from '../_mock/user';
 
 // ----------------------------------------------------------------------
 
