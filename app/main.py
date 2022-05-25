@@ -5,6 +5,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi import _rate_limit_exceeded_handler
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
 
@@ -44,5 +45,9 @@ app.include_router(authController.router)
 app.include_router(batteryCellController.router)
 app.include_router(csvDataController.router)
 
+script_dir = os.path.dirname(__file__)
+st_abs_file_path = os.path.join(script_dir, "./client/build")
+# app.mount("/static", StaticFiles(directory=st_abs_file_path), name="static")
+
 # this messes up creation of things, only use when deploying
-app.mount("/", StaticFiles(directory="client/build", html=True), name="static")
+app.mount("/", StaticFiles(directory=st_abs_file_path, html=True), name="static")
