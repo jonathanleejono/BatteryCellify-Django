@@ -3,15 +3,12 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Blog from './pages/Blog';
-import User from './pages/User';
 import AllBatteryCells from './pages/AllBatteryCells';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';
 import Landing from './pages/Landing';
-import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import Graphs from './pages/Graphs';
 import ManageCsv from './pages/ManageCsv';
