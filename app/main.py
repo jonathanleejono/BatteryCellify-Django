@@ -60,11 +60,11 @@ app.include_router(csvDataController.router)
 # path_str = path.dirname(path.realpath(__file__))
 # logger.info("relative path of static folder: %s", path_str)
 
-# current_file = Path(__file__)
-# current_file_dir = current_file.parent
-# project_root = current_file_dir.parent
-# project_root_parent = project_root.parent
-# project_root_absolute = project_root.resolve()
+current_file = Path(__file__)
+current_file_dir = current_file.parent
+project_root = current_file_dir.parent
+project_root_parent = project_root.parent
+project_root_absolute = project_root.resolve()
 # logger.info("what is this1: %s", current_file)
 # logger.info("what is this2: %s", current_file_dir)
 # logger.info("what is this3: %s", project_root)
