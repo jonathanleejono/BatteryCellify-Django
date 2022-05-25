@@ -60,13 +60,13 @@ app.include_router(csvDataController.router)
 # path_str = path.dirname(path.realpath(__file__))
 # logger.info("relative path of static folder: %s", path_str)
 
-current_file = Path(__file__)
-current_file_dir = current_file.parent
-project_root = current_file_dir.parent
-project_root_absolute = project_root.resolve()
-logger.info("what is this: %s", project_root_absolute)
+# current_file = Path(__file__)
+# current_file_dir = current_file.parent
+# project_root = current_file_dir.parent
+# project_root_absolute = project_root.resolve()
+# logger.info("what is this: %s", project_root_absolute)
 
 
 # this messes up creation of things, only use when deploying
-app.mount("https://battery-cellify.herokuapp.com/", StaticFiles(directory=f"{project_root_absolute}/client/build",
-          html=True), name="static")
+app.mount("/", StaticFiles(directory="client/build",
+          html=True), name="client/build")
