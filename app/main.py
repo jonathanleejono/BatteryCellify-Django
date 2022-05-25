@@ -68,5 +68,5 @@ logger.info("what is this: %s", project_root_absolute)
 
 
 # this messes up creation of things, only use when deploying
-app.mount("/", StaticFiles(directory=f"{project_root_absolute}/client/build",
+app.mount("https://battery-cellify.herokuapp.com/", StaticFiles(directory=f"{project_root_absolute}/client/build",
           html=True), name="static")
