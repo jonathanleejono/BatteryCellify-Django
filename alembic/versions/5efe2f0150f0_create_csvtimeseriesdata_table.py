@@ -18,9 +18,13 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table('csvTimeSeriesData',
+    op.create_table('csv_time_series_data',
                     sa.Column('id', sa.Integer(), nullable=False,
                               primary_key=True),
+                    sa.Column("owner_id", sa.Integer, sa.ForeignKey(
+                        "users.id", ondelete="CASCADE"), nullable=False),
+                    sa.Column("battery_cell_id", sa.Integer, sa.ForeignKey(
+                        "battery_cells.id", ondelete="CASCADE"), nullable=False),
                     sa.Column('date_time', sa.String(), nullable=False),
                     sa.Column('test_time_seconds', sa.Float(), nullable=False),
                     sa.Column('cycle_index', sa.Integer(), nullable=False),
@@ -36,10 +40,6 @@ def upgrade():
                     sa.Column('environment_temp_celsius',
                               sa.Float(), nullable=False),
                     sa.Column('cell_temp_celsius', sa.Float(), nullable=False),
-                    sa.Column("battery_cell_id", sa.Integer, sa.ForeignKey(
-                        "battery_cells.id", ondelete="CASCADE"), nullable=False),
-                    sa.Column("owner_id", sa.Integer, sa.ForeignKey(
-                        "users.id", ondelete="CASCADE"), nullable=False),
                     sa.Column("created_at", sa.TIMESTAMP(
                         timezone=True), nullable=False, server_default=text('now()')),
                     )
@@ -47,4 +47,5 @@ def upgrade():
 
 
 def downgrade():
+    op.drop_table('csv_time_series_data')
     pass

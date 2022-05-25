@@ -18,9 +18,13 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table('csvCycleData',
+    op.create_table('csv_cycle_data',
                     sa.Column('id', sa.Integer(), nullable=False,
                               primary_key=True),
+                    sa.Column("owner_id", sa.Integer, sa.ForeignKey(
+                        "users.id", ondelete="CASCADE"), nullable=False),
+                    sa.Column("battery_cell_id", sa.Integer, sa.ForeignKey(
+                        "battery_cells.id", ondelete="CASCADE"), nullable=False),
                     sa.Column('cycle_index', sa.Integer(), nullable=False),
                     sa.Column('start_time', sa.Float(), nullable=False),
                     sa.Column('end_time', sa.Float(), nullable=False),
@@ -38,10 +42,6 @@ def upgrade():
                     sa.Column('charge_energy_wh', sa.Float(), nullable=False),
                     sa.Column('discharge_energy_wh',
                               sa.Float(), nullable=False),
-                    sa.Column("battery_cell_id", sa.Integer, sa.ForeignKey(
-                        "battery_cells.id", ondelete="CASCADE"), nullable=False),
-                    sa.Column("owner_id", sa.Integer, sa.ForeignKey(
-                        "users.id", ondelete="CASCADE"), nullable=False),
                     sa.Column("created_at", sa.TIMESTAMP(
                         timezone=True), nullable=False, server_default=text('now()')),
                     )
@@ -49,5 +49,5 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('csvCycleData')
+    op.drop_table('csv_cycle_data')
     pass

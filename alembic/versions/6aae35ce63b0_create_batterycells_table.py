@@ -21,6 +21,8 @@ def upgrade():
     op.create_table('battery_cells',
                     sa.Column('id', sa.Integer(), nullable=False,
                               primary_key=True),
+                    sa.Column("owner_id", sa.Integer, sa.ForeignKey(
+                        "users.id", ondelete="CASCADE"), nullable=False),
                     sa.Column('cell_name_id', sa.String(), nullable=False),
                     sa.Column('cycles', sa.String(), nullable=False),
                     sa.Column('cathode', sa.Enum('LCO', 'LFP', 'NCA', 'NMC', 'NMC-LCO', name="cathodeOptions_enum"),
@@ -43,8 +45,6 @@ def upgrade():
                               sa.Float(), nullable=False),
                     sa.Column('discharge_capacity_rate',
                               sa.Float(), nullable=False),
-                    sa.Column("owner_id", sa.Integer, sa.ForeignKey(
-                        "users.id", ondelete="CASCADE"), nullable=False),
                     sa.Column("created_at", sa.TIMESTAMP(
                         timezone=True), nullable=False, server_default=text('now()')),
                     )
