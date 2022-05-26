@@ -49,7 +49,7 @@ async def client(session):
         finally:
             await session.close()
     app.dependency_overrides[get_db] = override_get_db
-    async with AsyncClient(app=app, base_url="http://127.0.0.1:8000/") as ac:
+    async with AsyncClient(app=app) as ac:
         yield ac
 
 
