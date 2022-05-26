@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 
 import sqlalchemy as sa
 
+# ------leaving this for future SQLModel use
+
 
 class UserBase(SQLModel):
     first_name: constr(min_length=2, max_length=20)
