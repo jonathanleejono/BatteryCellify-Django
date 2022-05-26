@@ -23,7 +23,7 @@ DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.dat
 engine = create_async_engine(DATABASE_URL, future=True)
 
 AsyncDatabaseSession = sessionmaker(
-    engine, autocommit=False, autoflush=False, expire_on_commit=False, class_=AsyncSession)
+    engine, expire_on_commit=False, class_=AsyncSession)
 
 
 @pytest.fixture()
