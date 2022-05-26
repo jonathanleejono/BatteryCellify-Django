@@ -39,8 +39,6 @@ async def on_startup():
     print("Database is starting up...")
     await init_db()
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 # @app.on_event("shutdown")
 # async def shutdown():
@@ -50,16 +48,6 @@ logger = logging.getLogger(__name__)
 app.include_router(authController.router)
 app.include_router(batteryCellController.router)
 app.include_router(csvDataController.router)
-
-script_dir = os.path.dirname("./client/build")
-logger.info("relative path of script_dir: %s", script_dir)
-
-
-current_file = Path(__file__)
-current_file_dir = current_file.parent
-project_root = current_file_dir.parent
-project_root_absolute = project_root.resolve()
-logger.info("what is this4: %s", project_root_absolute)
 
 
 # this messes up creation of things, only use when deploying

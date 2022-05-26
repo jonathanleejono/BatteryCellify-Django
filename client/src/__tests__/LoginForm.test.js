@@ -10,34 +10,34 @@ import Router from '../routes';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 
-// export const handlers = [
-//   rest.post('/api/login', (req, res, ctx) => {
-//     const { email } = req.body;
+export const handlers = [
+  rest.post('https://battery-cellify.herokuapp.com/api/login', (req, res, ctx) => {
+    const { email } = req.body;
 
-//     // ctx means context
+    // ctx means context
 
-//     return res(
-//       ctx.json({
-//         id: 13,
-//         user: {
-//           email,
-//           first_name: 'silas',
-//           last_name: 'whatever',
-//         },
-//       })
-//     );
-//   }),
-// ];
+    return res(
+      ctx.json({
+        id: 13,
+        user: {
+          email,
+          first_name: 'silas',
+          last_name: 'whatever',
+        },
+      })
+    );
+  }),
+];
 
 describe('LoginForm', () => {
   it('should allow a user to log in', async () => {
     render(
       <BrowserRouter>
-        {/* <Provider store={store}> */}
-        <Router>
-          <LoginForm />
-        </Router>
-        {/* </Provider> */}
+        <Provider store={store}>
+          <Router>
+            <LoginForm />
+          </Router>
+        </Provider>
       </BrowserRouter>
     );
 
