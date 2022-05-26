@@ -84,9 +84,9 @@ export default function Landing() {
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mb: 5, fontSize: 18 }}>
-              Manage battery cells and research through a state of the art dashboard. Built on top of React, FastAPI,
-              and PostgreSQL. Communicate to the database with the SQLAlchemy ORM. Visual data through Plotly.js, with
-              the help of processing data with Pandas.
+              Manage battery cells and research through a state of the art dashboard. Built on top of React and FastAPI.
+              Communicate to the PostgreSQL database with the SQLAlchemy ORM. Visual data through Plotly.js, with the
+              help of processing data with Pandas.
             </Typography>
 
             <Button variant="contained" component={RouterLink} to="/register" size="large">
