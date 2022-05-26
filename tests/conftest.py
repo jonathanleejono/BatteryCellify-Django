@@ -17,7 +17,7 @@ import pandas as pd
 from io import StringIO
 
 
-DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}_test'
+DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 
 
 engine = create_async_engine(DATABASE_URL, future=True)
