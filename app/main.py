@@ -1,7 +1,7 @@
 import logging
 from fastapi import FastAPI
 from .database import init_db
-from .controllers import authController, batteryCellController, csvDataController
+from .controllers import batteryCellController, csvDataController, usersController
 from slowapi.errors import RateLimitExceeded
 from slowapi import _rate_limit_exceeded_handler
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.state.limiter = authController.limiter
+app.state.limiter = usersController.limiter
 app.state.limiter = batteryCellController.limiter
 
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -45,7 +45,7 @@ async def on_startup():
 #     await database.disconnect()
 
 
-app.include_router(authController.router)
+app.include_router(usersController.router)
 app.include_router(batteryCellController.router)
 app.include_router(csvDataController.router)
 
