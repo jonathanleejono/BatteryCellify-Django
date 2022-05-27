@@ -208,7 +208,8 @@ export default function AllBatteryCells() {
             <Button
               variant="contained"
               component={RouterLink}
-              to="/app/add-battery-cell"
+              // mark-app
+              to="/add-battery-cell"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
               Add Battery Cell
@@ -328,7 +329,8 @@ export default function AllBatteryCells() {
                         <TableCell component="th" scope="row" padding="none" align="center">
                           <IconButton
                             component={RouterLink}
-                            to="/app/edit-battery-cell"
+                            // mark-app
+                            to="/edit-battery-cell"
                             sx={{ color: 'text.secondary' }}
                             onClick={() => {
                               dispatch(

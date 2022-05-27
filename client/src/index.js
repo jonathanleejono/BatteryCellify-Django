@@ -1,7 +1,7 @@
 // scroll bar
 import 'simplebar/src/simplebar.css';
-
 import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer, Slide } from 'react-toastify';
@@ -20,16 +20,18 @@ import App from './App';
 //   worker.start();
 // }
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <HelmetProvider>
-    <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
+    {/* <BrowserRouter> */}
+    <Provider store={store}>
+      <App />
       <ToastContainer position="top-center" autoClose={2000} hideProgressBar transition={Slide} />
-    </BrowserRouter>
-  </HelmetProvider>,
-  document.getElementById('root')
+    </Provider>
+    {/* </BrowserRouter> */}
+  </HelmetProvider>
 );
 
 // If you want to enable client cache, register instead.

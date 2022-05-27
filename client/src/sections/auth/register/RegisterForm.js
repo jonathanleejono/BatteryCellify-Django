@@ -7,7 +7,7 @@ import { Stack, MenuItem, TextField, IconButton, InputAdornment } from '@mui/mat
 import { LoadingButton } from '@mui/lab';
 // component
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, registerUser } from '../../../features/user/userSlice';
+import { registerUser } from '../../../features/user/userSlice';
 import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -20,12 +20,6 @@ export default function RegisterForm() {
   const dispatch = useDispatch();
 
   const { user, isLoading } = useSelector((store) => store.user);
-
-  const [currency, setCurrency] = useState('EUR');
-
-  const handleChange = (event) => {
-    setCurrency(event.target.value);
-  };
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
@@ -44,7 +38,8 @@ export default function RegisterForm() {
     validationSchema: RegisterSchema,
     onSubmit: () => {
       dispatch(registerUser(formik.values));
-      navigate('/app/dashboard', { replace: true });
+      // mark-app
+      navigate('/dashboard', { replace: true });
     },
   });
 
@@ -53,7 +48,8 @@ export default function RegisterForm() {
   useEffect(() => {
     if (user) {
       // setTimeout(() => {
-      navigate('/app/dashboard');
+      // mark-app
+      navigate('/dashboard');
       // }, 1);
     }
   }, [user, navigate]);

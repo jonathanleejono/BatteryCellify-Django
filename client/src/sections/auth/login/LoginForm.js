@@ -7,7 +7,7 @@ import { Link, Stack, Checkbox, TextField, IconButton, InputAdornment, FormContr
 import { LoadingButton } from '@mui/lab';
 // component
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, registerUser } from '../../../features/user/userSlice';
+import { loginUser } from '../../../features/user/userSlice';
 import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -35,7 +35,8 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: () => {
       dispatch(loginUser(formik.values));
-      navigate('/app/dashboard', { replace: true });
+      // mark-app
+      navigate('/dashboard', { replace: true });
     },
   });
 
@@ -47,7 +48,8 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (user) {
-      navigate('/app/dashboard');
+      // mark-app
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 

@@ -73,7 +73,8 @@ export default function BatteryCellMoreMenu(
       >
         <MenuItem
           component={RouterLink}
-          to="/app/edit-battery-cell"
+          // mark-app
+          to="/edit-battery-cell"
           sx={{ color: 'text.secondary' }}
           onClick={() => {
             dispatch(

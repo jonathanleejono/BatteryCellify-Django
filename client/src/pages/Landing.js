@@ -70,7 +70,8 @@ export default function Landing() {
 
   useEffect(() => {
     if (user) {
-      navigate('/app/dashboard', { replace: true });
+      // mark-app
+      navigate('/dashboard', { replace: true });
     }
   }, [user, navigate]);
 
