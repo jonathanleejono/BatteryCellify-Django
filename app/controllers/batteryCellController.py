@@ -101,7 +101,10 @@ async def get_batteryCells(db: AsyncSession = Depends(get_db),
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BatteryCellOut)
 @limiter.limit("30/minute", error_message="Too many requests, please try again later")
-async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Request, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def create_batteryCell(batteryCell: schemas.BatteryCellCreate,
+                             request: Request,
+                             db: AsyncSession = Depends(get_db),
+                             current_user: int = Depends(oauth2.get_current_user)):
 
     # make sure the response_model = the table itself for pytest
     # make sure in the function it says "request: Request" and not "req: Request", or else the slowapi rate limiter won't work
@@ -118,7 +121,11 @@ async def create_batteryCell(batteryCell: schemas.BatteryCellCreate, request: Re
 
 @router.patch("/{id}", response_model=schemas.BatteryCellOut)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def update_batteryCell(request: Request, id: int, updating_batteryCell: schemas.BatteryCellUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def update_batteryCell(request: Request,
+                             id: int,
+                             updating_batteryCell: schemas.BatteryCellUpdate,
+                             db: AsyncSession = Depends(get_db),
+                             current_user: int = Depends(oauth2.get_current_user)):
 
     batteryCell = await db.get(models.Battery_Cells, id)
 
@@ -143,7 +150,10 @@ async def update_batteryCell(request: Request, id: int, updating_batteryCell: sc
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def delete_batteryCell(request: Request, id: int,  db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def delete_batteryCell(request: Request,
+                             id: int,
+                             db: AsyncSession = Depends(get_db),
+                             current_user: int = Depends(oauth2.get_current_user)):
 
     batteryCell = await db.get(models.Battery_Cells, id)
 

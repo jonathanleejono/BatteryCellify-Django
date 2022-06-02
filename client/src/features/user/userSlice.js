@@ -25,7 +25,9 @@ export const loginUser = createAsyncThunk('user/loginUser', async (user, thunkAP
 export const updateUser = createAsyncThunk('user/updateUser', async (user, thunkAPI) => {
   return updateUserThunk('/api/updateUser', user, thunkAPI);
 });
+
 export const clearStore = createAsyncThunk('user/clearStore', clearStoreThunk);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,

@@ -83,7 +83,10 @@ async def login_user(request: Request, logging_in_user: schemas.UserLogin, db: A
 
 @router.patch('/updateUser', response_model=schemas.UserOut)
 @limiter.limit("20/minute", error_message="Too many requests, please try again later")
-async def update_user(request: Request, updating_user: schemas.UserUpdate, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def update_user(request: Request,
+                      updating_user: schemas.UserUpdate,
+                      db: AsyncSession = Depends(get_db),
+                      current_user: int = Depends(oauth2.get_current_user)):
 
     user = await db.get(models.Users, current_user.id)
 

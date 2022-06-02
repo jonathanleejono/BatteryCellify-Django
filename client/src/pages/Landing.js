@@ -93,15 +93,6 @@ export default function Landing() {
             <Button variant="contained" component={RouterLink} to="/register" size="large">
               Enter
             </Button>
-
-            {/* {smUp && (
-            <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-              Already have an account?{' '}
-              <Link variant="subtitle2" to="/login" component={RouterLink}>
-                Login
-              </Link>
-            </Typography>
-            {/* )} */}
           </ContentStyle>
         </Container>
 

@@ -38,7 +38,6 @@ import {
   BatteryCellListToolbar,
   BatteryCellMoreMenu,
 } from '../sections/@dashboard/batteryCellTable';
-import { BatteryCellsSort, BatteryCellsFilter } from '../sections/@dashboard/batteryCell';
 // mock
 import {
   getAllBatteryCells,

@@ -24,7 +24,9 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 @router.get("/cycle-data/{id}", status_code=status.HTTP_200_OK)
-async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def get_csv_cycle_data(id: int,
+                             db: AsyncSession = Depends(get_db),
+                             current_user: int = Depends(oauth2.get_current_user)):
 
     query = await db.execute(select(models.Csv_Cycle_Data).where(
         models.Csv_Cycle_Data.battery_cell_id == id))
@@ -74,7 +76,11 @@ async def get_csv_cycle_data(id: int, db: AsyncSession = Depends(get_db), curren
 
 @router.post("/cycle-data/{id}", status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def upload_csv_cycle_data(id: int, request: Request, upload_file: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def upload_csv_cycle_data(id: int,
+                                request: Request,
+                                upload_file: UploadFile,
+                                db: AsyncSession = Depends(get_db),
+                                current_user: int = Depends(oauth2.get_current_user)):
 
     battery_cell = await db.get(models.Battery_Cells, id)
 
@@ -139,7 +145,10 @@ async def upload_csv_cycle_data(id: int, request: Request, upload_file: UploadFi
 
 @router.delete("/cycle-data/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("3/minute", error_message="Too many requests, please try again later")
-async def delete_csv_cycle_data(request: Request, id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def delete_csv_cycle_data(request: Request,
+                                id: int,
+                                db: AsyncSession = Depends(get_db),
+                                current_user: int = Depends(oauth2.get_current_user)):
 
     query = await db.execute(select(models.Csv_Cycle_Data).where(
         models.Csv_Cycle_Data.battery_cell_id == id))
@@ -162,7 +171,9 @@ async def delete_csv_cycle_data(request: Request, id: int, db: AsyncSession = De
 
 
 @router.get("/time-series-data/{id}", status_code=status.HTTP_200_OK)
-async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def get_csv_time_series_data(id: int,
+                                   db: AsyncSession = Depends(get_db),
+                                   current_user: int = Depends(oauth2.get_current_user)):
 
     query = await db.execute(select(models.Csv_Time_Series_Data).where(
         models.Csv_Time_Series_Data.battery_cell_id == id))
@@ -293,7 +304,11 @@ async def get_csv_time_series_data(id: int, db: AsyncSession = Depends(get_db), 
 
 @router.post("/time-series-data/{id}", status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/minute", error_message="Too many requests, please try again later")
-async def upload_csv_time_series_data(id: int, request: Request, upload_file: UploadFile, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def upload_csv_time_series_data(id: int,
+                                      request: Request,
+                                      upload_file: UploadFile,
+                                      db: AsyncSession = Depends(get_db),
+                                      current_user: int = Depends(oauth2.get_current_user)):
 
     battery_cell = await db.get(models.Battery_Cells, id)
 
@@ -362,7 +377,10 @@ async def upload_csv_time_series_data(id: int, request: Request, upload_file: Up
 
 @router.delete("/time-series-data/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("3/minute", error_message="Too many requests, please try again later")
-async def delete_csv_time_series_data(request: Request, id: int, db: AsyncSession = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def delete_csv_time_series_data(request: Request,
+                                      id: int,
+                                      db: AsyncSession = Depends(get_db),
+                                      current_user: int = Depends(oauth2.get_current_user)):
 
     query = await db.execute(select(models.Csv_Time_Series_Data).where(
         models.Csv_Time_Series_Data.battery_cell_id == id))

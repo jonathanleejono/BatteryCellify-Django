@@ -67,7 +67,7 @@ export default function DashboardApp() {
             <AppWidgetSummary
               title="Total No. Battery Cells"
               total={total_battery_cells}
-              icon={'ant-design:android-filled'}
+              icon={'ic:round-battery-charging-full'}
             />
           </Grid>
 
@@ -76,7 +76,7 @@ export default function DashboardApp() {
               title="Avg. Capacity (Ah)"
               total={avg_capacity}
               color="info"
-              icon={'ant-design:apple-filled'}
+              icon={'ic:baseline-battery-3-bar'}
             />
           </Grid>
 
@@ -85,7 +85,7 @@ export default function DashboardApp() {
               title="Avg. Depth of Discharge"
               total={avg_depth_of_discharge}
               color="warning"
-              icon={'ant-design:windows-filled'}
+              icon={'carbon:observed-lightning'}
             />
           </Grid>
 
@@ -94,7 +94,7 @@ export default function DashboardApp() {
               title="Avg. Temperature (C)"
               total={avg_temperature_c}
               color="error"
-              icon={'ant-design:bug-filled'}
+              icon={'bi:thermometer-half'}
             />
           </Grid>
 
@@ -112,7 +112,7 @@ export default function DashboardApp() {
             />
           </Grid>
 
-          {/* the type */}
+          {/* the cathode */}
 
           <Grid item xs={12} md={6} lg={6}>
             <AppCurrentVisits

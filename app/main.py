@@ -91,29 +91,29 @@ app.include_router(csvDataController.router)
 # app.mount("/", StaticFiles(directory="client/build",
 #           html=True), name="client/build")
 
-build_dir = Path("./client/build")
+***REMOVED***_dir = Path("./client/build")
 
-templates = Jinja2Templates(directory=build_dir.as_posix())
-
-
-app.mount(
-    "/static/",
-    StaticFiles(directory=build_dir / "static"),
-    name="React App static files",
-)
+# templates = Jinja2Templates(directory=build_dir.as_posix())
 
 
-@app.get("/{full_path:path}")
-async def catch_all(request: Request, full_path: str):
-    print("full_pathTEST: " + full_path)
-    print("os.path.exists: ", os.path)
-    # path = request.path_params["full_path"]
-    # file = "/client/build/"+path
+# app.mount(
+#     "/static/",
+#     StaticFiles(directory=build_dir / "static"),
+#     name="React App static files",
+# )
 
-    # print('look for: ', path, file)
-    # if os.path.exists(file):
 
-    #     return FileResponse(file)
-    # else:
-    #     return templates.TemplateResponse("index.html", {"request": request})
-    return templates.TemplateResponse("index.html", {"request": request})
+# @app.get("/{full_path:path}")
+# async def catch_all(request: Request, full_path: str):
+#     print("full_pathTEST: " + full_path)
+#     print("os.path.exists: ", os.path)
+#     # path = request.path_params["full_path"]
+#     # file = "/client/build/"+path
+
+#     # print('look for: ', path, file)
+#     # if os.path.exists(file):
+
+#     #     return FileResponse(file)
+#     # else:
+#     #     return templates.TemplateResponse("index.html", {"request": request})
+#     return templates.TemplateResponse("index.html", {"request": request})

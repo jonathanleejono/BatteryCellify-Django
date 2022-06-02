@@ -3,10 +3,13 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
-
-window.URL.createObjectURL = () => {};
-
 import { server } from './mocks/server';
+
+import 'jest-canvas-mock';
+
+// window.URL.createObjectURL = () => {};
+global.URL.createObjectURL = jest.fn();
+window.scrollTo = jest.fn();
 
 beforeAll(() => {
   // Enable the mocking in tests.

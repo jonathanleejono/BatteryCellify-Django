@@ -20,32 +20,8 @@ import AddBatteryCell from './pages/AddBatteryCell';
 import EditBatteryCell from './pages/EditBatteryCell';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
-import routes from './newRoutes';
-// import PrivateRoute from './PrivateRoute';
+import routes from './testRoutes';
 
-// ----------------------------------------------------------------------
-
-// const Layout = ({ component: LayoutComponent, routes, isPublic }) => {
-//   const paths = routes.map((x) => x.path);
-//   const layout = (
-//     <LayoutComponent
-//       children={routes.map((x) => (
-//         <Route key={x.path} {...x} />
-//       ))}
-//     />
-//   );
-//   return <Route exact path={paths} children={layout} />;
-
-// :
-
-// (
-//   <PrivateRoute exact path={paths} children={layout} />
-// );
-// };
-
-// {routes.map((x, i) => (
-//   <Layout key={i} {...x} />
-// ))}
 export default function App() {
   return (
     <ThemeProvider>

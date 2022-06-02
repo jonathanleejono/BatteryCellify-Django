@@ -9,7 +9,7 @@ import { AddBatteryCellForm } from '../sections/@dashboard/batteryCell';
 
 export default function AddBatteryCell() {
   return (
-    <Page title="Dashboard: Products">
+    <Page title="Add Battery Cell">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Add Battery Cell

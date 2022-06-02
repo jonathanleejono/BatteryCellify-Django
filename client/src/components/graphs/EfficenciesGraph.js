@@ -8,8 +8,6 @@ const EfficenciesGraph = ({
   coulombic_efficiency,
   battery_cell_name_id,
 }) => {
-  // cycle numbers and the effiencies do not have the same length right now
-
   return (
     <div>
       <Plot

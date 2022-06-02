@@ -60,6 +60,8 @@ export default function RegisterForm() {
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
+              id="First name"
+              name="First name"
               fullWidth
               label="First name"
               {...getFieldProps('first_name')}
