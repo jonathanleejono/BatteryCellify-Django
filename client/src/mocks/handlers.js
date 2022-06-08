@@ -10,12 +10,10 @@ export const handlers = [
       ctx.json({
         id: 1,
         user: {
-          email,
+          email: 'silasw2@gmail.com',
           first_name,
           last_name,
-          password,
-          // first_name: 'silas',
-          // last_name: 'whatever',
+          password: 'hello123',
         },
       })
     );

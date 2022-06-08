@@ -7,6 +7,15 @@ import { server } from './mocks/server';
 
 import 'jest-canvas-mock';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = require('./mocks/browser');
+  worker.start();
+}
+
 // window.URL.createObjectURL = () => {};
 global.URL.createObjectURL = jest.fn();
 window.scrollTo = jest.fn();

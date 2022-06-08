@@ -54,7 +54,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      toast.success(`Hello There ${user.first_name}`);
+      toast.success(`Hello there ${user.first_name}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -69,7 +69,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       state.token = token;
-      toast.success(`Welcome Back ${user.first_name}`);
+      toast.success(`Hello there ${user.first_name}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
