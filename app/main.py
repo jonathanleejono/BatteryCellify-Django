@@ -59,18 +59,18 @@ if settings.environment == "development":
     app.include_router(testSeedDbController.router)
 
 
-build_dir = Path("./client/build")
+***REMOVED***_dir = Path("./client/build")
 
-templates = Jinja2Templates(directory=build_dir.as_posix())
-
-
-app.mount(
-    "/static/",
-    StaticFiles(directory=build_dir / "static"),
-    name="React App static files",
-)
+# templates = Jinja2Templates(directory=build_dir.as_posix())
 
 
-@app.get("/{full_path:path}")
-async def catch_all(request: Request, full_path: str):
-    return templates.TemplateResponse("index.html", {"request": request})
+# app.mount(
+#     "/static/",
+#     StaticFiles(directory=build_dir / "static"),
+#     name="React App static files",
+# )
+
+
+# @app.get("/{full_path:path}")
+# async def catch_all(request: Request, full_path: str):
+#     return templates.TemplateResponse("index.html", {"request": request})
