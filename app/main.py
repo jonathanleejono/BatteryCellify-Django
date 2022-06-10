@@ -14,8 +14,6 @@ from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from sqlalchemy.exc import IntegrityError
-from starlette.exceptions import HTTPException as StarletteHTTPException
-from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from .config import settings
