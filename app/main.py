@@ -23,7 +23,7 @@ from .database import init_db
 
 app = FastAPI()
 
-origins = ["*"]
+origins = ["https://batterycellify.vercel.app"]
 
 app.add_middleware(
     CORSMiddleware,
