@@ -46,6 +46,8 @@ export default function ProfileForm() {
             <TextField
               fullWidth
               label="First name"
+              data-cy="first_name"
+              inputProps={{ data_cy: 'first-name-input' }}
               {...getFieldProps('first_name')}
               error={Boolean(touched.first_name && errors.first_name)}
               helperText={touched.first_name && errors.first_name}
@@ -56,6 +58,7 @@ export default function ProfileForm() {
               fullWidth
               label="Last name"
               {...getFieldProps('last_name')}
+              data-cy="last_name"
               error={Boolean(touched.last_name && errors.last_name)}
               helperText={touched.last_name && errors.last_name}
               value={formik.values.last_name}
@@ -64,8 +67,9 @@ export default function ProfileForm() {
 
           <TextField
             fullWidth
-            autoComplete="username"
+            autoComplete="email"
             type="email"
+            data-cy="email"
             label="Email address"
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}

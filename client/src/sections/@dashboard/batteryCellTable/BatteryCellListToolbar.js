@@ -92,6 +92,7 @@ export default function BatteryCellListToolbar({ numSelected, filterName, onFilt
         {/* {numSelected > 0 ? ( */}
         <Tooltip title="Delete">
           <IconButton
+            data-cy="delete-icon"
             onClick={() => {
               if (numSelected === 0) {
                 toast.error('Please Select Battery Cells');
@@ -133,6 +134,7 @@ export default function BatteryCellListToolbar({ numSelected, filterName, onFilt
             Cancel
           </Button>
           <Button
+            data-cy="modal-delete-confirm"
             onClick={() => {
               Object.keys(selected).forEach((id) => {
                 dispatch(deleteBatteryCell(selected[id]));

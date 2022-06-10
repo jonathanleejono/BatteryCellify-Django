@@ -70,7 +70,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           <AccountStyle>
             <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
             <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              <Typography data-cy="dashboard-sidebar-name" variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {user.first_name} {user.last_name}
               </Typography>
               {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>

@@ -283,7 +283,7 @@ export default function AllBatteryCells() {
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
+              <Table data-cy="battery-cells-table">
                 <BatteryCellListHead
                   order={order}
                   orderBy={orderBy}
@@ -323,12 +323,17 @@ export default function AllBatteryCells() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, id)} />
+                          <Checkbox
+                            data-cy="battery-cell-checkbox"
+                            checked={isItemSelected}
+                            onChange={(event) => handleClick(event, id)}
+                          />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none" align="center">
                           <IconButton
                             component={RouterLink}
                             // mark-app
+                            data-cy="edit-battery-cell"
                             to="/edit-battery-cell"
                             sx={{ color: 'text.secondary' }}
                             onClick={() => {
@@ -360,24 +365,48 @@ export default function AllBatteryCells() {
                             {id}
                           </Typography>
                         </TableCell>
-                        <TableCell align="left">{cell_name_id}</TableCell>
-                        <TableCell align="left">{cycles}</TableCell>
-                        <TableCell align="left">{cathode.toUpperCase()}</TableCell>
-                        <TableCell align="left">{capitalCase(anode)}</TableCell>
-                        <TableCell align="left">{capacity_ah}</TableCell>
-                        <TableCell align="left">{capitalCase(type)}</TableCell>
-                        <TableCell align="left">{source.toUpperCase()}</TableCell>
+                        <TableCell align="left" data-cy="table-cell-cell_name_id">
+                          {cell_name_id}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-cycles">
+                          {cycles}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-cathode">
+                          {cathode.toUpperCase()}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-anode">
+                          {capitalCase(anode)}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-capacity_ah">
+                          {capacity_ah}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-type">
+                          {capitalCase(type)}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-source">
+                          {source.toUpperCase()}
+                        </TableCell>
 
-                        <TableCell align="left">
+                        <TableCell align="left" data-cy="table-cell-temperature_c">
                           <Label variant="ghost" color={(temperature_c >= '25.00' && 'error') || 'warning'}>
                             {temperature_c}
                           </Label>
                         </TableCell>
-                        <TableCell align="left">{max_state_of_charge}</TableCell>
-                        <TableCell align="left">{min_state_of_charge}</TableCell>
-                        <TableCell align="left">{depth_of_discharge}</TableCell>
-                        <TableCell align="left">{charge_capacity_rate}</TableCell>
-                        <TableCell align="left">{discharge_capacity_rate}</TableCell>
+                        <TableCell align="left" data-cy="table-cell-max_state_of_charge">
+                          {max_state_of_charge}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-min_state_of_charge">
+                          {min_state_of_charge}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-depth_of_discharge">
+                          {depth_of_discharge}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-charge_capacity_rate">
+                          {charge_capacity_rate}
+                        </TableCell>
+                        <TableCell align="left" data-cy="table-cell-discharge_capacity_rate">
+                          {discharge_capacity_rate}
+                        </TableCell>
                       </TableRow>
                     );
                   })}

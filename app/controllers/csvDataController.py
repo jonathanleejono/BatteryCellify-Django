@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter, Request, UploadFile
 from .. import models, schemas, oauth2, entities
-from ..database import database, get_db
+from ..database import get_db
 from ..utils import (
     get_list_total_cells_by_attr,
     get_cell_efficency,

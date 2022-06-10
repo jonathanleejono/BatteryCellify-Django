@@ -65,6 +65,7 @@ export default function LoginForm() {
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
+            data-cy="email"
           />
 
           <TextField
@@ -73,6 +74,7 @@ export default function LoginForm() {
             type={showPassword ? 'text' : 'password'}
             label="Password"
             {...getFieldProps('password')}
+            data-cy="password"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">

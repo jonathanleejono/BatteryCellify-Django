@@ -19,7 +19,7 @@ def search_query_battery_cell(query_param, attr: str, list: list):
     return list
 
 
-def calc_float_avg(attr: str, list1: list):
+def calc_float_avg(attr: str, list1: list) -> float:
     if list1 and len(list1) > 0:
         avg = statistics.fmean([getattr(obj, attr) for obj in list1])
         return round(avg, 2)

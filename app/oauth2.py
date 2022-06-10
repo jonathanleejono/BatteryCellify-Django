@@ -56,9 +56,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
 
     query = select(models.Users).where(models.Users.id == int(token.id))
     users = await db.execute(query)
-    user = users.first()[0]
+    user = users.first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User was not found")
+    # have to use user[0] to access attributes (eg. password) to do things (eg. create battery cell)
+    user = user[0]
 
     return user

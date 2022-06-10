@@ -8,6 +8,11 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+import asyncpg
+from asyncpg import UniqueViolationError
 
 
 router = APIRouter(
@@ -53,32 +58,41 @@ async def create_user(user: schemas.UserCreate, request: Request, db: AsyncSessi
 @router.post('/login', response_model=schemas.UserOut)
 @limiter.limit("20/minute", error_message="Too many requests, please try again later")
 async def login_user(request: Request, logging_in_user: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
+    try:
+        if not logging_in_user.email or not logging_in_user.password:
+            raise Exception("Please provide all values")
 
-    if not logging_in_user.email or not logging_in_user.password:
+        query = select(models.Users).where(
+            models.Users.email == logging_in_user.email)
+
+        user_exists = await db.execute(query)
+
+        # use .first() instead of scalar_one
+        user = user_exists.first()
+
+        if not user:
+            raise Exception("Invalid credentials")
+
+        # query = ({}, {}, {},) ---> user = user_exists.first() == ({},) --> user = user[0] OR (user,) = user <- tuple literal OR user, = user
+        # access user attributes (eg. password)
+
+        user = user[0]
+
+        if not utils.verify(logging_in_user.password, user.password):
+            raise Exception("Can not verify credentials")
+
+        access_token = oauth2.create_access_token(data={"user_id": user.id})
+
+        logged_in_user = {"email": user.email, "first_name": user.first_name,
+                          "last_name": user.last_name}
+
+        return {"id": user.id, "user": logged_in_user, "token": access_token}
+    except Exception as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Please provide all values")
-
-    query = select(models.Users).where(
-        models.Users.email == logging_in_user.email)
-
-    user_exists = await db.execute(query)
-
-    user = user_exists.scalar_one()
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
-
-    if not utils.verify(logging_in_user.password, user.password):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
-
-    access_token = oauth2.create_access_token(data={"user_id": user.id})
-
-    logged_in_user = {"email": user.email, "first_name": user.first_name,
-                      "last_name": user.last_name}
-
-    return {"id": user.id, "user": logged_in_user, "token": access_token}
+                            detail=f"{error}")
+    except:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="An error occurred")
 
 
 @router.patch('/updateUser', response_model=schemas.UserOut)

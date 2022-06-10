@@ -102,6 +102,7 @@ export default function AddBatteryCellForm() {
             fullWidth
             name="cell_name_id"
             label="Cell Name ID"
+            data-cy="cell_name_id"
             {...getFieldProps('cell_name_id')}
             error={Boolean(touched.cell_name_id && errors.cell_name_id)}
             helperText={touched.cell_name_id && errors.cell_name_id}
@@ -111,6 +112,7 @@ export default function AddBatteryCellForm() {
             <TextField
               fullWidth
               label="Cycles"
+              data-cy="cycles"
               {...getFieldProps('cycles')}
               error={Boolean(touched.cycles && errors.cycles)}
               helperText={touched.cycles && errors.cycles}
@@ -121,16 +123,25 @@ export default function AddBatteryCellForm() {
               name="cathode"
               label="Cathode"
               select
+              data-cy="cathode"
               value={cathode}
               onChange={handleBatteryCellInput}
             >
               {cathodeOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem data-cy="cathode-item" key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}
             </TextField>
-            <TextField fullWidth name="anode" label="Anode" select value={anode} onChange={handleBatteryCellInput}>
+            <TextField
+              fullWidth
+              name="anode"
+              label="Anode"
+              data-cy="anode"
+              select
+              value={anode}
+              onChange={handleBatteryCellInput}
+            >
               {anodeOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
@@ -142,19 +153,36 @@ export default function AddBatteryCellForm() {
             <TextField
               fullWidth
               label="Capacity (Ah)"
+              data-cy="capacity_ah"
               {...getFieldProps('capacity_ah')}
               error={Boolean(touched.capacity_ah && errors.capacity_ah)}
               helperText={touched.capacity_ah && errors.capacity_ah}
               value={formik.values.capacity_ah}
             />
-            <TextField fullWidth name="type" label="Type" select value={type} onChange={handleBatteryCellInput}>
+            <TextField
+              fullWidth
+              name="type"
+              data-cy="type"
+              label="Type"
+              select
+              value={type}
+              onChange={handleBatteryCellInput}
+            >
               {typeOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}
             </TextField>
-            <TextField fullWidth name="source" label="Source" select value={source} onChange={handleBatteryCellInput}>
+            <TextField
+              fullWidth
+              name="source"
+              data-cy="source"
+              label="Source"
+              select
+              value={source}
+              onChange={handleBatteryCellInput}
+            >
               {sourceOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
@@ -166,6 +194,7 @@ export default function AddBatteryCellForm() {
             <TextField
               fullWidth
               label="Temperature (C)"
+              data-cy="temperature_c"
               {...getFieldProps('temperature_c')}
               error={Boolean(touched.temperature_c && errors.temperature_c)}
               helperText={touched.temperature_c && errors.temperature_c}
@@ -174,6 +203,7 @@ export default function AddBatteryCellForm() {
             <TextField
               fullWidth
               label="Max State of Charge"
+              data-cy="max_state_of_charge"
               {...getFieldProps('max_state_of_charge')}
               error={Boolean(touched.max_state_of_charge && errors.max_state_of_charge)}
               helperText={touched.max_state_of_charge && errors.max_state_of_charge}
@@ -182,6 +212,7 @@ export default function AddBatteryCellForm() {
             <TextField
               fullWidth
               label="Min State of Charge"
+              data-cy="min_state_of_charge"
               {...getFieldProps('min_state_of_charge')}
               error={Boolean(touched.min_state_of_charge && errors.min_state_of_charge)}
               helperText={touched.min_state_of_charge && errors.min_state_of_charge}
@@ -191,6 +222,7 @@ export default function AddBatteryCellForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
+              data-cy="depth_of_discharge"
               label="Depth of Discharge"
               {...getFieldProps('depth_of_discharge')}
               error={Boolean(touched.depth_of_discharge && errors.depth_of_discharge)}
@@ -199,6 +231,7 @@ export default function AddBatteryCellForm() {
             />
             <TextField
               fullWidth
+              data-cy="charge_capacity_rate"
               label="Charge Capacity Rate"
               {...getFieldProps('charge_capacity_rate')}
               error={Boolean(touched.charge_capacity_rate && errors.charge_capacity_rate)}
@@ -207,6 +240,7 @@ export default function AddBatteryCellForm() {
             />
             <TextField
               fullWidth
+              data-cy="discharge_capacity_rate"
               label="Discharge Capacity Rate"
               {...getFieldProps('discharge_capacity_rate')}
               error={Boolean(touched.discharge_capacity_rate && errors.discharge_capacity_rate)}

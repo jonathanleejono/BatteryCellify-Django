@@ -1,5 +1,4 @@
 from .config import settings
-import databases
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -7,14 +6,12 @@ from sqlmodel import SQLModel
 from . import models
 
 
-SQLALCHEMY_DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 
-database = databases.Database(SQLALCHEMY_DATABASE_URL)
-
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL, future=True)
+engine = create_async_engine(DATABASE_URL, future=True)
 
 AsyncDatabaseSession = sessionmaker(
-    engine, expire_on_commit=False, class_=AsyncSession)
+    bind=engine, expire_on_commit=False, class_=AsyncSession)
 
 
 async def init_db():
