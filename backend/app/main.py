@@ -44,6 +44,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 async def pong():
     return {"ping": "pong!"}
 
+# test 3
+
 
 @app.get("/yoyo")
 async def pong():
