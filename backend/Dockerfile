@@ -3,7 +3,7 @@ FROM python:3.9.7
 WORKDIR /usr/src/app
 
 # optimization step
-COPY requirements.txt ./backend
+COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
