@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { clearStore } from '../features/user/userSlice';
 import { getTokenFromLocalStorage } from './localStorage';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const customFetch = axios.create({
-  baseURL: 'https://battery-cellify.herokuapp.com/',
-  // baseURL: 'http://localhost:3000/',
+  baseURL: process.env.API_URL,
   // baseURL: 'http://127.0.0.1:8000/',
 });
 
