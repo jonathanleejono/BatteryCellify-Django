@@ -45,6 +45,11 @@ async def pong():
     return {"ping": "pong!"}
 
 
+@app.get("/yoyo")
+async def pong():
+    return {"yo": "yo!"}
+
+
 @app.on_event("startup")
 async def on_startup():
     print("Database is starting up...")
