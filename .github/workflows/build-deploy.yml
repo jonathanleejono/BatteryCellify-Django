@@ -51,6 +51,7 @@ jobs:
           cd backend
           pip install -r requirements.txt
       - name: test with pytest
+      # have to add cd backend again
         run: |
           cd backend
           pip install pytest
@@ -73,7 +74,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./backend/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/battery-cellify:latest
