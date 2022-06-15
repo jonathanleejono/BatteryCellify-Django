@@ -46,9 +46,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 async def pong():
     return {"ping": "pong!"}
 
-# test 3
-# test4
-# test5 git init backend
 
 logger = get_logger(__name__)
 
