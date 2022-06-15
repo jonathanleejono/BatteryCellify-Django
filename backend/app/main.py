@@ -21,9 +21,11 @@ from .controllers import (batteryCellController, csvDataController,
                           testSeedDbController, usersController)
 from .database import init_db
 
+from structlog import get_logger
+
 app = FastAPI()
 
-origins = ["https://batterycellify.vercel.app"]
+origins = ["https://batterycellify.vercel.app", "*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,16 +50,26 @@ async def pong():
 # test4
 # test5 git init backend
 
+logger = get_logger(__name__)
+
+
+@app.get("/health")
+async def health_check():
+    """health check route"""
+    logger.debug("health_check")
+    return {"status": "healthy"}
+
 
 @app.get("/yoyo")
 async def pong():
     return {"yo": "yo!"}
 
-
-@app.on_event("startup")
-async def on_startup():
-    print("Database is starting up...")
-    await init_db()
+# if using alembic migrations, leave this commented
+# (because this function creates the SQL tables)
+# @app.on_event("startup")
+# async def on_startup():
+#     print("Database is starting up...")
+#     await init_db()
 
 
 app.include_router(usersController.router)

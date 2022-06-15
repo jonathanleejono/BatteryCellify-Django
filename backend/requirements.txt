@@ -88,12 +88,13 @@ sqlalchemy2-stubs==0.0.2a22
 sqlmodel==0.0.6
 stack-data==0.2.0
 starlette==0.17.1
+structlog==21.5.0
 toml==0.10.2
 tomli==2.0.1
 tornado==6.1
 traitlets==5.2.2.post1
 trio==0.20.0
-typing_extensions==4.2.0
+typing-extensions==4.2.0
 ujson==5.2.0
 urllib3==1.26.9
 uvicorn==0.17.6

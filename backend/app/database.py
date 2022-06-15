@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 from . import models
 
 
-DATABASE_URL = f'postgresql+asyncpg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+DATABASE_URL = settings.database_url
 
 engine = create_async_engine(DATABASE_URL, future=True)
 
