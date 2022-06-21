@@ -1,6 +1,6 @@
 # BatteryCellify
 
-BatteryCellify is a fullstack React Python (FastAPI) app that lets users upload battery cells and manage cell data. RESTful APIs are built with FastAPI, a Python framework with full support of async programming.
+BatteryCellify is a fullstack React Python (FastAPI) app that lets users upload battery cells and manage cell data. RESTful APIs are built with FastAPI, a Python framework with full support of async programming. This app uses a PostgreSQL database, with SQLAlchemy ORM. 
 
 View the live app here: https://batterycellify.vercel.app/
 
