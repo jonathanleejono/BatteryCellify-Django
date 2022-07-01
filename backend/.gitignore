@@ -4,3 +4,4 @@
 **/.env_temp
 **/.pytest_cache
 **/kaggle (2).json
+**/alembic
