@@ -66,10 +66,10 @@ async def pong():
 
 # if using alembic migrations, leave this commented
 # (because this function creates the SQL tables)
-# @app.on_event("startup")
-# async def on_startup():
-#     print("Database is starting up...")
-#     await init_db()
+@app.on_event("startup")
+async def on_startup():
+    print("Database is starting up...")
+    await init_db()
 
 
 app.include_router(usersController.router)
