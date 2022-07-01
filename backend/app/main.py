@@ -62,8 +62,6 @@ async def pong():
     return {"yo": "yo!"}
 
 
-# test
-
 # if using alembic migrations, leave this commented
 # (because this function creates the SQL tables)
 @app.on_event("startup")
