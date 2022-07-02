@@ -82,7 +82,7 @@
 
 # app = serve_react_app(app, path_to_react_app_build_dir)
 
-***REMOVED***_dir = Path("./client/build")
+# build_dir = Path("./client/build")
 
 # templates = Jinja2Templates(directory=build_dir.as_posix())
 

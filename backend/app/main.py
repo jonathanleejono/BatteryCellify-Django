@@ -78,7 +78,7 @@ if settings.environment == "development":
     app.include_router(testSeedDbController.router)
 
 
-***REMOVED***_dir = Path("./client/build")
+# build_dir = Path("./client/build")
 
 # templates = Jinja2Templates(directory=build_dir.as_posix())
 

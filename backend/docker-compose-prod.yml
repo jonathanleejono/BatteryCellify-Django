@@ -1,7 +1,7 @@
 version: "3"
 services: 
   api: 
-    ***REMOVED***: .
+    # build: .
     # instead of building the image in prod, you push the dev image up to dockerhub
     # and pull the image with the command below
     image: jonathanleejono/battery-cellify
