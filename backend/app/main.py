@@ -66,7 +66,7 @@ async def pong():
 # (because this function creates the SQL tables)
 @app.on_event("startup")
 async def on_startup():
-    print("Database is starting up...")
+    print("Database is connecting...")
     await init_db()
 
 
