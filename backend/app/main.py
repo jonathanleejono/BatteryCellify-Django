@@ -59,7 +59,7 @@ async def health_check():
 
 @app.get("/yoyo")
 async def pong():
-    return {"yo": "yo!"}
+    return {"yo": "yo!7"}
 
 
 # if using alembic migrations, leave this commented
