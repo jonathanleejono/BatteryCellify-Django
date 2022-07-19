@@ -25,7 +25,7 @@ from structlog import get_logger
 
 app = FastAPI()
 
-origins = ["https://batterycellify.vercel.app"]
+origins = ["https://batterycellify.vercel.app", "*"]
 
 app.add_middleware(
     CORSMiddleware,
