@@ -15,22 +15,22 @@ describe('User Login UI', () => {
 
     cy.get("button[type='submit']").click();
 
-    // is the below even necessary?
-    // cy.intercept('POST', 'http://127.0.0.1:8000/api/login', (req) => {
-    //   req.reply((res) => {
-    //     res.send({
-    //       id: 1,
-    //       user: {
-    //         email: 'silas.corrin@gmail.com',
-    //         first_name: 'silas',
-    //         last_name: 'corrin',
-    //       },
-    //       token:
-    //         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlNpbGFzIENvcnJpbiAyIiwidXNlcl9pZCI6MjAsImlhdCI6MTY1NDcyMTQxMywiZXhwIjoxNjU0NzI1MDEzfQ.8W8sEgFpPwELFUe_N-iIPGnneZDB7_xWIMiukz_HYKk',
-    //     });
-    //   });
-    // });
-
     cy.contains('silas').should('be.visible');
   });
 });
+
+// this could work without using backend
+// cy.intercept('POST', 'http://127.0.0.1:8000/api/login', (req) => {
+//   req.reply((res) => {
+//     res.send({
+//       id: 1,
+//       user: {
+//         email: 'silas.corrin@gmail.com',
+//         first_name: 'silas',
+//         last_name: 'corrin',
+//       },
+//       token:
+//         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlNpbGFzIENvcnJpbiAyIiwidXNlcl9pZCI6MjAsImlhdCI6MTY1NDcyMTQxMywiZXhwIjoxNjU0NzI1MDEzfQ.8W8sEgFpPwELFUe_N-iIPGnneZDB7_xWIMiukz_HYKk',
+//     });
+//   });
+// });
