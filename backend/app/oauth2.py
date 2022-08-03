@@ -1,6 +1,8 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from . import schemas, models, entities
+
+from .old import entities
+from . import schemas, models
 # from .models import users
 from .database import get_db
 from fastapi import Depends, status, HTTPException

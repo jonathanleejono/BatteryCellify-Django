@@ -57,11 +57,6 @@ async def health_check():
     return {"status": "healthy"}
 
 
-@app.get("/yoyo")
-async def pong():
-    return {"yo": "yo!7"}
-
-
 # if using alembic migrations, leave this commented
 # (because this function creates the SQL tables)
 @app.on_event("startup")
@@ -76,20 +71,3 @@ app.include_router(csvDataController.router)
 
 if settings.environment == "development":
     app.include_router(testSeedDbController.router)
-
-
-# build_dir = Path("./client/build")
-
-# templates = Jinja2Templates(directory=build_dir.as_posix())
-
-
-# app.mount(
-#     "/static/",
-#     StaticFiles(directory=build_dir / "static"),
-#     name="React App static files",
-# )
-
-
-# @app.get("/{full_path:path}")
-# async def catch_all(request: Request, full_path: str):
-#     return templates.TemplateResponse("index.html", {"request": request})
