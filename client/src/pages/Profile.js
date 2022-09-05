@@ -1,22 +1,6 @@
-// material
-import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
-  Button,
-  Checkbox,
-  TableRow,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  TableContainer,
-  TablePagination,
-} from '@mui/material';
-// components
-import Page from '../components/Page';
-import { ProfileForm } from '../sections/@dashboard/profile';
+import { Container, Stack, Typography } from '@mui/material';
+import Page from 'components/Page';
+import { ProfileForm } from 'sections/dashboard/profile';
 
 export default function Profile() {
   return (

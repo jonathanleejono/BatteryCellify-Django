@@ -1,11 +1,6 @@
-import { useState } from 'react';
-// material
-import { Container, Stack, Typography } from '@mui/material';
-// components
-import Page from '../components/Page';
-import { EditBatteryCellForm } from '../sections/@dashboard/batteryCell';
-
-// ----------------------------------------------------------------------
+import { Container, Typography } from '@mui/material';
+import Page from 'components/Page';
+import { EditBatteryCellForm } from 'sections/dashboard/battery-cell-form';
 
 export default function EditBatteryCell() {
   return (

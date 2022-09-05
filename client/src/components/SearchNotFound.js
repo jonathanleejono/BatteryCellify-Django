@@ -1,8 +1,5 @@
-import PropTypes from 'prop-types';
-// material
 import { Paper, Typography } from '@mui/material';
-
-// ----------------------------------------------------------------------
+import PropTypes from 'prop-types';
 
 SearchNotFound.propTypes = {
   searchQuery: PropTypes.string,

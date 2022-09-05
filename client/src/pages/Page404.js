@@ -1,11 +1,7 @@
-import { Link as RouterLink } from 'react-router-dom';
-// @mui
+import { Box, Button, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Button, Typography, Container, Box } from '@mui/material';
-// components
-import Page from '../components/Page';
-
-// ----------------------------------------------------------------------
+import Page from 'components/Page';
+import { Link as RouterLink } from 'react-router-dom';
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -16,8 +12,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   padding: theme.spacing(12, 0),
 }));
-
-// ----------------------------------------------------------------------
 
 export default function Page404() {
   return (

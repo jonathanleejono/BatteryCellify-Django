@@ -1,17 +1,10 @@
-import { Link as RouterLink } from 'react-router-dom';
-// @mui
+import { Card, Container, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography } from '@mui/material';
-// hooks
-import useResponsive from '../hooks/useResponsive';
-// components
-import Page from '../components/Page';
-import Logo from '../components/Logo';
-// sections
-import { RegisterForm } from '../sections/auth/register';
-import AuthSocial from '../sections/auth/AuthSocial';
-
-// ----------------------------------------------------------------------
+import Logo from 'components/Logo';
+import Page from 'components/Page';
+import { Link as RouterLink } from 'react-router-dom';
+import { RegisterForm } from 'sections/auth/register';
+import useResponsive from 'utils/useResponsiveLayout';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -53,8 +46,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   padding: theme.spacing(12, 0),
 }));
-
-// ----------------------------------------------------------------------
 
 export default function Register() {
   const smUp = useResponsive('up', 'sm');

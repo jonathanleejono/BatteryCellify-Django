@@ -1,60 +1,62 @@
-// routes
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import Router from './routes';
-// theme
-import ThemeProvider from './theme';
-// components
-import ScrollToTop from './components/ScrollToTop';
-import { BaseOptionChartStyle } from './components/chart/BaseOptionChart';
-import AllBatteryCells from './pages/AllBatteryCells';
-import Profile from './pages/Profile';
-import Login from './pages/Login';
-import NotFound from './pages/Page404';
-import Register from './pages/Register';
-import Landing from './pages/Landing';
-import DashboardApp from './pages/DashboardApp';
-import Graphs from './pages/Graphs';
-import ManageCsv from './pages/ManageCsv';
-import ProtectedRoute from './pages/ProtectedRoute';
-import AddBatteryCell from './pages/AddBatteryCell';
-import EditBatteryCell from './pages/EditBatteryCell';
-import DashboardLayout from './layouts/dashboard';
-import LogoOnlyLayout from './layouts/LogoOnlyLayout';
-import routes from './testRoutes';
+import { BaseOptionChartStyle } from 'components/chart/BaseOptionChartStyle';
+import ScrollToTop from 'components/ScrollToTop';
+import {
+  addBatteryCellRoute,
+  allBatteryCellsRoute,
+  batteryCellGraphsRoute,
+  dashboardRoute,
+  editBatteryCellRoute,
+  loginRoute,
+  manageCsvRoute,
+  notFound404Route,
+  profileRoute,
+  registerRoute,
+} from 'constants/routes';
+import DashboardLayout from 'layouts/dashboard';
+import LogoOnlyLayout from 'layouts/LogoOnlyLayout';
+import AddBatteryCell from 'pages/AddBatteryCell';
+import AllBatteryCells from 'pages/AllBatteryCells';
+import Graphs from 'pages/BatteryCellGraphs';
+import DashboardApp from 'pages/DashboardApp';
+import EditBatteryCell from 'pages/EditBatteryCell';
+import Landing from 'pages/Landing';
+import Login from 'pages/Login';
+import ManageCsv from 'pages/ManageCsv';
+import NotFound from 'pages/Page404';
+import Profile from 'pages/Profile';
+import ProtectedRoute from 'pages/ProtectedRoute';
+import Register from 'pages/Register';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ThemeProvider from 'theme';
 
 export default function App() {
   return (
     <ThemeProvider>
       <BaseOptionChartStyle />
-      {/* <Router /> */}
-
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          {/* <Route path="/"> */}
           <Route element={<LogoOnlyLayout />}>
             <Route index path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/*" element={<NotFound />} />
+            <Route path={loginRoute} element={<Login />} />
+            <Route path={registerRoute} element={<Register />} />
+            <Route path={notFound404Route} element={<NotFound />} />
           </Route>
           <Route
-            // path="/"
             element={
               <ProtectedRoute>
                 <DashboardLayout />
               </ProtectedRoute>
             }
           >
-            <Route path="/dashboard" element={<DashboardApp />} />
-            <Route path="/all-battery-cells" element={<AllBatteryCells />} />
-            <Route path="/add-battery-cell" element={<AddBatteryCell />} />
-            <Route path="/edit-battery-cell" element={<EditBatteryCell />} />
-            <Route path="/graphs" element={<Graphs />} />
-            <Route path="/manage-csv" element={<ManageCsv />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path={dashboardRoute} element={<DashboardApp />} />
+            <Route path={allBatteryCellsRoute} element={<AllBatteryCells />} />
+            <Route path={addBatteryCellRoute} element={<AddBatteryCell />} />
+            <Route path={editBatteryCellRoute} element={<EditBatteryCell />} />
+            <Route path={batteryCellGraphsRoute} element={<Graphs />} />
+            <Route path={manageCsvRoute} element={<ManageCsv />} />
+            <Route path={profileRoute} element={<Profile />} />
           </Route>
-          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

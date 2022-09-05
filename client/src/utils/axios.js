@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { clearStore } from '../features/user/userSlice';
-import { getTokenFromLocalStorage } from './localStorage';
+import { clearStore } from 'features/user/userSlice';
+import { getTokenFromLocalStorage } from 'localStorage';
 
 const customFetch = axios.create({
   baseURL: process.env.REACT_APP_API_URL,

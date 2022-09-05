@@ -1,20 +1,14 @@
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-// material
+import { Avatar, Box, Drawer, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
-// hooks
-import useResponsive from '../../hooks/useResponsive';
-// components
-import Logo from '../../components/Logo';
-import Scrollbar from '../../components/Scrollbar';
-import NavSection from '../../components/NavSection';
-//
-import navConfig from './NavConfig';
-
-// ----------------------------------------------------------------------
+import Logo from 'components/Logo';
+import Scrollbar from 'components/Scrollbar';
+import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import navConfig from 'sections/dashboard/navbar/NavConfig';
+import NavSection from 'sections/dashboard/navbar/NavSection';
+import useResponsive from 'utils/useResponsiveLayout';
 
 const DRAWER_WIDTH = 280;
 
@@ -32,8 +26,6 @@ const AccountStyle = styled('div')(({ theme }) => ({
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
   backgroundColor: theme.palette.grey[500_12],
 }));
-
-// ----------------------------------------------------------------------
 
 DashboardSidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -73,9 +65,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
               <Typography data-cy="dashboard-sidebar-name" variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {user.first_name} {user.last_name}
               </Typography>
-              {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
-              </Typography> */}
             </Box>
           </AccountStyle>
         </Link>

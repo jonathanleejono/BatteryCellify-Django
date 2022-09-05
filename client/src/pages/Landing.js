@@ -1,19 +1,10 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-// @mui
+import { Button, Card, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography, Button } from '@mui/material';
-// hooks
-import useResponsive from '../hooks/useResponsive';
-// components
-import Page from '../components/Page';
-import Logo from '../components/Logo';
-// sections
-import AuthSocial from '../sections/auth/AuthSocial';
-
-// ----------------------------------------------------------------------
+import Page from 'components/Page';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import useResponsive from 'utils/useResponsiveLayout';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -57,8 +48,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(8, 0),
 }));
 
-// ----------------------------------------------------------------------
-
 export default function Landing() {
   const smUp = useResponsive('up', 'sm');
 
@@ -70,7 +59,6 @@ export default function Landing() {
 
   useEffect(() => {
     if (user) {
-      // mark-app
       navigate('/dashboard', { replace: true });
     }
   }, [user, navigate]);

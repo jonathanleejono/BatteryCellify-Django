@@ -1,8 +1,8 @@
-import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
-import { clearAllBatteryCellsState } from '../allBatteryCells/allBatteryCellsSlice';
-import { clearValues } from '../batteryCell/batteryCellSlice';
-import { logoutUser } from './userSlice';
-import { addUserToLocalStorage } from '../../utils/localStorage';
+import { clearAllBatteryCellsState } from 'allBatteryCells/allBatteryCellsSlice';
+import { clearValues } from 'batteryCell/batteryCellSlice';
+import { logoutUser } from 'userSlice';
+import customFetch, { checkForUnauthorizedResponse } from 'utils/axios';
+import { addUserToLocalStorage } from 'utils/localStorage';
 
 export const registerUserThunk = async (url, newUser, thunkAPI) => {
   try {

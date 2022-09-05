@@ -1,57 +1,37 @@
-import { filter } from 'lodash';
-import { sentenceCase, capitalCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-// material
 import {
-  Card,
-  Grid,
-  Table,
-  Stack,
-  Avatar,
   Button,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  Grid,
+  IconButton,
+  MenuItem,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
   TablePagination,
-  MenuItem,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Box,
+  TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
-import { alpha } from '@mui/material/styles';
-// components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import Iconify from '../components/Iconify';
-import SearchNotFound from '../components/SearchNotFound';
+import { capitalCase } from 'change-case';
+import Iconify from 'components/Iconify';
+import Label from 'components/Label';
+import Page from 'components/Page';
+import Scrollbar from 'components/Scrollbar';
 import {
-  BatteryCellListHead,
-  BatteryCellListToolbar,
-  BatteryCellMoreMenu,
-} from '../sections/@dashboard/batteryCellTable';
-// mock
-import {
+  clearFilters,
   getAllBatteryCells,
   handleChangeAllBatteryCells,
-  clearFilters,
-} from '../features/allBatteryCells/allBatteryCellsSlice';
-import {
-  deleteBatteryCell,
-  setEditBatteryCell,
-  setCreateBatteryCell,
-  handleChange,
-} from '../features/batteryCell/batteryCellSlice';
-
-// ----------------------------------------------------------------------
+} from 'features/all-battery-cells/allBatteryCellsSlice';
+import { setEditBatteryCell } from 'features/battery-cell/batteryCellSlice';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import { BatteryCellListHead, BatteryCellListToolbar } from 'sections/dashboard/battery-cell-form-table';
 
 const TABLE_HEAD = [
   // { id: 'more', label: 'more', alignRight: false },
@@ -71,8 +51,6 @@ const TABLE_HEAD = [
   { id: 'charge_capacity_rate', label: 'Charge C Rate', alignRight: false },
   { id: 'discharge_capacity_rate', label: 'Discharge C Rate', alignRight: false },
 ];
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -102,8 +80,6 @@ function applySortFilter(array, comparator, query) {
   }
   return stabilizedThis.map((el) => el[0]);
 }
-
-// ----------------------------------------------------------------------
 
 export default function AllBatteryCells() {
   const { battery_cells, search, searchCathode, searchAnode, searchType, searchSource } = useSelector(
@@ -207,7 +183,6 @@ export default function AllBatteryCells() {
             <Button
               variant="contained"
               component={RouterLink}
-              // mark-app
               to="/add-battery-cell"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
@@ -332,7 +307,6 @@ export default function AllBatteryCells() {
                         <TableCell component="th" scope="row" padding="none" align="center">
                           <IconButton
                             component={RouterLink}
-                            // mark-app
                             data-cy="edit-battery-cell"
                             to="/edit-battery-cell"
                             sx={{ color: 'text.secondary' }}

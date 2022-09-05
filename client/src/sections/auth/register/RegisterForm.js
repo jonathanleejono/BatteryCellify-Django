@@ -1,16 +1,12 @@
-import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
-import { useFormik, Form, FormikProvider } from 'formik';
-import { useNavigate } from 'react-router-dom';
-// material
-import { Stack, MenuItem, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// component
+import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import Iconify from 'components/Iconify';
+import { registerUser } from 'features/user/userSlice';
+import { Form, FormikProvider, useFormik } from 'formik';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../../features/user/userSlice';
-import Iconify from '../../../components/Iconify';
-
-// ----------------------------------------------------------------------
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -19,7 +15,7 @@ export default function RegisterForm() {
 
   const dispatch = useDispatch();
 
-  const { user, isLoading } = useSelector((store) => store.user);
+  const { user } = useSelector((store) => store.user);
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
@@ -38,7 +34,7 @@ export default function RegisterForm() {
     validationSchema: RegisterSchema,
     onSubmit: () => {
       dispatch(registerUser(formik.values));
-      // mark-app
+
       navigate('/dashboard', { replace: true });
     },
   });
@@ -47,10 +43,7 @@ export default function RegisterForm() {
 
   useEffect(() => {
     if (user) {
-      // setTimeout(() => {
-      // mark-app
       navigate('/dashboard');
-      // }, 1);
     }
   }, [user, navigate]);
 
