@@ -105,9 +105,6 @@ const batteryCellSlice = createSlice({
     setEditBatteryCell: (state, { payload }) => {
       return { ...state, ...payload };
     },
-    setCreateBatteryCell: (state, { payload }) => {
-      return { ...state, ...payload };
-    },
   },
   extraReducers: {
     [createBatteryCell.pending]: (state) => {
@@ -141,6 +138,6 @@ const batteryCellSlice = createSlice({
   },
 });
 
-export const { handleChange, clearValues, setEditBatteryCell, setCreateBatteryCell } = batteryCellSlice.actions;
+export const { handleChange, clearValues, setEditBatteryCell } = batteryCellSlice.actions;
 
 export default batteryCellSlice.reducer;

@@ -252,7 +252,6 @@ export default function AddBatteryCellForm() {
               disabled={isSubmitting}
               ml={5}
               onClick={() => {
-                console.log('hello world');
                 resetForm();
               }}
             >

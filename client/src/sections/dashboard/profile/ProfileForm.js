@@ -27,7 +27,7 @@ export default function ProfileForm() {
     },
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, resetForm } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -78,7 +78,7 @@ export default function ProfileForm() {
               variant="outlined"
               disabled={isSubmitting}
               ml={5}
-              onClick={() => console.log('hello world')}
+              onClick={() => resetForm()}
             >
               Clear Values
             </Button>
