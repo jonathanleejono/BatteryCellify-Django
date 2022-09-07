@@ -25,13 +25,6 @@ View the live app here: https://batterycellify.vercel.app/
 - ESLint - Linting
 - Cypress - E2E/Integration tests
 
-### Deployment:
-
-- Github Actions (CI/CD)
-- Docker (Backend)
-- Heroku (Backend)
-- AWS EC2 / ECS / ECR (Backend)
-- Vercel (Frontend)
 
 ![landing page](https://github.com/jonathanleejono/BatteryDashboard/blob/main/assets/battery_cellify_landing.png)
 ![landing page](https://github.com/jonathanleejono/BatteryDashboard/blob/main/assets/add_battery_cell.png)
