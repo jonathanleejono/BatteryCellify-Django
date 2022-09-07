@@ -1,17 +1,10 @@
-import { Link as RouterLink } from 'react-router-dom';
-// @mui
+import { Card, Container, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography } from '@mui/material';
-// hooks
-import useResponsive from '../hooks/useResponsive';
-// components
-import Page from '../components/Page';
-import Logo from '../components/Logo';
-// sections
-import { LoginForm } from '../sections/auth/login';
-import AuthSocial from '../sections/auth/AuthSocial';
-
-// ----------------------------------------------------------------------
+import Logo from 'components/Logo';
+import Page from 'components/Page';
+import { Link as RouterLink } from 'react-router-dom';
+import { LoginForm } from 'sections/auth/login';
+import useResponsive from 'utils/useResponsiveLayout';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -54,8 +47,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-// ----------------------------------------------------------------------
-
 export default function Login() {
   const smUp = useResponsive('up', 'sm');
 
@@ -66,15 +57,6 @@ export default function Login() {
       <RootStyle>
         <HeaderStyle>
           <Logo />
-
-          {/* {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Don’t have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to="/register">
-                Get started
-              </Link>
-            </Typography>
-          )} */}
         </HeaderStyle>
 
         {mdUp && (
@@ -94,18 +76,14 @@ export default function Login() {
 
             <Typography sx={{ color: 'text.secondary', mb: 5 }}>Enter your details below.</Typography>
 
-            {/* <AuthSocial /> */}
-
             <LoginForm />
 
-            {/* {!smUp && ( */}
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?{' '}
+              Don't have an account?{' '}
               <Link variant="subtitle2" component={RouterLink} to="/register">
                 Get started
               </Link>
             </Typography>
-            {/* )} */}
           </ContentStyle>
         </Container>
       </RootStyle>

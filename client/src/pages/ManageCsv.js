@@ -1,22 +1,6 @@
-// material
-import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
-  Button,
-  Checkbox,
-  TableRow,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  TableContainer,
-  TablePagination,
-} from '@mui/material';
-// components
-import Page from '../components/Page';
-import { ManageCsvForm } from '../sections/@dashboard/manage-csv';
+import { Container, Stack, Typography } from '@mui/material';
+import Page from 'components/Page';
+import { ManageCsvForm } from 'sections/dashboard/manage-csv';
 
 export default function ManageCsv() {
   return (

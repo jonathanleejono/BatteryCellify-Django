@@ -1,16 +1,12 @@
-import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useFormik, Form, FormikProvider } from 'formik';
-// material
-import { Link, Stack, Checkbox, TextField, IconButton, InputAdornment, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// component
+import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import Iconify from 'components/Iconify';
+import { loginUser } from 'features/user/userSlice';
+import { Form, FormikProvider, useFormik } from 'formik';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../../features/user/userSlice';
-import Iconify from '../../../components/Iconify';
-
-// ----------------------------------------------------------------------
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -35,7 +31,6 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: () => {
       dispatch(loginUser(formik.values));
-      // mark-app
       navigate('/dashboard', { replace: true });
     },
   });
@@ -48,7 +43,6 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (user) {
-      // mark-app
       navigate('/dashboard');
     }
   }, [user, navigate]);
@@ -89,16 +83,6 @@ export default function LoginForm() {
           />
         </Stack>
         <div>&nbsp;</div>
-        {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Remember me"
-          />
-
-          <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">
-            Forgot password?
-          </Link>
-        </Stack> */}
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
           Login
         </LoadingButton>

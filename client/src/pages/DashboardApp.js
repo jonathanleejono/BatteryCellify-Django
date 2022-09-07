@@ -1,31 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { faker } from '@faker-js/faker';
-// @mui
+import { Container, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
-// components
-import Page from '../components/Page';
-import Iconify from '../components/Iconify';
-// sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
-} from '../sections/@dashboard/app';
-import {
-  getAllBatteryCells,
-  handleChangeAllBatteryCells,
-  clearFilters,
-} from '../features/allBatteryCells/allBatteryCellsSlice';
-
-// ----------------------------------------------------------------------
+import Page from 'components/Page';
+import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsSlice';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppConversionRates, AppCurrentVisits, AppWidgetSummary } from 'sections/dashboard/app';
 
 export default function DashboardApp() {
   const theme = useTheme();
