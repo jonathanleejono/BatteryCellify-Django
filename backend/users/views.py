@@ -1,22 +1,21 @@
 import environ
-import jwt
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.utils import generate_tokens
+from users.constants import COOKIE_EXPIRY, COOKIE_TOKEN
+from users.models import User
+from users.serializers import UserSerializer
+from users.utils import generate_jwt, get_user
 from utils.messages import invalid_fields_message
-
-from .models import User
-from .serializers import UserSerializer
 
 env = environ.Env()
 environ.Env.read_env()
 
-COOKIE_TOKEN = "bcd_id"
-
 
 valid_register_fields = [key for key in UserSerializer().fields if key != "id"]
+valid_login_fields = ["email", "password"]
+valid_update_profile_fields = ["name", "email"]
 
 
 class RegisterUser(APIView):
@@ -31,12 +30,34 @@ class RegisterUser(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        try:
+            jwt = generate_jwt(serializer.data["id"])
+        except:
+            raise AuthenticationFailed("Error authenticating")
+
+        response = Response(serializer.data)
+
+        # ensure samesite is "none" and not None
+        response.set_cookie(
+            key=COOKIE_TOKEN,
+            value=jwt["access_token"],
+            httponly=True,
+            secure=True if env("PY_ENV") == "production" else False,
+            samesite="none" if env("PY_ENV") == "production" else "lax",
+            max_age=COOKIE_EXPIRY
+        )
+
+        return response
 
 
 class LoginUser(APIView):
     def post(self, request):
-        email = request.data['email']
+        for key in request.data.keys():
+            if key not in valid_login_fields:
+                raise ValidationError(
+                    invalid_fields_message(valid_login_fields))
+
+        email = request.data["email"]
         password = request.data["password"]
 
         user = User.objects.filter(email=email).first()
@@ -48,38 +69,48 @@ class LoginUser(APIView):
             raise AuthenticationFailed("Invalid credentials")
 
         try:
-            jwt = generate_tokens(user.id)
+            jwt = generate_jwt(user.id)
         except:
             raise AuthenticationFailed("Error authenticating")
 
         response = Response()
 
+        # ensure samesite is "none" and not None
         response.set_cookie(
-            key=COOKIE_TOKEN, value=jwt["refresh_token"], httponly=True)
+            key=COOKIE_TOKEN,
+            value=jwt["access_token"],
+            httponly=True,
+            secure=True if env("PY_ENV") == "production" else False,
+            samesite="none" if env("PY_ENV") == "production" else "lax",
+            max_age=COOKIE_EXPIRY
+        )
 
-        response.data = {
-            "access_token": jwt["access_token"]
-        }
+        response.data = {"message": "Login success"}
 
         return response
 
 
-class GetAuthUser(APIView):
+class AuthUser(APIView):
     def get(self, request):
-        token = request.COOKIES.get(COOKIE_TOKEN)
-
-        if not token:
-            raise AuthenticationFailed("Unauthenticated")
-
-        try:
-            payload = jwt.decode(token, env("JWT_SECRET"),
-                                 algorithm=env("JWT_ALGORITHM"))
-        except:
-            raise AuthenticationFailed("Unauthenticated")
-
-        user = User.objects.filter(id=payload["id"]).first()
+        user = get_user(request)
 
         serializer = UserSerializer(user)
+
+        return Response(serializer.data)
+
+    def patch(self, request):
+
+        for key in request.data.keys():
+            if key not in valid_update_profile_fields:
+                raise ValidationError(
+                    invalid_fields_message(valid_update_profile_fields))
+
+        user = get_user(request)
+
+        # make sure partial=True
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(user, request.data)
 
         return Response(serializer.data)
 
@@ -88,7 +119,5 @@ class Logout(APIView):
     def post(self, request):
         response = Response()
         response.delete_cookie(COOKIE_TOKEN)
-        response.data = {
-            "message": "success"
-        }
+        response.data = {"message": "Logout success"}
         return response

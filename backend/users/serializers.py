@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import User
+from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,8 +25,13 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_email(self, value):
-        lower_email = value.lower()
-        if User.objects.filter(email__iexact=lower_email).exists():
-            raise serializers.ValidationError(
-                "Please use a different email")
-        return lower_email
+        current_email = self.__dict__['instance']
+        new_email = value.lower()
+
+        # make sure this is casted to str
+        if str(current_email).lower() != new_email:
+            if User.objects.filter(email__iexact=new_email).exists():
+                raise serializers.ValidationError(
+                    "Please use a different email")
+
+        return new_email
