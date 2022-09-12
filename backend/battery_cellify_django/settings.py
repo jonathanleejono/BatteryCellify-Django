@@ -12,21 +12,41 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
-import environ
+from environs import Env
+from marshmallow.validate import Length, OneOf
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialise environment variables
-env = environ.Env()
-environ.Env.read_env()
+env = Env(eager=False)
+
+env.read_env()
+
+
+PY_ENV = env.str(
+    "PY_ENV",
+    validate=OneOf(
+        ["production", "development"], error="PY_ENV must be one of: {choices}"
+    ),
+)
+
+SECRET_KEY_ = env.str("SECRET_KEY", validate=[Length(min=1)])
+DB_NAME = env.str("DB_NAME", validate=[Length(min=1)])
+DB_USER = env.str("DB_USER", validate=[Length(min=1)])
+DB_PASSWORD = env.str("DB_PASSWORD", validate=[Length(min=1)])
+JWT_ACCESS_SECRET = env.str("JWT_ACCESS_SECRET", validate=[Length(min=1)])
+JWT_ALGORITHM = env.str("JWT_ALGORITHM", validate=[Length(min=1)])
+
+
+env.seal()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = SECRET_KEY_
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -46,7 +66,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'utils',
-    'corsheaders'
+    'corsheaders',
+    'tests'
 ]
 
 MIDDLEWARE = [
@@ -87,9 +108,9 @@ WSGI_APPLICATION = 'battery_cellify_django.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DATABASE_NAME'),
-        "USER": env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD')
+        'NAME': DB_NAME,
+        "USER": DB_USER,
+        'PASSWORD': DB_PASSWORD
     }
 }
 

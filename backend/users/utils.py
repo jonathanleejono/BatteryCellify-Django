@@ -1,14 +1,11 @@
 import datetime
 
-import environ
 import jwt
+from battery_cellify_django.settings import JWT_ACCESS_SECRET, JWT_ALGORITHM
 from rest_framework.exceptions import AuthenticationFailed
 
 from users.constants import COOKIE_TOKEN
 from users.models import User
-
-env = environ.Env()
-environ.Env.read_env()
 
 
 def generate_jwt(user_id: int) -> dict[str, str]:
@@ -19,8 +16,8 @@ def generate_jwt(user_id: int) -> dict[str, str]:
         "iat": datetime.datetime.utcnow()
     }
 
-    access_token = jwt.encode(payload, env("JWT_ACCESS_SECRET"),
-                              algorithm=env("JWT_ALGORITHM"))
+    access_token = jwt.encode(payload, JWT_ACCESS_SECRET,
+                              algorithm=JWT_ALGORITHM)
 
     return {
         "access_token": access_token
@@ -35,8 +32,8 @@ def get_user(request):
 
     try:
         payload = jwt.decode(
-            token, env("JWT_ACCESS_SECRET"), algorithms=env("JWT_ALGORITHM")
-        )
+            token, JWT_ACCESS_SECRET, algorithms=JWT_ALGORITHM)
+
     except:
         raise AuthenticationFailed("Unauthenticated, please login again")
 
