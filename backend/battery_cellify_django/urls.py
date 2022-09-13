@@ -19,6 +19,8 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('users.urls')),
+    path('api/battery-cells/', include('battery_cells.urls')),
 ]
 
 handler404 = 'utils.views.custom404'
+handler500 = "utils.views.custom500"

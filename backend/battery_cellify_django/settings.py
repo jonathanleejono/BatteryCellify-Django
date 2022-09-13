@@ -67,7 +67,9 @@ INSTALLED_APPS = [
     'users',
     'utils',
     'corsheaders',
-    'tests'
+    'tests',
+    'battery_cells',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

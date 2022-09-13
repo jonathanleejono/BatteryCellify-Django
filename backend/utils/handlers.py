@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.exceptions import (AuthenticationFailed, NotAuthenticated)
+from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
@@ -30,6 +30,9 @@ def custom_exception_handler(exc, context):
             # keep this at the top
             if "This field" in value[0]:
                 value[0] = value[0].replace("This field", key.capitalize())
+
+            if "field" not in value[0] and "." in value[0]:
+                value[0] = value[0].replace(".", f": {key}")
 
             if len(value) == 1:
                 error = {'field': key, 'message': value[0]}

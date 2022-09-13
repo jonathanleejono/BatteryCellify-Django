@@ -6,13 +6,13 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from users.constants import COOKIE_TOKEN
 from users.models import User
+from users.serializers import UserSerializer
 
 
 def generate_jwt(user_id: int) -> dict[str, str]:
-
     payload = {
         "id": user_id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=15),
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
         "iat": datetime.datetime.utcnow()
     }
 
@@ -24,11 +24,11 @@ def generate_jwt(user_id: int) -> dict[str, str]:
     }
 
 
-def get_user(request):
+def authenticate_user(request):
     token = request.COOKIES.get(COOKIE_TOKEN)
 
     if not token:
-        raise AuthenticationFailed("Unauthenticated")
+        raise AuthenticationFailed("Please login again")
 
     try:
         payload = jwt.decode(
@@ -37,9 +37,17 @@ def get_user(request):
     except:
         raise AuthenticationFailed("Unauthenticated, please login again")
 
-    user = User.objects.filter(id=payload["id"]).first()
+    user = User.objects.get(pk=payload["id"])
 
     if user is None:
         raise AuthenticationFailed("User not found!")
 
     return user
+
+
+def get_user_id(request):
+    user = authenticate_user(request)
+
+    serializer_user = UserSerializer(user)
+
+    return serializer_user.data["id"]

@@ -43,7 +43,6 @@ def test_login_user(client, user):
     login_payload = {"email": user["email"],
                      "password": mock_user2["password"]}
 
-    # cookie, env vars
     response = client.post("/api/auth/login", login_payload)
 
     cookie = str(response.cookies)

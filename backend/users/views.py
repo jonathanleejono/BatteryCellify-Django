@@ -1,14 +1,14 @@
 from battery_cellify_django.settings import PY_ENV
 from rest_framework import status
-from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.constants import COOKIE_EXPIRY, COOKIE_TOKEN
 from users.models import User
 from users.serializers import UserSerializer
-from users.utils import generate_jwt, get_user
-from utils.messages import invalid_fields_message
+from users.utils import authenticate_user, generate_jwt
+from utils.validate import validate_fields
 
 valid_register_fields = [key for key in UserSerializer().fields if key != "id"]
 valid_login_fields = ["email", "password"]
@@ -17,11 +17,7 @@ valid_update_profile_fields = ["name", "email"]
 
 class RegisterUser(APIView):
     def post(self, request):
-
-        for key in request.data.keys():
-            if key not in valid_register_fields:
-                raise ValidationError(
-                    invalid_fields_message(valid_register_fields))
+        validate_fields(request.data.keys(), valid_register_fields)
 
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -50,10 +46,7 @@ class RegisterUser(APIView):
 
 class LoginUser(APIView):
     def post(self, request):
-        for key in request.data.keys():
-            if key not in valid_login_fields:
-                raise ValidationError(
-                    invalid_fields_message(valid_login_fields))
+        validate_fields(request.data.keys(), valid_login_fields)
 
         email = request.data["email"]
         password = request.data["password"]
@@ -90,20 +83,16 @@ class LoginUser(APIView):
 
 class AuthUser(APIView):
     def get(self, request):
-        user = get_user(request)
+        user = authenticate_user(request)
 
         serializer = UserSerializer(user)
 
         return Response(serializer.data)
 
     def patch(self, request):
+        user = authenticate_user(request)
 
-        for key in request.data.keys():
-            if key not in valid_update_profile_fields:
-                raise ValidationError(
-                    invalid_fields_message(valid_update_profile_fields))
-
-        user = get_user(request)
+        validate_fields(request.data.keys(), valid_update_profile_fields)
 
         # make sure partial=True
         serializer = UserSerializer(user, data=request.data, partial=True)
@@ -115,7 +104,9 @@ class AuthUser(APIView):
 
 class Logout(APIView):
     def post(self, request):
+
         response = Response()
         response.delete_cookie(COOKIE_TOKEN)
         response.data = {"message": "Logout success"}
+
         return response
