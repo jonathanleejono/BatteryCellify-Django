@@ -1,10 +1,10 @@
-from battery_cells.enum import BatteryCellEnum
+from battery_cells.enum import Anode, Cathode, Source, Type
 from utils.validate import validate_value
 
-valid_cathode_options = BatteryCellEnum.Cathode.values
-valid_anode_options = BatteryCellEnum.Anode.values
-valid_type_options = BatteryCellEnum.Type.values
-valid_source_options = BatteryCellEnum.Source.values
+valid_cathode_options = Cathode.values
+valid_anode_options = Anode.values
+valid_type_options = Type.values
+valid_source_options = Source.values
 
 
 def handle_filter(key: str, value: str) -> str:

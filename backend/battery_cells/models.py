@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
-from battery_cells.enum import BatteryCellEnum
+
+from battery_cells.enum import Anode, Cathode, Source, Type
 
 
 class BatteryCell(models.Model):
@@ -13,26 +14,26 @@ class BatteryCell(models.Model):
 
     cathode = models.CharField(
         max_length=7,
-        choices=BatteryCellEnum.Cathode.choices,
-        default=BatteryCellEnum.Cathode.LCO,
+        choices=Cathode.choices,
+        default=Cathode.LCO,
     )
 
     anode = models.CharField(
         max_length=8,
-        choices=BatteryCellEnum.Anode.choices,
-        default=BatteryCellEnum.Anode.GRAPHITE,
+        choices=Anode.choices,
+        default=Anode.GRAPHITE,
     )
 
     type = models.CharField(
         max_length=9,
-        choices=BatteryCellEnum.Type.choices,
-        default=BatteryCellEnum.Type.TYPE_18650,
+        choices=Type.choices,
+        default=Type.TYPE_18650,
     )
 
     source = models.CharField(
         max_length=6,
-        choices=BatteryCellEnum.Source.choices,
-        default=BatteryCellEnum.Source.HNEI,
+        choices=Source.choices,
+        default=Source.HNEI,
     )
 
     temperature_c = models.FloatField(max_length=255, default=0)

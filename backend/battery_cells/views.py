@@ -1,8 +1,10 @@
+from django.db.models import Avg, Count
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.utils import get_user_id
+from users.utils import authenticate_user_get_id
 
+from battery_cells.enum import Cathode
 from battery_cells.models import BatteryCell
 from battery_cells.serializers import BatteryCellSerializer
 from battery_cells.utils import handle_filter
@@ -34,7 +36,7 @@ valid_sort_directions = ["asc", "desc"]
 
 class BatteryCellList(APIView):
     def get(self, request):
-        user_id = get_user_id(request)
+        user_id = authenticate_user_get_id(request)
 
         query_params = self.request.query_params
 
@@ -57,7 +59,8 @@ class BatteryCellList(APIView):
         sort_direction = query_params.get("sort_direction")
 
         if sort_direction:
-            validate_value("sort_direction", sort_direction, valid_sort_directions)
+            validate_value("sort_direction", sort_direction,
+                           valid_sort_directions)
 
             if sort_direction == valid_sort_directions[1]:  # desc
                 sort = f"-{sort}"
@@ -88,7 +91,7 @@ class BatteryCellList(APIView):
 
 class BatteryCellCreate(APIView):
     def post(self, request):
-        user_id = get_user_id(request)
+        user_id = authenticate_user_get_id(request)
 
         validate_fields(request.data.keys(), valid_battery_cell_fields)
 
@@ -103,76 +106,148 @@ class BatteryCellCreate(APIView):
         return response
 
 
-# edit, get de, stats
+class BatteryCellId(APIView):
+    def get_battery_cell_by_pk(self, pk, owner_id):
+        try:
+            return BatteryCell.objects.filter(pk=pk, owner=owner_id)
+        except:
+            return Response(
+                {"error": "Battery cell does not exist"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
-# class LoginUser(APIView):
-#     def post(self, request):
-#         for key in request.data.keys():
-#             if key not in valid_login_fields:
-#                 raise ValidationError(
-#                     invalid_fields_message(valid_login_fields))
+    def get(self, request, pk):
+        user_id = authenticate_user_get_id(request)
 
-#         email = request.data["email"]
-#         password = request.data["password"]
+        battery_cell = self.get_battery_cell_by_pk(pk, user_id)
+        serializer = BatteryCellSerializer(battery_cell)
 
-#         user = User.objects.filter(email=email).first()
+        return Response(serializer.data)
 
-#         if user is None:
-#             raise AuthenticationFailed("User not found!")
+    def patch(self, request, pk):
+        user_id = authenticate_user_get_id(request)
 
-#         if not user.check_password(password):
-#             raise AuthenticationFailed("Invalid credentials")
+        validate_fields(request.data.keys(), valid_battery_cell_fields)
 
-#         try:
-#             jwt = generate_jwt(user.id)
-#         except:
-#             raise AuthenticationFailed("Error authenticating")
+        battery_cell = self.get_battery_cell_by_pk(pk, user_id)
 
-#         response = Response()
+        # make sure partial=True
+        serializer = BatteryCellSerializer(
+            battery_cell, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.update(battery_cell, request.data)
 
-#         # ensure samesite is "none" and not None
-#         response.set_cookie(
-#             key=COOKIE_TOKEN,
-#             value=jwt["access_token"],
-#             httponly=True,
-#             secure=True if PY_ENV == "production" else False,
-#             samesite="none" if PY_ENV == "production" else "lax",
-#             max_age=COOKIE_EXPIRY
-#         )
+        return Response(serializer.data)
 
-#         response.data = {"message": "Login success"}
+    def delete(self, request, pk):
+        user_id = authenticate_user_get_id(request)
 
-#         return response
+        battery_cell = self.get_battery_cell_by_pk(pk, user_id)
+        battery_cell.delete()
 
-
-# class AuthUser(APIView):
-#     def get(self, request):
-#         user = authenticate_user(request)
-
-#         serializer = UserSerializer(user)
-
-#         return Response(serializer.data)
-
-#     def patch(self, request):
-
-#         for key in request.data.keys():
-#             if key not in valid_update_profile_fields:
-#                 raise ValidationError(
-#                     invalid_fields_message(valid_update_profile_fields))
-
-#         user = authenticate_user(request)
-
-#         # make sure partial=True
-#         serializer = UserSerializer(user, data=request.data, partial=True)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.update(user, request.data)
-
-#         return Response(serializer.data)
+        return Response({"message": "Battery cell deleted"})
 
 
-# class Logout(APIView):
-#     def post(self, request):
-#         response = Response()
-#         response.delete_cookie(COOKIE_TOKEN)
-#         response.data = {"message": "Logout success"}
-#         return response
+class BatteryCellStats(APIView):
+    def get(self, request):
+        user_id = authenticate_user_get_id(request)
+
+        queryset = BatteryCell.objects.filter(owner=user_id)
+
+        # if no values are found use float 0.0, and round to 2 decimal places
+        avg_capacity_ah = round(
+            float(queryset.aggregate(Avg("capacity_ah"))
+                  ["capacity_ah__avg"]) or 0, 2
+        )
+
+        avg_depth_of_discharge = round(
+            float(
+                queryset.aggregate(Avg("depth_of_discharge"))[
+                    "depth_of_discharge__avg"]
+                or 0
+            ),
+            2,
+        )
+
+        avg_temperature_c = round(
+            float(queryset.aggregate(Avg("temperature_c"))
+                  ["temperature_c__avg"] or 0),
+            2,
+        )
+
+        total_cathode_cells = {
+            Cathode.LCO: queryset.filter(cathode=Cathode.LCO).aggregate(Count("id"))[
+                "id__count"
+            ],
+            Cathode.LFP: queryset.filter(cathode=Cathode.LFP).aggregate(Count("id"))[
+                "id__count"
+            ],
+            Cathode.NCA: queryset.filter(cathode=Cathode.NCA).aggregate(Count("id"))[
+                "id__count"
+            ],
+            Cathode.NMC: queryset.filter(cathode=Cathode.NMC).aggregate(Count("id"))[
+                "id__count"
+            ],
+            Cathode.NMC_LCO: queryset.filter(cathode=Cathode.NMC_LCO).aggregate(
+                Count("id")
+            )["id__count"],
+        }
+
+        avg_cycles_by_cathode = {
+            Cathode.LCO: round(
+                float(
+                    queryset.filter(cathode=Cathode.LCO).aggregate(Avg("cycles"))[
+                        "cycles__avg"
+                    ]
+                    or 0
+                ),
+                2,
+            ),
+            Cathode.LFP: round(
+                float(
+                    queryset.filter(cathode=Cathode.LFP).aggregate(Avg("cycles"))[
+                        "cycles__avg"
+                    ]
+                    or 0
+                ),
+                2,
+            ),
+            Cathode.NCA: round(
+                float(
+                    queryset.filter(cathode=Cathode.NCA).aggregate(Avg("cycles"))[
+                        "cycles__avg"
+                    ]
+                    or 0
+                ),
+                2,
+            ),
+            Cathode.NMC: round(
+                float(
+                    queryset.filter(cathode=Cathode.NMC).aggregate(Avg("cycles"))[
+                        "cycles__avg"
+                    ]
+                    or 0
+                ),
+                2,
+            ),
+            Cathode.NMC_LCO: round(
+                float(
+                    queryset.filter(cathode=Cathode.NMC_LCO).aggregate(Avg("cycles"))[
+                        "cycles__avg"
+                    ]
+                    or 0
+                ),
+                2,
+            ),
+        }
+
+        return Response(
+            {
+                "avg_capacity_ah": avg_capacity_ah,
+                "avg_depth_of_discharge": avg_depth_of_discharge,
+                "avg_temperature_c": avg_temperature_c,
+                "total_cathode_cells": total_cathode_cells,
+                "avg_cycles_by_cathode": avg_cycles_by_cathode,
+            }
+        )

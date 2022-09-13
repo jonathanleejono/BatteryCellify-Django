@@ -45,7 +45,7 @@ def authenticate_user(request):
     return user
 
 
-def get_user_id(request):
+def authenticate_user_get_id(request):
     user = authenticate_user(request)
 
     serializer_user = UserSerializer(user)
