@@ -4,15 +4,17 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.constants import COOKIE_EXPIRY, COOKIE_TOKEN
+from users.constants import (
+    COOKIE_EXPIRY,
+    COOKIE_TOKEN,
+    valid_login_fields,
+    valid_register_fields,
+    valid_update_profile_fields,
+)
 from users.models import User
 from users.serializers import UserSerializer
 from users.utils import authenticate_user, generate_jwt
 from utils.validate import validate_fields
-
-valid_register_fields = [key for key in UserSerializer().fields if key != "id"]
-valid_login_fields = ["email", "password"]
-valid_update_profile_fields = ["name", "email"]
 
 
 class RegisterUser(APIView):
@@ -28,8 +30,7 @@ class RegisterUser(APIView):
         except:
             raise AuthenticationFailed("Error authenticating")
 
-        response = Response(serializer.data,
-                            status=status.HTTP_201_CREATED)
+        response = Response(serializer.data, status=status.HTTP_201_CREATED)
 
         # ensure samesite is "none" and not None
         response.set_cookie(
@@ -38,7 +39,7 @@ class RegisterUser(APIView):
             httponly=True,
             secure=True if PY_ENV == "production" else False,
             samesite="none" if PY_ENV == "production" else "lax",
-            max_age=COOKIE_EXPIRY
+            max_age=COOKIE_EXPIRY,
         )
 
         return response
@@ -73,7 +74,7 @@ class LoginUser(APIView):
             httponly=True,
             secure=True if PY_ENV == "production" else False,
             samesite="none" if PY_ENV == "production" else "lax",
-            max_age=COOKIE_EXPIRY
+            max_age=COOKIE_EXPIRY,
         )
 
         response.data = {"message": "Login success"}

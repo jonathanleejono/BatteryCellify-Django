@@ -1,13 +1,10 @@
-from battery_cells.enum import Anode, Cathode, Source, Type
+from battery_cells.constants import (valid_anode_options,
+                                     valid_cathode_options,
+                                     valid_source_options, valid_type_options)
 from utils.validate import validate_value
 
-valid_cathode_options = Cathode.values
-valid_anode_options = Anode.values
-valid_type_options = Type.values
-valid_source_options = Source.values
 
-
-def handle_filter(key: str, value: str) -> str:
+def handle_battery_options(key: str, value: str) -> str:
     if key == "cathode" and value:
         validate_value(key, value, valid_cathode_options)
         return key

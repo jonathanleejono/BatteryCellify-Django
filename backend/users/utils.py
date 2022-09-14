@@ -13,15 +13,12 @@ def generate_jwt(user_id: int) -> dict[str, str]:
     payload = {
         "id": user_id,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-        "iat": datetime.datetime.utcnow()
+        "iat": datetime.datetime.utcnow(),
     }
 
-    access_token = jwt.encode(payload, JWT_ACCESS_SECRET,
-                              algorithm=JWT_ALGORITHM)
+    access_token = jwt.encode(payload, JWT_ACCESS_SECRET, algorithm=JWT_ALGORITHM)
 
-    return {
-        "access_token": access_token
-    }
+    return {"access_token": access_token}
 
 
 def authenticate_user(request):
@@ -31,8 +28,7 @@ def authenticate_user(request):
         raise AuthenticationFailed("Please login again")
 
     try:
-        payload = jwt.decode(
-            token, JWT_ACCESS_SECRET, algorithms=JWT_ALGORITHM)
+        payload = jwt.decode(token, JWT_ACCESS_SECRET, algorithms=JWT_ALGORITHM)
 
     except:
         raise AuthenticationFailed("Unauthenticated, please login again")
@@ -45,7 +41,7 @@ def authenticate_user(request):
     return user
 
 
-def authenticate_user_get_id(request):
+def get_auth_user_id(request):
     user = authenticate_user(request)
 
     serializer_user = UserSerializer(user)

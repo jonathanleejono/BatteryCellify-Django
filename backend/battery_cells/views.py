@@ -1,42 +1,29 @@
 from django.db.models import Avg, Count
 from rest_framework import status
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.utils import authenticate_user_get_id
+from users.utils import get_auth_user_id
 
-from battery_cells.enum import Cathode
+from battery_cells.constants import (
+    valid_anode_options,
+    valid_battery_cell_fields,
+    valid_cathode_options,
+    valid_filters,
+    valid_query_params,
+    valid_sort_directions,
+    valid_source_options,
+    valid_type_options,
+)
 from battery_cells.models import BatteryCell
 from battery_cells.serializers import BatteryCellSerializer
-from battery_cells.utils import handle_filter
+from battery_cells.utils import handle_battery_options
 from utils.validate import validate_fields, validate_value
-
-valid_battery_cell_fields = [
-    key
-    for key in BatteryCellSerializer().fields
-    if key != "id" or key != "created_at" or key != "updated_at"
-]
-
-valid_filters = [
-    "cathode",
-    "anode",
-    "type",
-    "source",
-]
-
-valid_query_params = [
-    "cell_name_id",
-    "sort_by",
-    "sort_direction",
-    "offset_skip",
-    "limit",
-] + valid_filters
-
-valid_sort_directions = ["asc", "desc"]
 
 
 class BatteryCellList(APIView):
     def get(self, request):
-        user_id = authenticate_user_get_id(request)
+        user_id = get_auth_user_id(request)
 
         query_params = self.request.query_params
 
@@ -45,7 +32,9 @@ class BatteryCellList(APIView):
         validate_fields(input_query_params, valid_query_params)
 
         filters = {
-            k: v for (k, v) in query_params.items() if handle_filter(key=k, value=v)
+            k: v
+            for (k, v) in query_params.items()
+            if handle_battery_options(key=k, value=v)
         }
 
         sort = "id"
@@ -59,8 +48,7 @@ class BatteryCellList(APIView):
         sort_direction = query_params.get("sort_direction")
 
         if sort_direction:
-            validate_value("sort_direction", sort_direction,
-                           valid_sort_directions)
+            validate_value("sort_direction", sort_direction, valid_sort_directions)
 
             if sort_direction == valid_sort_directions[1]:  # desc
                 sort = f"-{sort}"
@@ -91,9 +79,14 @@ class BatteryCellList(APIView):
 
 class BatteryCellCreate(APIView):
     def post(self, request):
-        user_id = authenticate_user_get_id(request)
+        user_id = get_auth_user_id(request)
 
         validate_fields(request.data.keys(), valid_battery_cell_fields)
+
+        validate_value("cathode", request.data["cathode"], valid_cathode_options)
+        validate_value("anode", request.data["anode"], valid_anode_options)
+        validate_value("type", request.data["type"], valid_type_options)
+        validate_value("source", request.data["source"], valid_source_options)
 
         request.data["owner"] = user_id
 
@@ -108,16 +101,19 @@ class BatteryCellCreate(APIView):
 
 class BatteryCellId(APIView):
     def get_battery_cell_by_pk(self, pk, owner_id):
+
         try:
-            return BatteryCell.objects.filter(pk=pk, owner=owner_id)
+            battery_cell = BatteryCell.objects.get(pk=pk)
         except:
-            return Response(
-                {"error": "Battery cell does not exist"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+            raise NotFound("Battery cell does not exist")
+
+        if battery_cell.owner_id != owner_id:
+            raise PermissionDenied()
+
+        return battery_cell
 
     def get(self, request, pk):
-        user_id = authenticate_user_get_id(request)
+        user_id = get_auth_user_id(request)
 
         battery_cell = self.get_battery_cell_by_pk(pk, user_id)
         serializer = BatteryCellSerializer(battery_cell)
@@ -125,9 +121,14 @@ class BatteryCellId(APIView):
         return Response(serializer.data)
 
     def patch(self, request, pk):
-        user_id = authenticate_user_get_id(request)
+        user_id = get_auth_user_id(request)
 
         validate_fields(request.data.keys(), valid_battery_cell_fields)
+
+        validate_value("cathode", request.data["cathode"], valid_cathode_options)
+        validate_value("anode", request.data["anode"], valid_anode_options)
+        validate_value("type", request.data["type"], valid_type_options)
+        validate_value("source", request.data["source"], valid_source_options)
 
         battery_cell = self.get_battery_cell_by_pk(pk, user_id)
 
@@ -141,7 +142,7 @@ class BatteryCellId(APIView):
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        user_id = authenticate_user_get_id(request)
+        user_id = get_auth_user_id(request)
 
         battery_cell = self.get_battery_cell_by_pk(pk, user_id)
         battery_cell.delete()
@@ -151,96 +152,36 @@ class BatteryCellId(APIView):
 
 class BatteryCellStats(APIView):
     def get(self, request):
-        user_id = authenticate_user_get_id(request)
+        user_id = get_auth_user_id(request)
 
         queryset = BatteryCell.objects.filter(owner=user_id)
 
-        # if no values are found use float 0.0, and round to 2 decimal places
+        # if no values are found use float 0.0, and then round to 2 decimal places
         avg_capacity_ah = round(
-            float(queryset.aggregate(Avg("capacity_ah"))
-                  ["capacity_ah__avg"]) or 0, 2
+            float(queryset.aggregate(Avg("capacity_ah"))["capacity_ah__avg"]) or 0, 2
         )
 
         avg_depth_of_discharge = round(
             float(
-                queryset.aggregate(Avg("depth_of_discharge"))[
-                    "depth_of_discharge__avg"]
+                queryset.aggregate(Avg("depth_of_discharge"))["depth_of_discharge__avg"]
                 or 0
             ),
             2,
         )
 
         avg_temperature_c = round(
-            float(queryset.aggregate(Avg("temperature_c"))
-                  ["temperature_c__avg"] or 0),
+            float(queryset.aggregate(Avg("temperature_c"))["temperature_c__avg"] or 0),
             2,
         )
 
-        total_cathode_cells = {
-            Cathode.LCO: queryset.filter(cathode=Cathode.LCO).aggregate(Count("id"))[
-                "id__count"
-            ],
-            Cathode.LFP: queryset.filter(cathode=Cathode.LFP).aggregate(Count("id"))[
-                "id__count"
-            ],
-            Cathode.NCA: queryset.filter(cathode=Cathode.NCA).aggregate(Count("id"))[
-                "id__count"
-            ],
-            Cathode.NMC: queryset.filter(cathode=Cathode.NMC).aggregate(Count("id"))[
-                "id__count"
-            ],
-            Cathode.NMC_LCO: queryset.filter(cathode=Cathode.NMC_LCO).aggregate(
-                Count("id")
-            )["id__count"],
-        }
+        # add list type to ensure proper casting
+        total_cathode_cells = list(
+            queryset.values("cathode").annotate(total=Count("id")).order_by("total")
+        )
 
-        avg_cycles_by_cathode = {
-            Cathode.LCO: round(
-                float(
-                    queryset.filter(cathode=Cathode.LCO).aggregate(Avg("cycles"))[
-                        "cycles__avg"
-                    ]
-                    or 0
-                ),
-                2,
-            ),
-            Cathode.LFP: round(
-                float(
-                    queryset.filter(cathode=Cathode.LFP).aggregate(Avg("cycles"))[
-                        "cycles__avg"
-                    ]
-                    or 0
-                ),
-                2,
-            ),
-            Cathode.NCA: round(
-                float(
-                    queryset.filter(cathode=Cathode.NCA).aggregate(Avg("cycles"))[
-                        "cycles__avg"
-                    ]
-                    or 0
-                ),
-                2,
-            ),
-            Cathode.NMC: round(
-                float(
-                    queryset.filter(cathode=Cathode.NMC).aggregate(Avg("cycles"))[
-                        "cycles__avg"
-                    ]
-                    or 0
-                ),
-                2,
-            ),
-            Cathode.NMC_LCO: round(
-                float(
-                    queryset.filter(cathode=Cathode.NMC_LCO).aggregate(Avg("cycles"))[
-                        "cycles__avg"
-                    ]
-                    or 0
-                ),
-                2,
-            ),
-        }
+        avg_cycles_by_cathode = list(
+            queryset.values("cathode").annotate(avg=Avg("cycles")).order_by("avg")
+        )
 
         return Response(
             {

@@ -11,13 +11,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "name", "email", "password"]
         extra_kwargs = {
-            "password": {"write_only": True, "min_length": 5, "error_messages": {
-                "min_length": "Please use a password with at least 6 characters",
-            }, }
+            "password": {
+                "write_only": True,
+                "min_length": 5,
+                "error_messages": {
+                    "min_length": "Please use a password with at least 6 characters",
+                },
+            }
         }
 
     def create(self, validated_data):
-        password = validated_data.pop('password', None)
+        password = validated_data.pop("password", None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
             instance.set_password(password)
@@ -25,13 +29,12 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_email(self, value):
-        current_email = self.__dict__['instance']
+        current_email = self.__dict__["instance"]
         new_email = value.lower()
 
         # make sure this is casted to str
         if str(current_email).lower() != new_email:
             if User.objects.filter(email__iexact=new_email).exists():
-                raise serializers.ValidationError(
-                    "Please use a different email")
+                raise serializers.ValidationError("Please use a different email")
 
         return new_email

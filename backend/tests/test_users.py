@@ -1,21 +1,22 @@
 import pytest
 from users.constants import COOKIE_TOKEN
 
-from .mock_users import mock_user, mock_user2, mock_user3
+from .mock_users import mock_user, mock_user2
+
+user_payload = {"name": "bob", "email": "bob@gmail.com", "password": "password"}
 
 
 @pytest.mark.django_db
 def test_register_user(client):
     print("Should register user")
 
-    response = client.post("/api/auth/register", mock_user)
+    response = client.post("/api/auth/register", user_payload)
 
     data = response.data
 
     assert response.status_code == 201
-    assert data["id"] == 1
-    assert data["name"] == mock_user["name"]
-    assert data["email"] == mock_user["email"]
+    assert data["name"] == user_payload["name"]
+    assert data["email"] == user_payload["email"]
     assert "password" not in data
 
 
@@ -23,11 +24,11 @@ def test_register_user(client):
 def test_register_user_invalid(client):
     print("Should not register user with the same email")
 
-    response = client.post("/api/auth/register", mock_user)
+    response = client.post("/api/auth/register", user_payload)
 
     assert response.status_code == 201
 
-    response = client.post("/api/auth/register", mock_user)
+    response = client.post("/api/auth/register", user_payload)
 
     errors = response.data["errors"][0]
 
@@ -40,15 +41,14 @@ def test_register_user_invalid(client):
 def test_login_user(client, user):
     print("Should login user")
 
-    login_payload = {"email": user["email"],
-                     "password": mock_user2["password"]}
+    login_payload = {"email": user["email"], "password": mock_user["password"]}
 
     response = client.post("/api/auth/login", login_payload)
 
     cookie = str(response.cookies)
 
     # make sure outer string quotes are single '', and inner are double ""
-    assert f'Set-Cookie: {COOKIE_TOKEN}=ey' in cookie
+    assert f"Set-Cookie: {COOKIE_TOKEN}=ey" in cookie
     assert "HttpOnly" in cookie
     assert response.status_code == 200
 
@@ -76,7 +76,7 @@ def test_update_user(client, user):
 
     assert response.status_code == 200
     assert data["email"] == update_payload["email"]
-    assert data["name"] == mock_user2["name"]
+    assert data["name"] == mock_user["name"]
 
 
 @pytest.mark.django_db
@@ -95,11 +95,12 @@ def test_update_user_2(client, user):
 
 
 @pytest.mark.django_db
-def test_update_user_invalid(client, register_db_user, user):
-    # make sure to include "register_db_user" and "user" in params to register users in db
+def test_update_user_invalid(client, user2, user):
+    # make sure to include "user2" and "user" in params to register users in db
+    # and that user2 goes before user, so that user2 gets registered first
     print("Should not update user using email that already exists")
 
-    update_payload = {"email": mock_user3["email"]}
+    update_payload = {"email": mock_user2["email"]}
 
     response = client.patch("/api/auth/user", update_payload)
 
