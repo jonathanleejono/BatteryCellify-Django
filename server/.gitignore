@@ -1,8 +1,0 @@
-**/__pycache__
-**/venv
-**/.env
-**/.env_temp
-**/.pytest_cache
-**/kaggle (2).json
-**/alembic
-old/
