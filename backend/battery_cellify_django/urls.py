@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/auth/', include('users.urls')),
-    path('api/battery-cells/', include('battery_cells.urls')),
+    path("admin/", admin.site.urls),
+    path("api/", include("utils.urls")),
+    path("api/auth/", include("users.urls")),
+    path("api/battery-cells/", include("battery_cells.urls")),
+    path("api/battery-cells/csv/", include("csv_data.urls")),
 ]
 
-handler404 = 'utils.views.custom404'
+handler404 = "utils.views.custom404"
 handler500 = "utils.views.custom500"

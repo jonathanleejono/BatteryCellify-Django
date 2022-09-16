@@ -1,6 +1,6 @@
 import pytest
 
-from tests.mock_battery_cells import mock_battery_cell_payload, mock_battery_cell_stats
+from mocks.mock_battery_cells import mock_battery_cell_payload, mock_battery_cell_stats
 
 
 @pytest.mark.django_db
@@ -11,8 +11,12 @@ def test_get_battery_cells(client, mock_battery_cells_list, login_user):
 
     response = client.get("/api/battery-cells/list")
 
+    # make sure [0] is included as list is returned
+    data = response.data[0]
+
     assert response.status_code == 200
     assert len(response.data) == 2
+    assert data.items() == mock_battery_cells_list[0].items()
 
 
 @pytest.mark.django_db
@@ -21,12 +25,15 @@ def test_get_battery_cells_query(client, mock_battery_cells_list, login_user):
 
     response = client.get("/api/battery-cells/list?source=HNEI")
 
+    data = response.data[0]
+
     assert response.status_code == 200
     assert len(response.data) == 1
+    assert data.items() == mock_battery_cells_list[0].items()
 
 
 @pytest.mark.django_db
-def test_get_battery_cells_query(client, mock_battery_cells_list, login_user):
+def test_get_battery_cells_stats(client, mock_battery_cells_list, login_user):
     print("Should get all battery cells stats")
 
     response = client.get("/api/battery-cells/stats")

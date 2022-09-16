@@ -1,7 +1,7 @@
 import pytest
 from users.constants import COOKIE_TOKEN
 
-from .mock_users import mock_user, mock_user2
+from mocks.mock_users import mock_user, mock_user2
 
 user_payload = {"name": "bob", "email": "bob@gmail.com", "password": "password"}
 

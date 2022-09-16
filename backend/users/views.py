@@ -77,7 +77,9 @@ class LoginUser(APIView):
             max_age=COOKIE_EXPIRY,
         )
 
-        response.data = {"message": "Login success"}
+        serializer = UserSerializer(user)
+
+        response.data = serializer.data
 
         return response
 

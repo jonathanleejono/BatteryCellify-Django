@@ -1,23 +1,21 @@
 from django.db.models import Avg, Count
 from rest_framework import status
-from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.utils import get_auth_user_id
 
 from battery_cells.constants import (
-    valid_anode_options,
-    valid_battery_cell_fields,
-    valid_cathode_options,
     valid_filters,
     valid_query_params,
     valid_sort_directions,
-    valid_source_options,
-    valid_type_options,
 )
 from battery_cells.models import BatteryCell
 from battery_cells.serializers import BatteryCellSerializer
-from battery_cells.utils import handle_battery_options
+from battery_cells.utils import (
+    authorize_battery_cell,
+    handle_battery_options,
+    validate_battery_cell_fields,
+)
 from utils.validate import validate_fields, validate_value
 
 
@@ -81,12 +79,7 @@ class BatteryCellCreate(APIView):
     def post(self, request):
         user_id = get_auth_user_id(request)
 
-        validate_fields(request.data.keys(), valid_battery_cell_fields)
-
-        validate_value("cathode", request.data["cathode"], valid_cathode_options)
-        validate_value("anode", request.data["anode"], valid_anode_options)
-        validate_value("type", request.data["type"], valid_type_options)
-        validate_value("source", request.data["source"], valid_source_options)
+        validate_battery_cell_fields(request)
 
         request.data["owner"] = user_id
 
@@ -100,22 +93,11 @@ class BatteryCellCreate(APIView):
 
 
 class BatteryCellId(APIView):
-    def get_battery_cell_by_pk(self, pk, owner_id):
-
-        try:
-            battery_cell = BatteryCell.objects.get(pk=pk)
-        except:
-            raise NotFound("Battery cell does not exist")
-
-        if battery_cell.owner_id != owner_id:
-            raise PermissionDenied()
-
-        return battery_cell
-
     def get(self, request, pk):
         user_id = get_auth_user_id(request)
 
-        battery_cell = self.get_battery_cell_by_pk(pk, user_id)
+        battery_cell = authorize_battery_cell(pk, user_id)
+
         serializer = BatteryCellSerializer(battery_cell)
 
         return Response(serializer.data)
@@ -123,14 +105,9 @@ class BatteryCellId(APIView):
     def patch(self, request, pk):
         user_id = get_auth_user_id(request)
 
-        validate_fields(request.data.keys(), valid_battery_cell_fields)
+        validate_battery_cell_fields(request)
 
-        validate_value("cathode", request.data["cathode"], valid_cathode_options)
-        validate_value("anode", request.data["anode"], valid_anode_options)
-        validate_value("type", request.data["type"], valid_type_options)
-        validate_value("source", request.data["source"], valid_source_options)
-
-        battery_cell = self.get_battery_cell_by_pk(pk, user_id)
+        battery_cell = authorize_battery_cell(pk, user_id)
 
         # make sure partial=True
         serializer = BatteryCellSerializer(
@@ -144,7 +121,8 @@ class BatteryCellId(APIView):
     def delete(self, request, pk):
         user_id = get_auth_user_id(request)
 
-        battery_cell = self.get_battery_cell_by_pk(pk, user_id)
+        battery_cell = authorize_battery_cell(pk, user_id)
+
         battery_cell.delete()
 
         return Response({"message": "Battery cell deleted"})
