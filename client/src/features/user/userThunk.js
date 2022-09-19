@@ -1,50 +1,61 @@
-import { clearAllBatteryCellsState } from 'allBatteryCells/allBatteryCellsSlice';
-import { clearValues } from 'batteryCell/batteryCellSlice';
-import { logoutUser } from 'userSlice';
-import customFetch, { checkForUnauthorizedResponse } from 'utils/axios';
-import { addUserToLocalStorage } from 'utils/localStorage';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { clearAllBatteryCellsState } from 'features/all-battery-cells/allBatteryCellsSlice';
+import { clearValues } from 'features/battery-cell/batteryCellSlice';
+import { logoutUser } from 'features/user/userSlice';
+import customFetch from 'utils/axios';
+import { checkForUnauthorizedResponse } from 'utils/checkForUnauthorizedResponse';
+import { removeUserFromLocalStorage } from 'utils/localStorage';
 
-export const registerUserThunk = async (url, newUser, thunkAPI) => {
+export const registerUser = createAsyncThunk('user/registerUser', async (newUser, thunkAPI) => {
   try {
-    const resp = await customFetch.post(url, newUser);
-    const { user, token } = resp.data;
-    addUserToLocalStorage({ user, token });
+    const resp = await customFetch.post('/api/auth/register', newUser);
+
     return resp.data;
   } catch (err) {
-    // the "error.response.data.detail" needs to have the word "detail" in it to make the
-    // HTTPException message work (because 'detail' is destructured from it)
-    // the "err.response.data.error" is for the slowapi rate limiting error message
-    return thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error);
+    const errorResponse = err.response.data;
+    return thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message);
   }
-};
+});
 
-export const loginUserThunk = async (url, loginUser, thunkAPI) => {
+export const loginUser = createAsyncThunk('user/loginUser', async (loginUser, thunkAPI) => {
   try {
-    const resp = await customFetch.post(url, loginUser);
-    const { user, token } = resp.data;
-    addUserToLocalStorage({ user, token });
+    const resp = await customFetch.post('/api/auth/login', loginUser);
+
     return resp.data;
   } catch (err) {
-    return thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error);
+    const errorResponse = err.response.data;
+    return thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message);
   }
-};
+});
 
-export const updateUserThunk = async (url, updatedUser, thunkAPI) => {
+export const getUser = createAsyncThunk('user/getUser', async (_, thunkAPI) => {
   try {
-    const resp = await customFetch.patch(url, updatedUser);
-    const { user, token } = resp.data;
-    addUserToLocalStorage({ user, token });
+    const resp = await customFetch.get('/api/auth/user');
+
     return resp.data;
   } catch (err) {
+    const errorResponse = err.response.data;
+    return thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message);
+  }
+});
+
+export const updateUser = createAsyncThunk('user/updateUser', async (updatedUser, thunkAPI) => {
+  try {
+    const resp = await customFetch.patch('/api/auth/user', updatedUser);
+
+    return resp.data;
+  } catch (err) {
+    const errorResponse = err.response.data;
     return (
       checkForUnauthorizedResponse(err, thunkAPI),
-      thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error)
+      thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message)
     );
   }
-};
+});
 
-export const clearStoreThunk = async (message, thunkAPI) => {
+export const clearStore = createAsyncThunk('user/clearStore', async (message, thunkAPI) => {
   try {
+    removeUserFromLocalStorage();
     thunkAPI.dispatch(logoutUser(message));
     thunkAPI.dispatch(clearAllBatteryCellsState());
     thunkAPI.dispatch(clearValues());
@@ -52,4 +63,4 @@ export const clearStoreThunk = async (message, thunkAPI) => {
   } catch (error) {
     return Promise.reject();
   }
-};
+});

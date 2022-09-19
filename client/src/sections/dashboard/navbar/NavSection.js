@@ -1,6 +1,6 @@
 import { Box, List } from '@mui/material';
 import { clearState } from 'features/all-battery-cells/allBatteryCellsSlice';
-import { clearValues } from 'features/csv-data/csvDataSlice';
+import { clearCsvFormValues } from 'features/csv-data/csvDataSlice';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { matchPath, useLocation } from 'react-router-dom';
@@ -24,7 +24,7 @@ export default function NavSection({ navConfig, ...other }) {
         sx={{ p: 1 }}
         onClick={() => {
           dispatch(clearState());
-          dispatch(clearValues());
+          dispatch(clearCsvFormValues());
         }}
       >
         {navConfig.map((item) => (

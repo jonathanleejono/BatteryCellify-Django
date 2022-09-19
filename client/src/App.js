@@ -6,6 +6,7 @@ import {
   batteryCellGraphsRoute,
   dashboardRoute,
   editBatteryCellRoute,
+  landingRoute,
   loginRoute,
   manageCsvRoute,
   notFound404Route,
@@ -37,7 +38,7 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           <Route element={<LogoOnlyLayout />}>
-            <Route index path="/" element={<Landing />} />
+            <Route index path={landingRoute} element={<Landing />} />
             <Route path={loginRoute} element={<Login />} />
             <Route path={registerRoute} element={<Register />} />
             <Route path={notFound404Route} element={<NotFound />} />

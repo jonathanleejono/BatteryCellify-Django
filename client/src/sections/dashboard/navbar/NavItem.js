@@ -1,6 +1,6 @@
 import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import Iconify from 'Iconify';
+import Iconify from 'components/Iconify';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
@@ -28,7 +28,7 @@ NavItem.propTypes = {
   active: PropTypes.func,
 };
 
-function NavItem({ item, active }) {
+export default function NavItem({ item, active }) {
   const theme = useTheme();
 
   const isActiveRoot = active(item.path);

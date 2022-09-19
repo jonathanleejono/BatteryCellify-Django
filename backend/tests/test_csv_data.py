@@ -39,18 +39,12 @@ def test_upload_cycle_data_invalid(client, mock_battery_cells_list, login_user):
 
 
 @pytest.mark.django_db
-def test_get_cycle_data(client, upload_mock_cycle_data, login_user):
+def test_get_cycle_data(client, upload_mock_cycle_data):
     print("Should get cycle data")
 
     response = client.get(
         "/api/battery-cells/csv/cycle-data/1",
     )
-
-    for row in response.data:
-        del row["id"]
-
-    for row in mock_cycle_data_output:
-        row["owner"] = login_user["id"]
 
     assert response.status_code == 200
     assert response.data == mock_cycle_data_output

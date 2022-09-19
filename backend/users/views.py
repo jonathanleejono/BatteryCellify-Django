@@ -32,16 +32,26 @@ class RegisterUser(APIView):
 
         response = Response(serializer.data, status=status.HTTP_201_CREATED)
 
+        secure_setting = True
+        samesite_setting = "none"
+
+        origin = request.headers["Origin"]
+
+        if origin and origin == "http://localhost:3000" and PY_ENV == "development":
+            secure_setting = False
+            samesite_setting = "lax"
+
+        response = Response()
+
         # ensure samesite is "none" and not None
         response.set_cookie(
             key=COOKIE_TOKEN,
             value=jwt["access_token"],
             httponly=True,
-            secure=True if PY_ENV == "production" else False,
-            samesite="none" if PY_ENV == "production" else "lax",
+            secure=secure_setting,
+            samesite=samesite_setting,
             max_age=COOKIE_EXPIRY,
         )
-
         return response
 
 
@@ -65,6 +75,15 @@ class LoginUser(APIView):
         except:
             raise AuthenticationFailed("Error authenticating")
 
+        secure_setting = True
+        samesite_setting = "none"
+
+        origin = request.headers["Origin"]
+
+        if origin and origin == "http://localhost:3000" and PY_ENV == "development":
+            secure_setting = False
+            samesite_setting = "lax"
+
         response = Response()
 
         # ensure samesite is "none" and not None
@@ -72,8 +91,8 @@ class LoginUser(APIView):
             key=COOKIE_TOKEN,
             value=jwt["access_token"],
             httponly=True,
-            secure=True if PY_ENV == "production" else False,
-            samesite="none" if PY_ENV == "production" else "lax",
+            secure=secure_setting,
+            samesite=samesite_setting,
             max_age=COOKIE_EXPIRY,
         )
 

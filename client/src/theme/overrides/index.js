@@ -1,12 +1,12 @@
-import Autocomplete from 'Autocomplete';
-import Backdrop from 'Backdrop';
-import Button from 'Button';
-import Card from 'Card';
-import CssBaseline from 'CssBaseline';
-import Input from 'Input';
-import Paper from 'Paper';
-import Tooltip from 'Tooltip';
-import Typography from 'Typography';
+import Autocomplete from 'theme/overrides/Autocomplete';
+import Backdrop from 'theme/overrides/Backdrop';
+import Button from 'theme/overrides/Button';
+import Card from 'theme/overrides/Card';
+import CssBaseline from 'theme/overrides/CssBaseline';
+import Input from 'theme/overrides/Input';
+import Paper from 'theme/overrides/Paper';
+import Tooltip from 'theme/overrides/Tooltip';
+import Typography from 'theme/overrides/Typography';
 
 export default function ComponentsOverrides(theme) {
   return Object.assign(

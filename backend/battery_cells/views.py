@@ -153,12 +153,10 @@ class BatteryCellStats(APIView):
         )
 
         # add list type to ensure proper casting
-        total_cathode_cells = list(
-            queryset.values("cathode").annotate(total=Count("id")).order_by("total")
-        )
-
-        avg_cycles_by_cathode = list(
-            queryset.values("cathode").annotate(avg=Avg("cycles")).order_by("avg")
+        cell_stats_by_cathode = list(
+            queryset.values("cathode")
+            .annotate(total=Count("id"), avg=Avg("cycles"))
+            .order_by("cathode")
         )
 
         return Response(
@@ -166,7 +164,6 @@ class BatteryCellStats(APIView):
                 "avg_capacity_ah": avg_capacity_ah,
                 "avg_depth_of_discharge": avg_depth_of_discharge,
                 "avg_temperature_c": avg_temperature_c,
-                "total_cathode_cells": total_cathode_cells,
-                "avg_cycles_by_cathode": avg_cycles_by_cathode,
+                "cell_stats_by_cathode": cell_stats_by_cathode,
             }
         )

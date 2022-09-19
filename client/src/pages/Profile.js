@@ -1,6 +1,6 @@
 import { Container, Stack, Typography } from '@mui/material';
 import Page from 'components/Page';
-import { ProfileForm } from 'sections/dashboard/profile';
+import ProfileForm from 'sections/profile/ProfileForm';
 
 export default function Profile() {
   return (

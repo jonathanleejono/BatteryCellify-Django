@@ -1,6 +1,7 @@
 import { Button, Card, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Page from 'components/Page';
+import { dashboardRoute, loginRoute, registerRoute } from 'constants/routes';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -9,22 +10,6 @@ import useResponsive from 'utils/useResponsiveLayout';
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
-  },
-}));
-
-const HeaderStyle = styled('header')(({ theme }) => ({
-  top: 0,
-  zIndex: 9,
-  lineHeight: 0,
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'absolute',
-  padding: theme.spacing(3),
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-start',
-    padding: theme.spacing(7, 5, 0, 7),
   },
 }));
 
@@ -49,19 +34,19 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Landing() {
-  const smUp = useResponsive('up', 'sm');
-
   const mdUp = useResponsive('up', 'md');
 
-  const { user, isLoading } = useSelector((store) => store.user);
+  const { userAuthenticated } = useSelector((store) => store.user);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      navigate('/dashboard', { replace: true });
+    if (userAuthenticated) {
+      navigate(dashboardRoute, { replace: true });
     }
-  }, [user, navigate]);
+  }, [userAuthenticated, navigate]);
+
+  const PROD_ENV = process.env.NODE_ENV === 'production';
 
   return (
     <Page title="Landing">
@@ -73,12 +58,12 @@ export default function Landing() {
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mb: 5, fontSize: 18 }}>
-              Manage battery cells and research through a state of the art dashboard. Built on top of React and FastAPI.
-              Communicate to the PostgreSQL database with the SQLAlchemy ORM. Visual data through Plotly.js, with the
-              help of processing data with Pandas.
+              Manage battery cells and research through a state of the art dashboard. Built with React, Redux, Python,
+              and Django. Communicate to the MySQL database with the Django ORM. Preprocess spreadsheets with Pandas,
+              and visual data through Plotly.js.
             </Typography>
 
-            <Button variant="contained" component={RouterLink} to="/register" size="large">
+            <Button variant="contained" component={RouterLink} to={PROD_ENV ? registerRoute : loginRoute} size="large">
               Enter
             </Button>
           </ContentStyle>
@@ -86,7 +71,7 @@ export default function Landing() {
 
         {mdUp && (
           <SectionStyle>
-            <img alt="register" src="/static/battery.svg" />
+            <img alt="battery icon" src="/static/battery.svg" />
           </SectionStyle>
         )}
       </RootStyle>

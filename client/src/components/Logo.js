@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { landingRoute } from 'constants/routes';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -14,5 +15,5 @@ export default function Logo({ disabledLink = false, sx }) {
     return <>{logo}</>;
   }
 
-  return <RouterLink to="/">{logo}</RouterLink>;
+  return <RouterLink to={landingRoute}>{logo}</RouterLink>;
 }

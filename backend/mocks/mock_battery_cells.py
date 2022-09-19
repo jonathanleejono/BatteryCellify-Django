@@ -19,12 +19,8 @@ mock_battery_cell_stats = {
     "avg_capacity_ah": 3.1,
     "avg_depth_of_discharge": 100.0,
     "avg_temperature_c": 24.0,
-    "total_cathode_cells": [
-        {"cathode": "NMC-LCO", "total": 1},
-        {"cathode": "NCA", "total": 1},
-    ],
-    "avg_cycles_by_cathode": [
-        {"cathode": "NCA", "avg": 205.0},
-        {"cathode": "NMC-LCO", "avg": 1113.0},
+    "cell_stats_by_cathode": [
+        {"cathode": "NCA", "total": 1, "avg": 205.0},
+        {"cathode": "NMC-LCO", "total": 1, "avg": 1113.0},
     ],
 }

@@ -1,5 +1,4 @@
 import pytest
-
 from mocks.mock_battery_cells import mock_battery_cell_payload, mock_battery_cell_stats
 
 

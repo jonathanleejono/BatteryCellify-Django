@@ -1,11 +1,14 @@
 import { Avatar, Box, Divider, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import MenuPopover from 'components/MenuPopover';
-import { dashboardRoute, profileRoute } from 'constants/routes';
-import { clearStore } from 'features/user/userSlice';
-import { useRef, useState } from 'react';
+import { dashboardRoute, landingRoute, profileRoute } from 'constants/routes';
+import { clearStore, getUser } from 'features/user/userThunk';
+import { handleToastErrors } from 'notifications/toast';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { removeUserFromLocalStorage } from 'utils/localStorage';
 
 const MENU_OPTIONS = [
   {
@@ -24,6 +27,17 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleFetchUser = useCallback(async () => {
+    const resultAction = await dispatch(getUser());
+
+    handleToastErrors(resultAction, getUser, 'Error fetching user details');
+  }, [dispatch]);
+
+  useEffect(() => {
+    handleFetchUser();
+  }, [handleFetchUser, dispatch]);
 
   const { user } = useSelector((store) => store.user);
 
@@ -35,6 +49,13 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLogout = () => {
+    toast.success('Logging out...');
+    dispatch(clearStore());
+    removeUserFromLocalStorage();
+    navigate(landingRoute);
   };
 
   return (
@@ -76,7 +97,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user.first_name}
+            {user.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user.email}
@@ -95,7 +116,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={() => dispatch(clearStore('Logging out...'))} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </MenuPopover>

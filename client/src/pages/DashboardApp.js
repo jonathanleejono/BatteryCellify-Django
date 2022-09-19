@@ -1,36 +1,92 @@
 import { Container, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Page from 'components/Page';
-import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsSlice';
-import { useEffect } from 'react';
+import { getAllBatteryCells, getAllBatteryCellsStats } from 'features/all-battery-cells/allBatteryCellsThunk';
+import { handleToastErrors } from 'notifications/toast';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppConversionRates, AppCurrentVisits, AppWidgetSummary } from 'sections/dashboard/app';
+import HorizontalBarChart from 'sections/dashboard/app/HorizontalBarChart';
+import PieChart from 'sections/dashboard/app/PieChart';
+import StatsCard from 'sections/dashboard/app/StatsCard';
 
 export default function DashboardApp() {
   const theme = useTheme();
 
-  const {
-    total_battery_cells,
-    avg_capacity,
-    avg_depth_of_discharge,
-    avg_temperature_c,
-    total_cathode_lco_cells,
-    total_cathode_lfp_cells,
-    total_cathode_nca_cells,
-    total_cathode_nmc_cells,
-    total_cathode_nmclco_cells,
-    avg_cycles_lco_cells,
-    avg_cycles_lfp_cells,
-    avg_cycles_nca_cells,
-    avg_cycles_nmc_cells,
-    avg_cycles_nmclco_cells,
-  } = useSelector((store) => store.allBatteryCells);
+  const { all_battery_cells, avg_capacity_ah, avg_depth_of_discharge, avg_temperature_c, cell_stats_by_cathode } =
+    useSelector((store) => store.allBatteryCells);
 
   const dispatch = useDispatch();
 
+  const handleFetchBatteryCells = useCallback(async () => {
+    const resultAction = await dispatch(getAllBatteryCells());
+
+    handleToastErrors(resultAction, getAllBatteryCells, 'Error fetching battery cells');
+
+    const resultActionStats = await dispatch(getAllBatteryCellsStats());
+
+    handleToastErrors(resultActionStats, getAllBatteryCellsStats, 'Error fetching battery cells stats');
+  }, [dispatch]);
+
   useEffect(() => {
-    dispatch(getAllBatteryCells());
-  }, [dispatch, total_battery_cells, avg_capacity, avg_depth_of_discharge, avg_temperature_c]);
+    handleFetchBatteryCells();
+  }, [handleFetchBatteryCells, dispatch]);
+
+  let avg_cycles_lco_cells = 0;
+  let avg_cycles_lfp_cells = 0;
+  let avg_cycles_nca_cells = 0;
+  let avg_cycles_nmc_cells = 0;
+  let avg_cycles_nmclco_cells = 0;
+
+  let total_cathode_lco_cells = 0;
+  let total_cathode_lfp_cells = 0;
+  let total_cathode_nca_cells = 0;
+  let total_cathode_nmc_cells = 0;
+  let total_cathode_nmclco_cells = 0;
+
+  // avg_cycles_by_cathode and total_cathode_cells should have
+  // the same length and similar shape based on cathodes
+  Object.keys(cell_stats_by_cathode).forEach((_, index) => {
+    const cathodeType = cell_stats_by_cathode[index].cathode;
+    const cyclesAvg = cell_stats_by_cathode[index].avg;
+    const cathodeTotal = cell_stats_by_cathode[index].total;
+
+    switch (cathodeType) {
+      case 'LCO':
+        avg_cycles_lco_cells = cyclesAvg;
+        total_cathode_lco_cells = cathodeTotal;
+        break;
+      case 'LFP':
+        avg_cycles_lfp_cells = cyclesAvg;
+        total_cathode_lfp_cells = cathodeTotal;
+        break;
+      case 'NCA':
+        avg_cycles_nca_cells = cyclesAvg;
+        total_cathode_nca_cells = cathodeTotal;
+        break;
+      case 'NMC':
+        avg_cycles_nmc_cells = cyclesAvg;
+        total_cathode_nmc_cells = cathodeTotal;
+        break;
+      case 'NMC-LCO':
+        avg_cycles_nmclco_cells = cyclesAvg;
+        total_cathode_nmclco_cells = cathodeTotal;
+        break;
+      default:
+        avg_cycles_lco_cells = 0;
+        avg_cycles_lfp_cells = 0;
+        avg_cycles_nca_cells = 0;
+        avg_cycles_nmc_cells = 0;
+        avg_cycles_nmclco_cells = 0;
+
+        total_cathode_lco_cells = 0;
+        total_cathode_lfp_cells = 0;
+        total_cathode_nca_cells = 0;
+        total_cathode_nmc_cells = 0;
+        total_cathode_nmclco_cells = 0;
+    }
+  });
+
+  const totalBatteryCells = all_battery_cells ? all_battery_cells.length : 0;
 
   return (
     <Page title="Dashboard">
@@ -39,28 +95,26 @@ export default function DashboardApp() {
           Hi, Welcome Back
         </Typography>
 
-        {/* number of batteries, average capacity, average depth of discharge, average temperature */}
-
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
+            <StatsCard
               title="Total No. Battery Cells"
-              total={total_battery_cells}
+              total={totalBatteryCells}
               icon={'ic:round-battery-charging-full'}
             />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
+            <StatsCard
               title="Avg. Capacity (Ah)"
-              total={avg_capacity}
+              total={avg_capacity_ah}
               color="info"
               icon={'ic:baseline-battery-3-bar'}
             />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
+            <StatsCard
               title="Avg. Depth of Discharge"
               total={avg_depth_of_discharge}
               color="warning"
@@ -69,7 +123,7 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
+            <StatsCard
               title="Avg. Temperature (C)"
               total={avg_temperature_c}
               color="error"
@@ -78,9 +132,8 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={6}>
-            <AppConversionRates
+            <HorizontalBarChart
               title="Average Cycles Per Cathode"
-              // subheader="(+43%) than last year"
               chartData={[
                 { label: 'LCO', value: avg_cycles_lco_cells },
                 { label: 'LFP', value: avg_cycles_lfp_cells },
@@ -91,10 +144,8 @@ export default function DashboardApp() {
             />
           </Grid>
 
-          {/* the cathode */}
-
           <Grid item xs={12} md={6} lg={6}>
-            <AppCurrentVisits
+            <PieChart
               title="Battery Cell Cathodes"
               chartData={[
                 { label: 'LCO', value: total_cathode_lco_cells },

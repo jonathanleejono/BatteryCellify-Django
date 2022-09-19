@@ -2,8 +2,9 @@ import { Card, Container, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Logo from 'components/Logo';
 import Page from 'components/Page';
+import { loginRoute } from 'constants/routes';
 import { Link as RouterLink } from 'react-router-dom';
-import { RegisterForm } from 'sections/auth/register';
+import RegisterForm from 'sections/user-auth/RegisterForm';
 import useResponsive from 'utils/useResponsiveLayout';
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -48,8 +49,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Register() {
-  const smUp = useResponsive('up', 'sm');
-
   const mdUp = useResponsive('up', 'md');
 
   return (
@@ -57,14 +56,6 @@ export default function Register() {
       <RootStyle>
         <HeaderStyle>
           <Logo />
-          {/* {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Already have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to="/login">
-                Login
-              </Link>
-            </Typography>
-          )} */}
         </HeaderStyle>
 
         {mdUp && (
@@ -72,7 +63,7 @@ export default function Register() {
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Manage your research more effectively
             </Typography>
-            <img alt="register" src="/static/illustrations/illustration_register.png" />
+            <img alt="research person" src="/static/illustrations/illustration_register.png" />
           </SectionStyle>
         )}
 
@@ -86,14 +77,12 @@ export default function Register() {
 
             <RegisterForm />
 
-            {/* {smUp && ( */}
             <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
               Already have an account?{' '}
-              <Link variant="subtitle2" to="/login" component={RouterLink}>
+              <Link variant="subtitle2" to={loginRoute} component={RouterLink}>
                 Login
               </Link>
             </Typography>
-            {/* )} */}
           </ContentStyle>
         </Container>
       </RootStyle>

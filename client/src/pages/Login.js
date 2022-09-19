@@ -2,8 +2,9 @@ import { Card, Container, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Logo from 'components/Logo';
 import Page from 'components/Page';
+import { registerRoute } from 'constants/routes';
 import { Link as RouterLink } from 'react-router-dom';
-import { LoginForm } from 'sections/auth/login';
+import LoginForm from 'sections/user-auth/LoginForm';
 import useResponsive from 'utils/useResponsiveLayout';
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -48,8 +49,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Login() {
-  const smUp = useResponsive('up', 'sm');
-
   const mdUp = useResponsive('up', 'md');
 
   return (
@@ -64,14 +63,14 @@ export default function Login() {
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, Welcome Back
             </Typography>
-            <img src="/static/illustrations/illustration_login.png" alt="login" />
+            <img src="/static/illustrations/illustration_login.png" alt="person going through door" />
           </SectionStyle>
         )}
 
         <Container maxWidth="sm">
           <ContentStyle>
             <Typography variant="h4" gutterBottom>
-              Sign in to BatteryCellify
+              Sign in to BatteryCellify-Django
             </Typography>
 
             <Typography sx={{ color: 'text.secondary', mb: 5 }}>Enter your details below.</Typography>
@@ -80,7 +79,7 @@ export default function Login() {
 
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
               Don't have an account?{' '}
-              <Link variant="subtitle2" component={RouterLink} to="/register">
+              <Link variant="subtitle2" component={RouterLink} to={registerRoute}>
                 Get started
               </Link>
             </Typography>

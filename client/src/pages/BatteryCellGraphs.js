@@ -1,70 +1,40 @@
 import { Button, Container, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import Page from 'components/Page';
-import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsSlice';
-import { getCycleData, getTimeSeriesData, handleChange } from 'features/csv-data/csvDataSlice';
+import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
+import { handleChange } from 'features/csv-data/csvDataSlice';
+import { getCycleData, getTimeSeriesData } from 'features/csv-data/csvDataThunk';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import CycleDecayGraph from 'sections/dashboard/battery-cell-graphs/CycleDecayGraph';
-import EfficenciesGraph from 'sections/dashboard/battery-cell-graphs/EfficenciesGraph';
-import TimeSeriesDecayGraph from 'sections/dashboard/battery-cell-graphs/TimeSeriesDecayGraph';
-import VoltageByCycleStepsGraph from 'sections/dashboard/battery-cell-graphs/VoltageByCycleStepsGraph';
+import CycleDecayGraph from 'sections/battery-cell-graphs/CycleDecayGraph';
+import EfficenciesGraph from 'sections/battery-cell-graphs/EfficenciesGraph';
+import TimeSeriesDecayGraph from 'sections/battery-cell-graphs/TimeSeriesDecayGraph';
+import VoltageByCycleStepsGraph from 'sections/battery-cell-graphs/VoltageByCycleStepsGraph';
 
-export default function Graphs() {
-  const theme = useTheme();
-
+export default function BatteryCellGraphs() {
   const dispatch = useDispatch();
 
-  const { battery_cells } = useSelector((store) => store.allBatteryCells);
+  const { all_battery_cells } = useSelector((store) => store.allBatteryCells);
 
   const {
     isLoading,
     selectedBatteryCell,
-    cycle_numbers,
-    cycle_discharge_capacity_ah,
-    cycle_discharge_energy_wh,
+    all_cycle_numbers,
+    cycle_discharge_capacity_ah_list,
+    cycle_discharge_energy_wh_list,
     energy_efficiency,
     coulombic_efficiency,
     cycle_numbers_capacity,
     cycle_numbers_energy,
-    test_time_seconds,
-    time_series_discharge_capacity_ah,
-    time_series_discharge_energy_wh,
-    voltage_cycles_100_step,
-    voltage_cycles_200_step,
-    voltage_cycles_300_step,
-    voltage_cycles_400_step,
-    voltage_cycles_500_step,
-    voltage_cycles_600_step,
-    voltage_cycles_700_step,
-    voltage_cycles_800_step,
-    voltage_cycles_900_step,
-    voltage_cycles_1000_step,
-    voltage_cycles_1100_step,
-    charge_capacity_cycles_100_step,
-    charge_capacity_cycles_200_step,
-    charge_capacity_cycles_300_step,
-    charge_capacity_cycles_400_step,
-    charge_capacity_cycles_500_step,
-    charge_capacity_cycles_600_step,
-    charge_capacity_cycles_700_step,
-    charge_capacity_cycles_800_step,
-    charge_capacity_cycles_900_step,
-    charge_capacity_cycles_1000_step,
-    charge_capacity_cycles_1100_step,
-    discharge_capacity_cycles_100_step,
-    discharge_capacity_cycles_200_step,
-    discharge_capacity_cycles_300_step,
-    discharge_capacity_cycles_400_step,
-    discharge_capacity_cycles_500_step,
-    discharge_capacity_cycles_600_step,
-    discharge_capacity_cycles_700_step,
-    discharge_capacity_cycles_800_step,
-    discharge_capacity_cycles_900_step,
-    discharge_capacity_cycles_1000_step,
-    discharge_capacity_cycles_1100_step,
+    test_time_seconds_list,
+    time_series_discharge_capacity_ah_list,
+    time_series_discharge_energy_wh_list,
+    voltage_cycle_steps,
+    charge_capacity_cycles_steps,
+    discharge_capacity_cycles_steps,
   } = useSelector((store) => store.csvData);
+
+  console.log('voltage_cycle_stepsg:  ', voltage_cycle_steps);
 
   useEffect(() => {
     dispatch(getAllBatteryCells());
@@ -87,10 +57,10 @@ export default function Graphs() {
   };
 
   return (
-    <Page title="Dashboard">
+    <Page title="Battery Cell Graphs">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Graphs
+          Battery Cell Graphs
         </Typography>
 
         <form onSubmit={handleSubmit}>
@@ -102,7 +72,7 @@ export default function Graphs() {
               onChange={handleSelect}
               label="Select Battery Cell"
             >
-              {battery_cells.map((option) => (
+              {all_battery_cells.map((option) => (
                 <MenuItem key={option.id} value={option}>
                   {option.cell_name_id}
                 </MenuItem>
@@ -117,9 +87,9 @@ export default function Graphs() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={12} xl={6}>
             <CycleDecayGraph
-              cycle_numbers={cycle_numbers}
-              cycle_discharge_capacity_ah={cycle_discharge_capacity_ah}
-              cycle_discharge_energy_wh={cycle_discharge_energy_wh}
+              all_cycle_numbers={all_cycle_numbers}
+              cycle_discharge_capacity_ah_list={cycle_discharge_capacity_ah_list}
+              cycle_discharge_energy_wh_list={cycle_discharge_energy_wh_list}
               battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>
@@ -136,48 +106,18 @@ export default function Graphs() {
 
           <Grid item xs={12} md={6} lg={12} xl={6}>
             <TimeSeriesDecayGraph
-              test_time_seconds={test_time_seconds}
-              time_series_discharge_capacity_ah={time_series_discharge_capacity_ah}
-              time_series_discharge_energy_wh={time_series_discharge_energy_wh}
+              test_time_seconds_list={test_time_seconds_list}
+              time_series_discharge_capacity_ah_list={time_series_discharge_capacity_ah_list}
+              time_series_discharge_energy_wh_list={time_series_discharge_energy_wh_list}
               battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={12} xl={6}>
             <VoltageByCycleStepsGraph
-              voltage_cycles_100_step={voltage_cycles_100_step}
-              voltage_cycles_200_step={voltage_cycles_200_step}
-              voltage_cycles_300_step={voltage_cycles_300_step}
-              voltage_cycles_400_step={voltage_cycles_400_step}
-              voltage_cycles_500_step={voltage_cycles_500_step}
-              voltage_cycles_600_step={voltage_cycles_600_step}
-              voltage_cycles_700_step={voltage_cycles_700_step}
-              voltage_cycles_800_step={voltage_cycles_800_step}
-              voltage_cycles_900_step={voltage_cycles_900_step}
-              voltage_cycles_1000_step={voltage_cycles_1000_step}
-              voltage_cycles_1100_step={voltage_cycles_1100_step}
-              charge_capacity_cycles_100_step={charge_capacity_cycles_100_step}
-              charge_capacity_cycles_200_step={charge_capacity_cycles_200_step}
-              charge_capacity_cycles_300_step={charge_capacity_cycles_300_step}
-              charge_capacity_cycles_400_step={charge_capacity_cycles_400_step}
-              charge_capacity_cycles_500_step={charge_capacity_cycles_500_step}
-              charge_capacity_cycles_600_step={charge_capacity_cycles_600_step}
-              charge_capacity_cycles_700_step={charge_capacity_cycles_700_step}
-              charge_capacity_cycles_800_step={charge_capacity_cycles_800_step}
-              charge_capacity_cycles_900_step={charge_capacity_cycles_900_step}
-              charge_capacity_cycles_1000_step={charge_capacity_cycles_1000_step}
-              charge_capacity_cycles_1100_step={charge_capacity_cycles_1100_step}
-              discharge_capacity_cycles_100_step={discharge_capacity_cycles_100_step}
-              discharge_capacity_cycles_200_step={discharge_capacity_cycles_200_step}
-              discharge_capacity_cycles_300_step={discharge_capacity_cycles_300_step}
-              discharge_capacity_cycles_400_step={discharge_capacity_cycles_400_step}
-              discharge_capacity_cycles_500_step={discharge_capacity_cycles_500_step}
-              discharge_capacity_cycles_600_step={discharge_capacity_cycles_600_step}
-              discharge_capacity_cycles_700_step={discharge_capacity_cycles_700_step}
-              discharge_capacity_cycles_800_step={discharge_capacity_cycles_800_step}
-              discharge_capacity_cycles_900_step={discharge_capacity_cycles_900_step}
-              discharge_capacity_cycles_1000_step={discharge_capacity_cycles_1000_step}
-              discharge_capacity_cycles_1100_step={discharge_capacity_cycles_1100_step}
+              voltage_cycle_steps={voltage_cycle_steps}
+              charge_capacity_cycles_steps={charge_capacity_cycles_steps}
+              discharge_capacity_cycles_steps={discharge_capacity_cycles_steps}
               battery_cell_name_id={selectedBatteryCell.cell_name_id}
             />
           </Grid>

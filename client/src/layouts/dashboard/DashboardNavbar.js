@@ -2,7 +2,7 @@ import { AppBar, Box, IconButton, Stack, Toolbar } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import Iconify from 'components/Iconify';
 import PropTypes from 'prop-types';
-import AccountPopover from 'sections/dashboard/navbar/AccountPopover;';
+import AccountPopover from 'sections/dashboard/navbar/AccountPopover';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;

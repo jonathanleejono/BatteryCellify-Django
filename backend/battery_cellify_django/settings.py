@@ -52,7 +52,7 @@ SECRET_KEY = SECRET_KEY_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [CORS_ORIGIN]
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -165,6 +165,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ALLOWED_ORIGINS = [
+    CORS_ORIGIN,
+]
 
 CORS_ALLOW_CREDENTIALS = True  # necessary for cookies
 

@@ -63,7 +63,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography data-cy="dashboard-sidebar-name" variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {user.first_name} {user.last_name}
+                {user.name}
               </Typography>
             </Box>
           </AccountStyle>
