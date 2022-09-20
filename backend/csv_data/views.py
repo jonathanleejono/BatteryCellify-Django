@@ -1,5 +1,5 @@
 from battery_cells.utils import authorize_battery_cell
-from django.db.models import ExpressionWrapper, F, FloatField
+from django.db.models import Case, ExpressionWrapper, F, FloatField, When
 from pandas import DataFrame
 from rest_framework import status
 from rest_framework.exceptions import NotFound, ValidationError
@@ -78,7 +78,7 @@ class CsvCycleDataView(APIView):
 
         # __gt means greater than
         energy_filtered_data = queryset.filter(
-            discharge_energy_wh__gt=0.1, charge_energy_wh__gt=0.1
+            discharge_energy_wh__gt=1.0, charge_energy_wh__gt=1.0
         )
 
         energy_efficiency = list(
@@ -218,24 +218,23 @@ class CsvTimeSeriesDataView(APIView):
         discharge_capacity_cycles_data = {}
 
         for every_100_rows in range(0, 1001, 100):
+
+            cycle_filter_queryset = queryset.filter(
+                cycle_index__gte=every_100_rows - 99, cycle_index__lte=every_100_rows
+            )
+
             steps_key = f"steps_{every_100_rows + 100}"
 
             voltage_cycle_steps_data[f"{steps_key}"] = list(
-                queryset.values_list("voltage_v", flat=True)[
-                    every_100_rows : every_100_rows + 100
-                ]
+                cycle_filter_queryset.values_list("voltage_v", flat=True)
             )
 
             charge_capacity_cycles_data[f"{steps_key}"] = list(
-                queryset.values_list("charge_capacity_ah", flat=True)[
-                    every_100_rows : every_100_rows + 100
-                ]
+                cycle_filter_queryset.values_list("charge_capacity_ah", flat=True)
             )
 
             discharge_capacity_cycles_data[f"{steps_key}"] = list(
-                queryset.values_list("discharge_capacity_ah", flat=True)[
-                    every_100_rows : every_100_rows + 100
-                ]
+                cycle_filter_queryset.values_list("discharge_capacity_ah", flat=True)
             )
 
         if not (

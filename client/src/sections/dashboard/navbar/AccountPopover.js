@@ -2,7 +2,7 @@ import { Avatar, Box, Divider, IconButton, MenuItem, Stack, Typography } from '@
 import { alpha } from '@mui/material/styles';
 import MenuPopover from 'components/MenuPopover';
 import { dashboardRoute, landingRoute, profileRoute } from 'constants/routes';
-import { clearStore, getUser } from 'features/user/userThunk';
+import { clearStore, getUser, logoutUser } from 'features/user/userThunk';
 import { handleToastErrors } from 'notifications/toast';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -53,6 +53,7 @@ export default function AccountPopover() {
 
   const handleLogout = () => {
     toast.success('Logging out...');
+    dispatch(logoutUser());
     dispatch(clearStore());
     removeUserFromLocalStorage();
     navigate(landingRoute);

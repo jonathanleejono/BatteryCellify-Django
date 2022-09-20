@@ -1,6 +1,8 @@
 import { Button, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { anodeOptions, cathodeOptions, sourceOptions, typeOptions } from 'constants/options';
 import { clearFilters, handleChangeAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsSlice';
+import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
+import { handleToastErrors } from 'notifications/toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function AllBatteryCellsFilters() {
@@ -8,9 +10,12 @@ export default function AllBatteryCellsFilters() {
 
   const { cathode, anode, type, source } = useSelector((store) => store.allBatteryCells);
 
-  const handleSearch = (event) => {
+  const handleSearch = async (event) => {
     const { name, value } = event.target;
     dispatch(handleChangeAllBatteryCells({ name, value }));
+
+    const resultAction = await dispatch(getAllBatteryCells());
+    handleToastErrors(resultAction, getAllBatteryCells, 'Error fetching battery cells');
   };
 
   return (
@@ -64,7 +69,13 @@ export default function AllBatteryCellsFilters() {
             ))}
           </TextField>
         </Stack>
-        <Button variant="outlined" onClick={() => dispatch(clearFilters())}>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            dispatch(clearFilters());
+            dispatch(getAllBatteryCells());
+          }}
+        >
           Clear Filters
         </Button>
       </Stack>

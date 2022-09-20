@@ -38,6 +38,7 @@ DB_PASSWORD = env.str("DB_PASSWORD", validate=[Length(min=1)])
 JWT_ACCESS_SECRET = env.str("JWT_ACCESS_SECRET", validate=[Length(min=1)])
 JWT_ALGORITHM = env.str("JWT_ALGORITHM", validate=[Length(min=1)])
 CORS_ORIGIN = env.str("CORS_ORIGIN", validate=[Length(min=1)])
+TESTING = env.str("TESTING", validate=[Length(min=1)])
 
 
 env.seal()

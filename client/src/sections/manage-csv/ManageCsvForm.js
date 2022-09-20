@@ -18,14 +18,15 @@ import {
 import { alpha, useTheme } from '@mui/material/styles';
 import Iconify from 'components/Iconify';
 import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
-import { handleChange } from 'features/csv-data/csvDataSlice';
+import { clearCsvState, handleChange } from 'features/csv-data/csvDataSlice';
 import {
   deleteCycleData,
   deleteTimeSeriesData,
   uploadCycleData,
   uploadTimeSeriesData,
 } from 'features/csv-data/csvDataThunk';
-import { useEffect, useState } from 'react';
+import { handleToast, handleToastErrors } from 'notifications/toast';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -36,9 +37,17 @@ export default function ManageCsvForm() {
 
   const { selectedBatteryCell, isLoading } = useSelector((store) => store.csvData);
 
-  useEffect(() => {
-    dispatch(getAllBatteryCells());
+  const handleFetchBatteryCells = useCallback(async () => {
+    dispatch(clearCsvState());
+
+    const resultAction = await dispatch(getAllBatteryCells());
+
+    handleToastErrors(resultAction, getAllBatteryCells, 'Error fetching battery cells');
   }, [dispatch]);
+
+  useEffect(() => {
+    handleFetchBatteryCells();
+  }, [handleFetchBatteryCells, dispatch]);
 
   const [selectedCsvType, setSelectedCsvType] = useState('cycleData');
   const [csvFile, setCsvFile] = useState('');
@@ -61,7 +70,7 @@ export default function ManageCsvForm() {
     if (e.target.files) setCsvFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!selectedBatteryCell) {
@@ -75,14 +84,18 @@ export default function ManageCsvForm() {
     formData.append('file', csvFile);
 
     if (selectedCsvType === 'cycleData') {
-      dispatch(uploadCycleData({ id: selectedBatteryCell.id, file: formData }));
+      const resultAction = await dispatch(uploadCycleData({ id: selectedBatteryCell.id, file: formData }));
+
+      handleToast(resultAction, uploadCycleData, 'Uploaded cycle data!', 'Error uploading cycle data');
     }
     if (selectedCsvType === 'timeSeriesData') {
-      dispatch(uploadTimeSeriesData({ id: selectedBatteryCell.id, file: formData }));
+      const resultAction = await dispatch(uploadTimeSeriesData({ id: selectedBatteryCell.id, file: formData }));
+
+      handleToast(resultAction, uploadTimeSeriesData, 'Uploaded time series data!', 'Error uploading time series data');
     }
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = async (e) => {
     e.preventDefault();
 
     if (!selectedBatteryCell) {
@@ -90,11 +103,17 @@ export default function ManageCsvForm() {
     }
 
     if (selectedCsvType === 'cycleData') {
-      dispatch(deleteCycleData(selectedBatteryCell.id));
+      const resultAction = await dispatch(deleteCycleData(selectedBatteryCell.id));
+
+      handleToast(resultAction, deleteCycleData, 'Deleted cycle data!', 'Error deleting cycle data');
+
       handleClose();
     }
     if (selectedCsvType === 'timeSeriesData') {
-      dispatch(deleteTimeSeriesData(selectedBatteryCell.id));
+      const resultAction = await dispatch(deleteTimeSeriesData(selectedBatteryCell.id));
+
+      handleToast(resultAction, deleteTimeSeriesData, 'Deleted time series data!', 'Error deleting time series data');
+
       handleClose();
     }
   };

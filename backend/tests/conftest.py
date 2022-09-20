@@ -4,12 +4,18 @@ from battery_cells.models import BatteryCell
 from battery_cells.serializers import BatteryCellSerializer
 from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
-from mocks.mock_users import mock_user, mock_user2
+from mocks.mock_users import mock_user, mock_user2, mock_user3
 from rest_framework.test import APIClient
 
 
 @pytest.fixture
-def client():
+def set_env():
+    mp = pytest.MonkeyPatch()
+    mp.setenv("TESTING", "yes")
+
+
+@pytest.fixture
+def client(set_env):
     return APIClient()
 
 
@@ -23,6 +29,12 @@ def user(client):
 @pytest.fixture
 def user2(client):
     response = client.post("/api/auth/register", mock_user2)
+    return response.data
+
+
+@pytest.fixture
+def user3(client):
+    response = client.post("/api/auth/register", mock_user3)
     return response.data
 
 

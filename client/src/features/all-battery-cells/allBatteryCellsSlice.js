@@ -11,7 +11,7 @@ const initialFiltersState = {
 const initialQueryParamsState = {
   cell_name_id: '',
   offset_skip: 0,
-  limit: 20,
+  limit: 1000,
   sort_by: '',
   sort_direction: '',
   ...initialFiltersState,
@@ -75,7 +75,6 @@ const allBatteryCellsSlice = createSlice({
       })
       .addCase(getAllBatteryCellsStats.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        console.log('payload: ', payload);
         state.avg_capacity_ah = payload.avg_capacity_ah;
         state.avg_depth_of_discharge = payload.avg_depth_of_discharge;
         state.avg_temperature_c = payload.avg_temperature_c;

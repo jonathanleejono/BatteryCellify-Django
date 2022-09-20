@@ -8,6 +8,7 @@ import { handleToast } from 'notifications/toast';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { addUserToLocalStorage } from 'utils/localStorage';
 import * as Yup from 'yup';
 
 export default function RegisterForm() {
@@ -32,10 +33,19 @@ export default function RegisterForm() {
       password: '',
     },
     validationSchema: RegisterSchema,
-    onSubmit: () => {
-      const resultAction = dispatch(registerUser(formik.values));
+    onSubmit: async () => {
+      const resultAction = await dispatch(registerUser(formik.values));
 
-      handleToast(resultAction, registerUser, `Hello there ${user.name}!`, 'Error logging in');
+      const response = handleToast(
+        resultAction,
+        registerUser,
+        `Hello there ${formik.values.name}!`,
+        'Error registering'
+      );
+
+      if (response.data === 'success') {
+        addUserToLocalStorage();
+      }
 
       navigate(`${dashboardRoute}`, { replace: true });
     },

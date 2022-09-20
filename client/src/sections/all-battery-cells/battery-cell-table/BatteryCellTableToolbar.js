@@ -2,8 +2,6 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
   InputAdornment,
@@ -46,9 +44,16 @@ BatteryCellTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   selected: PropTypes.array,
+  deselectBatteryCells: PropTypes.func,
 };
 
-export default function BatteryCellTableToolbar({ numSelected, filterName, onFilterName, selected }) {
+export default function BatteryCellTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  selected,
+  deselectBatteryCells,
+}) {
   const [openDialog, setOpenDialog] = useState(false);
   const dispatch = useDispatch();
 
@@ -110,24 +115,23 @@ export default function BatteryCellTableToolbar({ numSelected, filterName, onFil
           },
         }}
       >
-        <DialogTitle id="form-dialog-title"> Delete the selected battery cell(s)? </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">{JSON.stringify(selected)}</DialogContentText>
-        </DialogContent>
+        <DialogTitle id="form-dialog-title"> Delete battery cell(s)? </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button
             data-cy="modal-delete-confirm"
-            onClick={() => {
-              Object.keys(selected).forEach((id) => {
-                const resultAction = dispatch(deleteBatteryCell(selected[id]));
+            onClick={async () => {
+              Object.keys(selected).forEach(async (id) => {
+                const resultAction = await dispatch(deleteBatteryCell(selected[id]));
 
                 handleToast(resultAction, deleteBatteryCell, 'Battery cell deleted!', 'Error deleting battery cell');
               });
 
               handleClose();
+
+              deselectBatteryCells();
             }}
             color="primary"
           >

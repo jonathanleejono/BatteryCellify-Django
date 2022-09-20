@@ -1,13 +1,18 @@
 import { Button, MenuItem, Stack, TextField } from '@mui/material';
 import { anodeOptions, cathodeOptions, sourceOptions, typeOptions } from 'constants/options';
+import { allBatteryCellsRoute } from 'constants/routes';
 import { handleChange } from 'features/battery-cell/batteryCellSlice';
 import { editBatteryCell } from 'features/battery-cell/batteryCellThunk';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { handleToast } from 'notifications/toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 export default function EditBatteryCellForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     id,
     cell_name_id,
@@ -24,8 +29,6 @@ export default function EditBatteryCellForm() {
     charge_capacity_rate,
     discharge_capacity_rate,
   } = useSelector((store) => store.batteryCell);
-
-  const dispatch = useDispatch();
 
   const EditBatteryCellSchema = Yup.object().shape({
     cell_name_id: Yup.string().min(2, 'Too Short!').max(100, 'Too Long!').required('Cell Name ID is required'),
@@ -84,8 +87,8 @@ export default function EditBatteryCellForm() {
     validationSchema: EditBatteryCellSchema,
     enableReinitialize: false,
 
-    onSubmit: () => {
-      const resultAction = dispatch(
+    onSubmit: async () => {
+      const resultAction = await dispatch(
         editBatteryCell({
           id,
           batteryCell: {
@@ -106,7 +109,16 @@ export default function EditBatteryCellForm() {
         })
       );
 
-      handleToast(resultAction, editBatteryCell, 'Battery cell modified!', 'Error updating battery cell');
+      const response = handleToast(
+        resultAction,
+        editBatteryCell,
+        'Battery cell modified!',
+        'Error updating battery cell'
+      );
+
+      if (response.data === 'success') {
+        navigate(allBatteryCellsRoute);
+      }
     },
   });
 

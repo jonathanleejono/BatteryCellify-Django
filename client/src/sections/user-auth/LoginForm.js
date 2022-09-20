@@ -34,7 +34,7 @@ export default function LoginForm() {
     onSubmit: async () => {
       const resultAction = await dispatch(loginUser(formik.values));
 
-      const response = handleToast(resultAction, loginUser, `Hello there ${user.name}!`, 'Error logging in');
+      const response = handleToast(resultAction, loginUser, `Welcome back!`, 'Error logging in');
 
       if (response.data === 'success') {
         addUserToLocalStorage();

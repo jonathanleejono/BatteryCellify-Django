@@ -1,4 +1,3 @@
-from battery_cellify_django.settings import PY_ENV
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -13,7 +12,7 @@ from users.constants import (
 )
 from users.models import User
 from users.serializers import UserSerializer
-from users.utils import authenticate_user, generate_jwt
+from users.utils import authenticate_user, generate_jwt, get_cookie_settings
 from utils.validate import validate_fields
 
 
@@ -32,18 +31,8 @@ class RegisterUser(APIView):
 
         response = Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        secure_setting = True
-        samesite_setting = "none"
+        secure_setting, samesite_setting = get_cookie_settings(request)
 
-        origin = request.headers["Origin"]
-
-        if origin and origin == "http://localhost:3000" and PY_ENV == "development":
-            secure_setting = False
-            samesite_setting = "lax"
-
-        response = Response()
-
-        # ensure samesite is "none" and not None
         response.set_cookie(
             key=COOKIE_TOKEN,
             value=jwt["access_token"],
@@ -78,15 +67,10 @@ class LoginUser(APIView):
         secure_setting = True
         samesite_setting = "none"
 
-        origin = request.headers["Origin"]
-
-        if origin and origin == "http://localhost:3000" and PY_ENV == "development":
-            secure_setting = False
-            samesite_setting = "lax"
+        secure_setting, samesite_setting = get_cookie_settings(request)
 
         response = Response()
 
-        # ensure samesite is "none" and not None
         response.set_cookie(
             key=COOKIE_TOKEN,
             value=jwt["access_token"],
@@ -125,7 +109,7 @@ class AuthUser(APIView):
 
 
 class Logout(APIView):
-    def post(self, request):
+    def delete(self, request):
 
         response = Response()
         response.delete_cookie(COOKIE_TOKEN)

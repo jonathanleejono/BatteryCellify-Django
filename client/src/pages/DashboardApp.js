@@ -43,8 +43,6 @@ export default function DashboardApp() {
   let total_cathode_nmc_cells = 0;
   let total_cathode_nmclco_cells = 0;
 
-  // avg_cycles_by_cathode and total_cathode_cells should have
-  // the same length and similar shape based on cathodes
   Object.keys(cell_stats_by_cathode).forEach((_, index) => {
     const cathodeType = cell_stats_by_cathode[index].cathode;
     const cyclesAvg = cell_stats_by_cathode[index].avg;
@@ -92,7 +90,7 @@ export default function DashboardApp() {
     <Page title="Dashboard">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome Back
+          Dashboard
         </Typography>
 
         <Grid container spacing={3}>

@@ -24,3 +24,10 @@ mock_battery_cell_stats = {
         {"cathode": "NMC-LCO", "total": 1, "avg": 1113.0},
     ],
 }
+
+mock_battery_cell_stats_empty = {
+    "avg_capacity_ah": 0.0,
+    "avg_depth_of_discharge": 0.0,
+    "avg_temperature_c": 0.0,
+    "cell_stats_by_cathode": [],
+}

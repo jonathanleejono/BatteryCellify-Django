@@ -14,7 +14,6 @@ export default function VoltageByCycleStepsGraph({
   discharge_capacity_cycles_steps,
   battery_cell_name_id,
 }) {
-  console.log('voltage: ', voltage_cycle_steps);
   return (
     <div>
       <Plot
@@ -178,7 +177,7 @@ export default function VoltageByCycleStepsGraph({
         // -------------------------------------------------
         layout={{
           autosize: true,
-          title: 'Cycle Quantities By Step',
+          title: { text: 'Cycle Quantities By Step' },
           font: {
             family: 'Public Sans, sans-serif',
           },
@@ -196,13 +195,14 @@ export default function VoltageByCycleStepsGraph({
               color: '#000000',
             },
           },
-          legend: {
-            orientation: 'h',
-            yanchor: 'bottom',
-            y: 1.5,
-            xanchor: 'right',
-            x: 1,
-          },
+          // optionally use a legend
+          // legend: {
+          //   orientation: 'h',
+          //   yanchor: 'top',
+          //   y: -1,
+          //   xanchor: 'right',
+          //   x: 1,
+          // },
         }}
         useResizeHandler
         style={{

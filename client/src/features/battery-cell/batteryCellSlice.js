@@ -27,9 +27,7 @@ const batteryCellSlice = createSlice({
     handleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
-    clearValues: () => ({
-      ...initialState,
-    }),
+    clearBatteryCellState: () => initialState,
 
     setEditBatteryCell: (state, { payload }) => ({ ...state, ...payload }),
   },
@@ -65,6 +63,6 @@ const batteryCellSlice = createSlice({
   },
 });
 
-export const { handleChange, clearValues, setEditBatteryCell } = batteryCellSlice.actions;
+export const { handleChange, clearBatteryCellState, setEditBatteryCell } = batteryCellSlice.actions;
 
 export default batteryCellSlice.reducer;

@@ -21,7 +21,7 @@ export const deleteCycleData = createAsyncThunk('csvData/deleteCycleData', async
   thunkAPI.dispatch(showLoading());
   try {
     const resp = await customFetch.delete(`/api/battery-cells/csv/cycle-data/${id}`);
-    return resp.data.msg;
+    return resp.data;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
     const errorResponse = err.response.data;
@@ -63,7 +63,7 @@ export const deleteTimeSeriesData = createAsyncThunk('csvData/deleteTimeSeriesDa
   thunkAPI.dispatch(showLoading());
   try {
     const resp = await customFetch.delete(`/api/battery-cells/csv/time-series-data/${id}`);
-    return resp.data.msg;
+    return resp.data;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
     const errorResponse = err.response.data;

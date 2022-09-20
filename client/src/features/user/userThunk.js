@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { clearAllBatteryCellsState } from 'features/all-battery-cells/allBatteryCellsSlice';
-import { clearValues } from 'features/battery-cell/batteryCellSlice';
-import { logoutUser } from 'features/user/userSlice';
+import { clearBatteryCellState } from 'features/battery-cell/batteryCellSlice';
+import { clearCsvState } from 'features/csv-data/csvDataSlice';
+import { clearUserState } from 'features/user/userSlice';
 import customFetch from 'utils/axios';
 import { checkForUnauthorizedResponse } from 'utils/checkForUnauthorizedResponse';
 import { removeUserFromLocalStorage } from 'utils/localStorage';
@@ -53,12 +54,27 @@ export const updateUser = createAsyncThunk('user/updateUser', async (updatedUser
   }
 });
 
-export const clearStore = createAsyncThunk('user/clearStore', async (message, thunkAPI) => {
+export const logoutUser = createAsyncThunk('user/logoutUser', async (_, thunkAPI) => {
+  try {
+    const resp = await customFetch.delete('/api/auth/logout');
+
+    return resp.data;
+  } catch (err) {
+    const errorResponse = err.response.data;
+    return (
+      checkForUnauthorizedResponse(err, thunkAPI),
+      thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message)
+    );
+  }
+});
+
+export const clearStore = createAsyncThunk('user/clearStore', async (_, thunkAPI) => {
   try {
     removeUserFromLocalStorage();
-    thunkAPI.dispatch(logoutUser(message));
+    thunkAPI.dispatch(clearUserState());
     thunkAPI.dispatch(clearAllBatteryCellsState());
-    thunkAPI.dispatch(clearValues());
+    thunkAPI.dispatch(clearBatteryCellState());
+    thunkAPI.dispatch(clearCsvState());
     return Promise.resolve();
   } catch (error) {
     return Promise.reject();

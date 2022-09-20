@@ -136,7 +136,7 @@ class BatteryCellStats(APIView):
 
         # if no values are found use float 0.0, and then round to 2 decimal places
         avg_capacity_ah = round(
-            float(queryset.aggregate(Avg("capacity_ah"))["capacity_ah__avg"]) or 0, 2
+            float(queryset.aggregate(Avg("capacity_ah"))["capacity_ah__avg"] or 0), 2
         )
 
         avg_depth_of_discharge = round(

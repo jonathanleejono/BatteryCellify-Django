@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { hideLoading, showLoading } from 'features/all-battery-cells/allBatteryCellsSlice';
 import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
-import { clearValues } from 'features/battery-cell/batteryCellSlice';
+import { clearBatteryCellState } from 'features/battery-cell/batteryCellSlice';
 import customFetch from 'utils/axios';
 import { checkForUnauthorizedResponse } from 'utils/checkForUnauthorizedResponse';
 
@@ -10,7 +10,7 @@ export const createBatteryCell = createAsyncThunk(
   async ({ batteryCell }, thunkAPI) => {
     try {
       const resp = await customFetch.post('/api/battery-cells/create', batteryCell);
-      thunkAPI.dispatch(clearValues());
+      thunkAPI.dispatch(clearBatteryCellState());
       return resp.data;
     } catch (err) {
       const errorResponse = err.response.data;
@@ -27,7 +27,7 @@ export const deleteBatteryCell = createAsyncThunk('batteryCell/deleteBatteryCell
   try {
     const resp = await customFetch.delete(`/api/battery-cells/${id}`);
     thunkAPI.dispatch(getAllBatteryCells());
-    return resp.data.msg;
+    return resp.data;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
     const errorResponse = err.response.data;
@@ -43,7 +43,7 @@ export const editBatteryCell = createAsyncThunk(
   async ({ id, batteryCell }, thunkAPI) => {
     try {
       const resp = await customFetch.patch(`/api/battery-cells/${id}`, batteryCell);
-      thunkAPI.dispatch(clearValues());
+      thunkAPI.dispatch(clearBatteryCellState());
       return resp.data;
     } catch (err) {
       const errorResponse = err.response.data;

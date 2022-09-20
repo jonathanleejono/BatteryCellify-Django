@@ -77,11 +77,7 @@ const csvDataSlice = createSlice({
     handleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
-    clearCsvFormValues: () => {
-      return {
-        ...initialState,
-      };
-    },
+    clearCsvState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -155,6 +151,6 @@ const csvDataSlice = createSlice({
   },
 });
 
-export const { handleChange, clearCsvFormValues } = csvDataSlice.actions;
+export const { handleChange, clearCsvState } = csvDataSlice.actions;
 
 export default csvDataSlice.reducer;

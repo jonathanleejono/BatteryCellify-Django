@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getUser, loginUser, registerUser, updateUser } from 'features/user/userThunk';
+import { getUserFromLocalStorage } from 'utils/localStorage';
 
 const initialState = {
   isLoading: false,
   isSidebarOpen: false,
   user: { name: '', email: '' },
-  userAuthenticated: false,
+  userAuthenticated: getUserFromLocalStorage(),
 };
 
 const userSlice = createSlice({
@@ -15,10 +16,7 @@ const userSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    logoutUser: (state) => {
-      state.userAuthenticated = false;
-      state.isSidebarOpen = false;
-    },
+    clearUserState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -68,5 +66,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, logoutUser } = userSlice.actions;
+export const { toggleSidebar, clearUserState } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,15 +1,15 @@
 import { Button, Container, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import Page from 'components/Page';
 import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
-import { handleChange } from 'features/csv-data/csvDataSlice';
+import { clearCsvState, handleChange } from 'features/csv-data/csvDataSlice';
 import { getCycleData, getTimeSeriesData } from 'features/csv-data/csvDataThunk';
-import { useEffect } from 'react';
+import { handleToastErrors } from 'notifications/toast';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CycleDecayGraph from 'sections/battery-cell-graphs/CycleDecayGraph';
 import EfficenciesGraph from 'sections/battery-cell-graphs/EfficenciesGraph';
 import TimeSeriesDecayGraph from 'sections/battery-cell-graphs/TimeSeriesDecayGraph';
-import VoltageByCycleStepsGraph from 'sections/battery-cell-graphs/VoltageByCycleStepsGraph';
 
 export default function BatteryCellGraphs() {
   const dispatch = useDispatch();
@@ -34,27 +34,40 @@ export default function BatteryCellGraphs() {
     discharge_capacity_cycles_steps,
   } = useSelector((store) => store.csvData);
 
-  console.log('voltage_cycle_stepsg:  ', voltage_cycle_steps);
+  const handleFetchBatteryCells = useCallback(async () => {
+    dispatch(clearCsvState());
+
+    const resultAction = await dispatch(getAllBatteryCells());
+
+    handleToastErrors(resultAction, getAllBatteryCells, 'Error fetching battery cells');
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAllBatteryCells());
-  }, [dispatch]);
+    handleFetchBatteryCells();
+  }, [handleFetchBatteryCells, dispatch]);
 
   const handleSelect = (event) => {
     const { name, value } = event.target;
     dispatch(handleChange({ name, value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!selectedBatteryCell) {
       return toast.error('No Battery Cell Selected');
     }
 
-    dispatch(getCycleData(selectedBatteryCell.id));
-    dispatch(getTimeSeriesData(selectedBatteryCell.id));
+    const resultActionCycleData = await dispatch(getCycleData(selectedBatteryCell.id));
+
+    handleToastErrors(resultActionCycleData, getCycleData, 'Error fetching cycle data');
+
+    const resultActionTimeSeriesData = await dispatch(getTimeSeriesData(selectedBatteryCell.id));
+
+    handleToastErrors(resultActionTimeSeriesData, getTimeSeriesData, 'Error fetching time series data');
   };
+
+  const cellNameId = selectedBatteryCell.cell_name_id || 'N/A';
 
   return (
     <Page title="Battery Cell Graphs">
@@ -62,7 +75,6 @@ export default function BatteryCellGraphs() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Battery Cell Graphs
         </Typography>
-
         <form onSubmit={handleSubmit}>
           <Stack spacing={3} mb={5}>
             <TextField
@@ -83,14 +95,13 @@ export default function BatteryCellGraphs() {
             </Button>
           </Stack>
         </form>
-
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={12} xl={6}>
             <CycleDecayGraph
               all_cycle_numbers={all_cycle_numbers}
               cycle_discharge_capacity_ah_list={cycle_discharge_capacity_ah_list}
               cycle_discharge_energy_wh_list={cycle_discharge_energy_wh_list}
-              battery_cell_name_id={selectedBatteryCell.cell_name_id}
+              battery_cell_name_id={cellNameId}
             />
           </Grid>
 
@@ -100,27 +111,18 @@ export default function BatteryCellGraphs() {
               cycle_numbers_energy={cycle_numbers_energy}
               energy_efficiency={energy_efficiency}
               coulombic_efficiency={coulombic_efficiency}
-              battery_cell_name_id={selectedBatteryCell.cell_name_id}
+              battery_cell_name_id={cellNameId}
             />
           </Grid>
-
-          <Grid item xs={12} md={6} lg={12} xl={6}>
-            <TimeSeriesDecayGraph
-              test_time_seconds_list={test_time_seconds_list}
-              time_series_discharge_capacity_ah_list={time_series_discharge_capacity_ah_list}
-              time_series_discharge_energy_wh_list={time_series_discharge_energy_wh_list}
-              battery_cell_name_id={selectedBatteryCell.cell_name_id}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={12} xl={6}>
-            <VoltageByCycleStepsGraph
-              voltage_cycle_steps={voltage_cycle_steps}
-              charge_capacity_cycles_steps={charge_capacity_cycles_steps}
-              discharge_capacity_cycles_steps={discharge_capacity_cycles_steps}
-              battery_cell_name_id={selectedBatteryCell.cell_name_id}
-            />
-          </Grid>
+        </Grid>
+        &nbsp;
+        <Grid item xs={12} md={6} lg={12} xl={6}>
+          <TimeSeriesDecayGraph
+            test_time_seconds_list={test_time_seconds_list}
+            time_series_discharge_capacity_ah_list={time_series_discharge_capacity_ah_list}
+            time_series_discharge_energy_wh_list={time_series_discharge_energy_wh_list}
+            battery_cell_name_id={cellNameId}
+          />
         </Grid>
       </Container>
     </Page>
