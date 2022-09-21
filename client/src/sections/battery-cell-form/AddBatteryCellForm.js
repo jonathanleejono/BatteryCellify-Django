@@ -46,7 +46,6 @@ export default function AddBatteryCellForm() {
   });
 
   const formik = useFormik({
-    enableReinitialize: true,
     initialValues: {
       cell_name_id: '',
       cycles: '',

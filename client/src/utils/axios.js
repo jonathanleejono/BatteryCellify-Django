@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { baseApiUrl } from 'constants/apiUrls';
 
 const customFetch = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: baseApiUrl,
   withCredentials: true, // this is necessary for cookies
 });
 

@@ -1,11 +1,28 @@
 import { Button, Card, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Logo from 'components/Logo';
 import Page from 'components/Page';
 import { dashboardRoute, loginRoute, registerRoute } from 'constants/routes';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useResponsive from 'utils/useResponsiveLayout';
+
+const HeaderStyle = styled('header')(({ theme }) => ({
+  top: 0,
+  zIndex: 9,
+  lineHeight: 0,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  position: 'absolute',
+  padding: theme.spacing(3),
+  justifyContent: 'space-between',
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-start',
+    padding: theme.spacing(7, 5, 0, 7),
+  },
+}));
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -51,6 +68,10 @@ export default function Landing() {
   return (
     <Page title="Landing">
       <RootStyle>
+        <HeaderStyle>
+          <Logo />
+        </HeaderStyle>
+
         <Container>
           <ContentStyle>
             <Typography variant="h2" gutterBottom>

@@ -42,6 +42,7 @@ export default function ProfileForm() {
               label="Name"
               {...getFieldProps('name')}
               data-cy="name"
+              inputProps={{ data_cy: 'profile-name-input' }}
               error={Boolean(touched.name && errors.name)}
               helperText={touched.name && errors.name}
               value={formik.values.name}

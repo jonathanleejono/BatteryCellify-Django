@@ -11,7 +11,7 @@ const initialFiltersState = {
 const initialQueryParamsState = {
   cell_name_id: '',
   offset_skip: 0,
-  limit: 1000,
+  limit: 20,
   sort_by: '',
   sort_direction: '',
   ...initialFiltersState,

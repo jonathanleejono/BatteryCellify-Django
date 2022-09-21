@@ -8,4 +8,4 @@ export const editBatteryCellRoute = '/edit-battery-cell';
 export const batteryCellGraphsRoute = '/battery-cell-graphs';
 export const manageCsvRoute = '/manage-csv';
 export const profileRoute = '/profile';
-export const landingRoute = '/landing';
+export const landingRoute = '/';

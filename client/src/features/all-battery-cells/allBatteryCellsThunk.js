@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getAllBatteryCellsListUrl, getAllBatteryCellsStatsUrl } from 'constants/apiUrls';
 import customFetch from 'utils/axios';
 import { checkForUnauthorizedResponse } from 'utils/checkForUnauthorizedResponse';
 
@@ -7,7 +8,7 @@ export const getAllBatteryCells = createAsyncThunk('allBatteryCells/getBatteryCe
     thunkAPI.getState().allBatteryCells;
 
   try {
-    const resp = await customFetch.get('/api/battery-cells/list', {
+    const resp = await customFetch.get(`${getAllBatteryCellsListUrl}`, {
       params: {
         cathode,
         anode,
@@ -28,7 +29,7 @@ export const getAllBatteryCells = createAsyncThunk('allBatteryCells/getBatteryCe
 
 export const getAllBatteryCellsStats = createAsyncThunk('allBatteryCells/getBatteryCellsStats', async (_, thunkAPI) => {
   try {
-    const resp = await customFetch.get('/api/battery-cells/stats');
+    const resp = await customFetch.get(`${getAllBatteryCellsStatsUrl}`);
     return resp.data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
