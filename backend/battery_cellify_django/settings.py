@@ -35,6 +35,7 @@ SECRET_KEY_ = env.str("SECRET_KEY", validate=[Length(min=1)])
 DB_NAME = env.str("DB_NAME", validate=[Length(min=1)])
 DB_USER = env.str("DB_USER", validate=[Length(min=1)])
 DB_PASSWORD = env.str("DB_PASSWORD", validate=[Length(min=1)])
+DB_HOST = env.str("DB_HOST", validate=[Length(min=1)])
 JWT_ACCESS_SECRET = env.str("JWT_ACCESS_SECRET", validate=[Length(min=1)])
 JWT_ALGORITHM = env.str("JWT_ALGORITHM", validate=[Length(min=1)])
 CORS_ORIGIN = env.str("CORS_ORIGIN", validate=[Length(min=1)])
@@ -115,6 +116,7 @@ DATABASES = {
         "NAME": DB_NAME,
         "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,
+        "HOST": DB_HOST,
     }
 }
 
