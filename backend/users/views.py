@@ -17,6 +17,8 @@ from utils.validate import validate_fields
 
 
 class RegisterUser(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request):
         validate_fields(request.data.keys(), valid_register_fields)
 
@@ -45,6 +47,8 @@ class RegisterUser(APIView):
 
 
 class LoginUser(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request):
         validate_fields(request.data.keys(), valid_login_fields)
 
@@ -88,6 +92,8 @@ class LoginUser(APIView):
 
 
 class AuthUser(APIView):
+    throttle_scope = "mutation"
+
     def get(self, request):
         user = authenticate_user(request)
 
@@ -109,6 +115,8 @@ class AuthUser(APIView):
 
 
 class Logout(APIView):
+    throttle_scope = "mutation"
+
     def delete(self, request):
 
         response = Response()

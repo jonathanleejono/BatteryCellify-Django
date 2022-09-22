@@ -19,6 +19,8 @@ from csv_data.utils import (
 
 
 class CsvCycleDataView(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request, battery_cell_pk):
         user_id = get_auth_user_id(request)
 
@@ -138,6 +140,8 @@ class CsvCycleDataView(APIView):
 
 
 class CsvTimeSeriesDataView(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request, battery_cell_pk):
         user_id = get_auth_user_id(request)
 

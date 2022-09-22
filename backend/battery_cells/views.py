@@ -20,6 +20,8 @@ from utils.validate import validate_fields, validate_value
 
 
 class BatteryCellList(APIView):
+    throttle_scope = "query"
+
     def get(self, request):
         user_id = get_auth_user_id(request)
 
@@ -76,6 +78,8 @@ class BatteryCellList(APIView):
 
 
 class BatteryCellCreate(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request):
         user_id = get_auth_user_id(request)
 
@@ -93,6 +97,8 @@ class BatteryCellCreate(APIView):
 
 
 class BatteryCellId(APIView):
+    throttle_scope = "mutation"
+
     def get(self, request, pk):
         user_id = get_auth_user_id(request)
 
@@ -129,6 +135,8 @@ class BatteryCellId(APIView):
 
 
 class BatteryCellStats(APIView):
+    throttle_scope = "query"
+
     def get(self, request):
         user_id = get_auth_user_id(request)
 

@@ -173,4 +173,13 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True  # necessary for cookies
 
-REST_FRAMEWORK = {"EXCEPTION_HANDLER": "utils.handlers.custom_exception_handler"}
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "utils.handlers.custom_exception_handler",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "query": "7/minute" if PY_ENV == "production" else "30/minute",
+        "mutation": "3/minute" if PY_ENV == "production" else "30/minute",
+    },
+}
