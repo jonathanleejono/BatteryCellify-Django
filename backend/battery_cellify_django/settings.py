@@ -120,7 +120,7 @@ DATABASES = {
         "HOST": DB_HOST,
         "OPTIONS": {
             "ssl": {
-                "ca": MYSQL_ATTR_SSL_CA,
+                "ssl-ca": MYSQL_ATTR_SSL_CA,
             },
         },
     }
