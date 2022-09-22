@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import logging.config
 from pathlib import Path
 
 from environs import Env
@@ -191,5 +192,28 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "query": "7/minute" if PY_ENV == "production" else "30/minute",
         "mutation": "3/minute" if PY_ENV == "production" else "30/minute",
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {
+            "format": "%(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "gunicorn": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": True,
+        },
     },
 }
