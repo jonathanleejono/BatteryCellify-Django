@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "cell_name_id": "CALCE_18650_NMC_LCO_25C_0-100_0.5/1.5C_b",
+    "cycles": 1113.0,
+    "cathode": "NMC-LCO",
+    "anode": "graphite",
+    "capacity_ah": 2.8,
+    "type": "18650",
+    "source": "HNEI",
+    "temperature_c": 25.0,
+    "max_state_of_charge": 100.0,
+    "min_state_of_charge": 0.0,
+    "depth_of_discharge": 100.0,
+    "charge_capacity_rate": 0.5,
+    "discharge_capacity_rate": 1.5,
+    "battery_cell": 1,
+    "owner": 1
+  }
+]

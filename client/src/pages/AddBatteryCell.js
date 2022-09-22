@@ -1,6 +1,6 @@
 import { Container, Typography } from '@mui/material';
 import Page from 'components/Page';
-import { AddBatteryCellForm } from 'sections/dashboard/battery-cell-form';
+import AddBatteryCellForm from 'sections/battery-cell-form/AddBatteryCellForm';
 
 export default function AddBatteryCell() {
   return (

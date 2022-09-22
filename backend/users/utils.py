@@ -1,7 +1,8 @@
 import datetime
+import os
 
 import jwt
-from battery_cellify_django.settings import JWT_ACCESS_SECRET, JWT_ALGORITHM
+from battery_cellify_django.settings import JWT_ACCESS_SECRET, JWT_ALGORITHM, PY_ENV
 from rest_framework.exceptions import AuthenticationFailed
 
 from users.constants import COOKIE_TOKEN
@@ -47,3 +48,24 @@ def get_auth_user_id(request):
     serializer_user = UserSerializer(user)
 
     return serializer_user.data["id"]
+
+
+def get_cookie_settings(request):
+    secure_setting = True
+
+    # ensure samesite is "none" and not None
+    samesite_setting = "none"
+
+    # conftest monkeypatch sets in os,
+    # which is why environs package isn't used
+    TESTING = os.environ.get("TESTING")
+
+    if PY_ENV == "development" and TESTING != "yes":
+        useragent = request.headers["User-Agent"]
+
+        # postman needs false setting for cookie to set
+        if "Postman" in useragent:
+            secure_setting = False
+            samesite_setting = "lax"
+
+    return secure_setting, samesite_setting

@@ -1,4 +1,3 @@
-from battery_cellify_django.settings import PY_ENV
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -13,11 +12,13 @@ from users.constants import (
 )
 from users.models import User
 from users.serializers import UserSerializer
-from users.utils import authenticate_user, generate_jwt
+from users.utils import authenticate_user, generate_jwt, get_cookie_settings
 from utils.validate import validate_fields
 
 
 class RegisterUser(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request):
         validate_fields(request.data.keys(), valid_register_fields)
 
@@ -32,20 +33,22 @@ class RegisterUser(APIView):
 
         response = Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        # ensure samesite is "none" and not None
+        secure_setting, samesite_setting = get_cookie_settings(request)
+
         response.set_cookie(
             key=COOKIE_TOKEN,
             value=jwt["access_token"],
             httponly=True,
-            secure=True if PY_ENV == "production" else False,
-            samesite="none" if PY_ENV == "production" else "lax",
+            secure=secure_setting,
+            samesite=samesite_setting,
             max_age=COOKIE_EXPIRY,
         )
-
         return response
 
 
 class LoginUser(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request):
         validate_fields(request.data.keys(), valid_login_fields)
 
@@ -65,15 +68,19 @@ class LoginUser(APIView):
         except:
             raise AuthenticationFailed("Error authenticating")
 
+        secure_setting = True
+        samesite_setting = "none"
+
+        secure_setting, samesite_setting = get_cookie_settings(request)
+
         response = Response()
 
-        # ensure samesite is "none" and not None
         response.set_cookie(
             key=COOKIE_TOKEN,
             value=jwt["access_token"],
             httponly=True,
-            secure=True if PY_ENV == "production" else False,
-            samesite="none" if PY_ENV == "production" else "lax",
+            secure=secure_setting,
+            samesite=samesite_setting,
             max_age=COOKIE_EXPIRY,
         )
 
@@ -85,6 +92,8 @@ class LoginUser(APIView):
 
 
 class AuthUser(APIView):
+    throttle_scope = "mutation"
+
     def get(self, request):
         user = authenticate_user(request)
 
@@ -106,7 +115,9 @@ class AuthUser(APIView):
 
 
 class Logout(APIView):
-    def post(self, request):
+    throttle_scope = "mutation"
+
+    def delete(self, request):
 
         response = Response()
         response.delete_cookie(COOKIE_TOKEN)

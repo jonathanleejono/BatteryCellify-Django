@@ -20,6 +20,8 @@ from utils.validate import validate_fields, validate_value
 
 
 class BatteryCellList(APIView):
+    throttle_scope = "query"
+
     def get(self, request):
         user_id = get_auth_user_id(request)
 
@@ -76,6 +78,8 @@ class BatteryCellList(APIView):
 
 
 class BatteryCellCreate(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request):
         user_id = get_auth_user_id(request)
 
@@ -93,6 +97,8 @@ class BatteryCellCreate(APIView):
 
 
 class BatteryCellId(APIView):
+    throttle_scope = "mutation"
+
     def get(self, request, pk):
         user_id = get_auth_user_id(request)
 
@@ -129,6 +135,8 @@ class BatteryCellId(APIView):
 
 
 class BatteryCellStats(APIView):
+    throttle_scope = "query"
+
     def get(self, request):
         user_id = get_auth_user_id(request)
 
@@ -136,7 +144,7 @@ class BatteryCellStats(APIView):
 
         # if no values are found use float 0.0, and then round to 2 decimal places
         avg_capacity_ah = round(
-            float(queryset.aggregate(Avg("capacity_ah"))["capacity_ah__avg"]) or 0, 2
+            float(queryset.aggregate(Avg("capacity_ah"))["capacity_ah__avg"] or 0), 2
         )
 
         avg_depth_of_discharge = round(
@@ -153,12 +161,10 @@ class BatteryCellStats(APIView):
         )
 
         # add list type to ensure proper casting
-        total_cathode_cells = list(
-            queryset.values("cathode").annotate(total=Count("id")).order_by("total")
-        )
-
-        avg_cycles_by_cathode = list(
-            queryset.values("cathode").annotate(avg=Avg("cycles")).order_by("avg")
+        cell_stats_by_cathode = list(
+            queryset.values("cathode")
+            .annotate(total=Count("id"), avg=Avg("cycles"))
+            .order_by("cathode")
         )
 
         return Response(
@@ -166,7 +172,6 @@ class BatteryCellStats(APIView):
                 "avg_capacity_ah": avg_capacity_ah,
                 "avg_depth_of_discharge": avg_depth_of_discharge,
                 "avg_temperature_c": avg_temperature_c,
-                "total_cathode_cells": total_cathode_cells,
-                "avg_cycles_by_cathode": avg_cycles_by_cathode,
+                "cell_stats_by_cathode": cell_stats_by_cathode,
             }
         )

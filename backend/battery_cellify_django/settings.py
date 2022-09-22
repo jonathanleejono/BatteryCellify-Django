@@ -38,6 +38,7 @@ DB_PASSWORD = env.str("DB_PASSWORD", validate=[Length(min=1)])
 JWT_ACCESS_SECRET = env.str("JWT_ACCESS_SECRET", validate=[Length(min=1)])
 JWT_ALGORITHM = env.str("JWT_ALGORITHM", validate=[Length(min=1)])
 CORS_ORIGIN = env.str("CORS_ORIGIN", validate=[Length(min=1)])
+TESTING = env.str("TESTING", validate=[Length(min=1)])
 
 
 env.seal()
@@ -52,7 +53,7 @@ SECRET_KEY = SECRET_KEY_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [CORS_ORIGIN]
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -166,6 +167,19 @@ AUTH_USER_MODEL = "users.User"
 
 CORS_ORIGIN_ALLOW_ALL = False
 
+CORS_ALLOWED_ORIGINS = [
+    CORS_ORIGIN,
+]
+
 CORS_ALLOW_CREDENTIALS = True  # necessary for cookies
 
-REST_FRAMEWORK = {"EXCEPTION_HANDLER": "utils.handlers.custom_exception_handler"}
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "utils.handlers.custom_exception_handler",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "query": "7/minute" if PY_ENV == "production" else "30/minute",
+        "mutation": "3/minute" if PY_ENV == "production" else "30/minute",
+    },
+}

@@ -24,29 +24,39 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { loginUserUrl } from '../../src/constants/apiUrls';
+
+// found in cypress config
+export const apiUrl = Cypress.env('baseApiUrl');
+
+export const userData = {
+  email: 'bob@gmail.com',
+  name: 'bob',
+  password: 'bobspassword',
+};
+
 Cypress.Commands.add('getByDataCy', (selector, ...args) => {
   return cy.get(`[data-cy=${selector}]`, ...args);
 });
-Cypress.Commands.add('loginApi', () => {
-  let user;
-  let token;
 
-  cy.request('POST', 'http://127.0.0.1:8000/api/login', {
-    email: Cypress.env('email'),
-    password: Cypress.env('password'),
-  })
-    .its('body')
-    .then((res) => {
-      console.log('THE RES: ', res);
-      user = res.user;
-      token = res.token;
+Cypress.Commands.add('loginUserCommand', () => {
+  cy.intercept('POST', `${apiUrl}${loginUserUrl}`, (req) => {
+    req.reply({
+      statusCode: 200,
+      body: {
+        id: 1,
+        email: userData.email,
+        name: userData.name,
+      },
     });
-  cy.visit('/', {
-    onBeforeLoad(win) {
-      // and before the page finishes loading
-      // set the user object in local storage
-      win.localStorage.setItem('user', JSON.stringify(user));
-      win.localStorage.setItem('token', token);
-    },
-  });
+  }).as('loginPost');
+
+  cy.visit('/login');
+
+  cy.get('input[name="email"]').type(userData.email);
+  cy.get('input[name="password"]').type(userData.password);
+
+  cy.get("button[type='submit']").click();
+
+  cy.wait('@loginPost');
 });

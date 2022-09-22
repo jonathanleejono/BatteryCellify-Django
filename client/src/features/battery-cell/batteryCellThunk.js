@@ -1,75 +1,57 @@
-import { getAllBatteryCells, hideLoading, showLoading } from 'allBatteryCells/allBatteryCellsSlice';
-import { clearValues } from 'batteryCellSlice';
-import customFetch, { checkForUnauthorizedResponse } from 'utils/axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { apiBatteryCellsUrl, createBatteryCellUrl } from 'constants/apiUrls';
+import { hideLoading, showLoading } from 'features/all-battery-cells/allBatteryCellsSlice';
+import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
+import { clearBatteryCellState } from 'features/battery-cell/batteryCellSlice';
+import customFetch from 'utils/axios';
+import { checkForUnauthorizedResponse } from 'utils/checkForUnauthorizedResponse';
 
-export const createBatteryCellThunk = async (
-  {
-    cell_name_id,
-    cycles,
-    cathode,
-    anode,
-    capacity_ah,
-    type,
-    source,
-    temperature_c,
-    max_state_of_charge,
-    min_state_of_charge,
-    depth_of_discharge,
-    charge_capacity_rate,
-    discharge_capacity_rate,
-  },
-  thunkAPI
-) => {
-  // very important to add slashs at end of path (eg. '/battery-cells/')
-  // this is so urls can navigate properly
-  try {
-    const resp = await customFetch.post('/api/battery-cells/', {
-      cell_name_id,
-      cycles,
-      cathode,
-      anode,
-      capacity_ah,
-      type,
-      source,
-      temperature_c,
-      max_state_of_charge,
-      min_state_of_charge,
-      depth_of_discharge,
-      charge_capacity_rate,
-      discharge_capacity_rate,
-    });
-    thunkAPI.dispatch(clearValues());
-    return resp.data;
-  } catch (err) {
-    return (
-      checkForUnauthorizedResponse(err, thunkAPI),
-      thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error)
-    );
+export const createBatteryCell = createAsyncThunk(
+  'batteryCell/createBatteryCell',
+  async ({ batteryCell }, thunkAPI) => {
+    try {
+      const resp = await customFetch.post(`${createBatteryCellUrl}`, batteryCell);
+      thunkAPI.dispatch(clearBatteryCellState());
+      return resp.data;
+    } catch (err) {
+      const errorResponse = err.response.data;
+      return (
+        checkForUnauthorizedResponse(err, thunkAPI),
+        thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message)
+      );
+    }
   }
-};
-export const deleteBatteryCellThunk = async (id, thunkAPI) => {
+);
+
+export const deleteBatteryCell = createAsyncThunk('batteryCell/deleteBatteryCell', async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/api/battery-cells/${id}`);
+    const resp = await customFetch.delete(`${apiBatteryCellsUrl}/${id}`);
     thunkAPI.dispatch(getAllBatteryCells());
-    return resp.data.msg;
-  } catch (err) {
-    thunkAPI.dispatch(hideLoading());
-    return (
-      checkForUnauthorizedResponse(err, thunkAPI),
-      thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error)
-    );
-  }
-};
-export const editBatteryCellThunk = async ({ id, batteryCell }, thunkAPI) => {
-  try {
-    const resp = await customFetch.patch(`/api/battery-cells/${id}`, batteryCell);
-    thunkAPI.dispatch(clearValues());
     return resp.data;
   } catch (err) {
+    thunkAPI.dispatch(hideLoading());
+    const errorResponse = err.response.data;
     return (
       checkForUnauthorizedResponse(err, thunkAPI),
-      thunkAPI.rejectWithValue(err.response.data.detail || err.response.data.error)
+      thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message)
     );
   }
-};
+});
+
+export const editBatteryCell = createAsyncThunk(
+  'batteryCell/editBatteryCell',
+  async ({ id, batteryCell }, thunkAPI) => {
+    try {
+      const resp = await customFetch.patch(`${apiBatteryCellsUrl}/${id}`, batteryCell);
+      thunkAPI.dispatch(clearBatteryCellState());
+      return resp.data;
+    } catch (err) {
+      const errorResponse = err.response.data;
+      return (
+        checkForUnauthorizedResponse(err, thunkAPI),
+        thunkAPI.rejectWithValue(errorResponse.detail || errorResponse.error || errorResponse.errors[0].message)
+      );
+    }
+  }
+);

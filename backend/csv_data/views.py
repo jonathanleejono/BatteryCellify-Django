@@ -1,4 +1,5 @@
 from battery_cells.utils import authorize_battery_cell
+from django.db.models import Case, ExpressionWrapper, F, FloatField, When
 from pandas import DataFrame
 from rest_framework import status
 from rest_framework.exceptions import NotFound, ValidationError
@@ -9,7 +10,6 @@ from users.utils import get_auth_user_id
 from csv_data.constants import valid_cycle_data_headers, valid_time_series_data_headers
 from csv_data.enum import CycleDataEnum, TimeSeriesDataEnum
 from csv_data.models import CsvCycleData, CsvTimeSeriesData
-from csv_data.serializers import CsvCycleDataSerializer
 from csv_data.utils import (
     get_cycle_data,
     get_time_series_data,
@@ -19,6 +19,8 @@ from csv_data.utils import (
 
 
 class CsvCycleDataView(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request, battery_cell_pk):
         user_id = get_auth_user_id(request)
 
@@ -65,11 +67,66 @@ class CsvCycleDataView(APIView):
         )
 
     def get(self, request, battery_cell_pk):
-        csv_cycle_data = get_cycle_data(request, battery_cell_pk)
+        queryset = get_cycle_data(request, battery_cell_pk)
 
-        serializer = CsvCycleDataSerializer(csv_cycle_data, many=True)
+        all_cycle_numbers = list(queryset.values_list("cycle_index", flat=True))
 
-        return Response(serializer.data)
+        discharge_capacity_ah_list = list(
+            queryset.values_list("discharge_capacity_ah", flat=True)
+        )
+        discharge_energy_wh_list = list(
+            queryset.values_list("discharge_energy_wh", flat=True)
+        )
+
+        # __gt means greater than
+        energy_filtered_data = queryset.filter(
+            discharge_energy_wh__gt=1.0, charge_energy_wh__gt=1.0
+        )
+
+        energy_efficiency = list(
+            energy_filtered_data.annotate(
+                energy_efficiency=ExpressionWrapper(
+                    F("discharge_energy_wh") * 1.0 / F("charge_energy_wh") * 1.0,
+                    output_field=FloatField(),
+                ),
+            ).values_list("energy_efficiency", flat=True)
+        )
+
+        # get all cycle index numbers for energy if energy greater than 0.1
+        cycle_numbers_energy = list(
+            energy_filtered_data.values_list("cycle_index", flat=True)
+        )
+
+        # __gt means greater than
+        capacity_filtered_data = queryset.filter(
+            discharge_capacity_ah__gt=0.1, charge_capacity_ah__gt=0.1
+        )
+
+        coulombic_efficiency = list(
+            capacity_filtered_data.annotate(
+                coulombic_efficiency=ExpressionWrapper(
+                    F("discharge_capacity_ah") * 1.0 / F("charge_capacity_ah") * 1.0,
+                    output_field=FloatField(),
+                ),
+            ).values_list("coulombic_efficiency", flat=True)
+        )
+
+        # get all cycle index numbers for capacity if capacity greater than 0.1
+        cycle_numbers_capacity = list(
+            capacity_filtered_data.values_list("cycle_index", flat=True)
+        )
+
+        return Response(
+            {
+                "all_cycle_numbers": all_cycle_numbers,
+                "cycle_discharge_capacity_ah_list": discharge_capacity_ah_list,
+                "cycle_discharge_energy_wh_list": discharge_energy_wh_list,
+                "energy_efficiency": energy_efficiency,
+                "coulombic_efficiency": coulombic_efficiency,
+                "cycle_numbers_capacity": cycle_numbers_capacity,
+                "cycle_numbers_energy": cycle_numbers_energy,
+            }
+        )
 
     def delete(self, request, battery_cell_pk):
         csv_cycle_data = get_cycle_data(request, battery_cell_pk)
@@ -83,6 +140,8 @@ class CsvCycleDataView(APIView):
 
 
 class CsvTimeSeriesDataView(APIView):
+    throttle_scope = "mutation"
+
     def post(self, request, battery_cell_pk):
         user_id = get_auth_user_id(request)
 
@@ -141,7 +200,7 @@ class CsvTimeSeriesDataView(APIView):
     def get(self, request, battery_cell_pk):
         queryset = get_time_series_data(request, battery_cell_pk)
 
-        test_time_data = list(queryset.values_list("test_time_seconds", flat=True))
+        test_time_data_list = list(queryset.values_list("test_time_seconds", flat=True))
 
         discharge_capacity_ah_data = list(
             queryset.values_list("discharge_capacity_ah", flat=True)
@@ -152,7 +211,7 @@ class CsvTimeSeriesDataView(APIView):
         )
 
         if not (
-            len(test_time_data)
+            len(test_time_data_list)
             == len(discharge_capacity_ah_data)
             == len(discharge_energy_wh_data)
         ):
@@ -163,24 +222,23 @@ class CsvTimeSeriesDataView(APIView):
         discharge_capacity_cycles_data = {}
 
         for every_100_rows in range(0, 1001, 100):
-            steps_key = f"{every_100_rows + 100}_steps"
+
+            cycle_filter_queryset = queryset.filter(
+                cycle_index__gte=every_100_rows - 99, cycle_index__lte=every_100_rows
+            )
+
+            steps_key = f"steps_{every_100_rows + 100}"
 
             voltage_cycle_steps_data[f"{steps_key}"] = list(
-                queryset.values_list("voltage_v", flat=True)[
-                    every_100_rows : every_100_rows + 100
-                ]
+                cycle_filter_queryset.values_list("voltage_v", flat=True)
             )
 
             charge_capacity_cycles_data[f"{steps_key}"] = list(
-                queryset.values_list("charge_capacity_ah", flat=True)[
-                    every_100_rows : every_100_rows + 100
-                ]
+                cycle_filter_queryset.values_list("charge_capacity_ah", flat=True)
             )
 
             discharge_capacity_cycles_data[f"{steps_key}"] = list(
-                queryset.values_list("discharge_capacity_ah", flat=True)[
-                    every_100_rows : every_100_rows + 100
-                ]
+                cycle_filter_queryset.values_list("discharge_capacity_ah", flat=True)
             )
 
         if not (
@@ -192,9 +250,9 @@ class CsvTimeSeriesDataView(APIView):
 
         return Response(
             {
-                "test_time_seconds": test_time_data,
-                "discharge_capacity_ah": discharge_capacity_ah_data,
-                "discharge_energy_wh": discharge_energy_wh_data,
+                "test_time_seconds_list": test_time_data_list,
+                "time_series_discharge_capacity_ah_list": discharge_capacity_ah_data,
+                "time_series_discharge_energy_wh_list": discharge_energy_wh_data,
                 "voltage_cycle_steps": voltage_cycle_steps_data,
                 "charge_capacity_cycles_steps": charge_capacity_cycles_data,
                 "discharge_capacity_cycles_steps": discharge_capacity_cycles_data,

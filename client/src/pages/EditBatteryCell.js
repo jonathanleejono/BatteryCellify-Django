@@ -1,6 +1,6 @@
 import { Container, Typography } from '@mui/material';
 import Page from 'components/Page';
-import { EditBatteryCellForm } from 'sections/dashboard/battery-cell-form';
+import EditBatteryCellForm from 'sections/battery-cell-form/EditBatteryCellForm';
 
 export default function EditBatteryCell() {
   return (

@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import DashboardNavbar from 'DashboardNavbar';
-import DashboardSidebar from 'DashboardSidebar';
+import DashboardNavbar from 'layouts/dashboard/DashboardNavbar';
+import DashboardSidebar from 'layouts/dashboard/DashboardSidebar';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 

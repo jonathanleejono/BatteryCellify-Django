@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material/styles';
-import palette from 'palette';
+import palette from 'theme/palette';
 
 const LIGHT_MODE = palette.grey[500];
 

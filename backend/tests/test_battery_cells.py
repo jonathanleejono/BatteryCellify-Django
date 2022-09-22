@@ -1,6 +1,9 @@
 import pytest
-
-from mocks.mock_battery_cells import mock_battery_cell_payload, mock_battery_cell_stats
+from mocks.mock_battery_cells import (
+    mock_battery_cell_payload,
+    mock_battery_cell_stats,
+    mock_battery_cell_stats_empty,
+)
 
 
 @pytest.mark.django_db
@@ -40,6 +43,16 @@ def test_get_battery_cells_stats(client, mock_battery_cells_list, login_user):
 
     assert response.status_code == 200
     assert response.data.items() == mock_battery_cell_stats.items()
+
+
+@pytest.mark.django_db
+def test_get_battery_cells_stats_empty(client, user3):
+    print("Should get all battery cells stats without data")
+
+    response = client.get("/api/battery-cells/stats")
+
+    assert response.status_code == 200
+    assert response.data.items() == mock_battery_cell_stats_empty.items()
 
 
 @pytest.mark.django_db

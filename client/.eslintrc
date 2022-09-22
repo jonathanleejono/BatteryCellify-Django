@@ -8,13 +8,10 @@
     "airbnb",
     "plugin:jsx-a11y/recommended",
     "plugin:react-hooks/recommended",
-    "prettier"
+    "prettier",
+    "plugin:import/recommended"
   ],
-  "plugins": [
-    "react",
-    "react-hooks",
-    "prettier"
-  ],
+  "plugins": ["react", "react-hooks", "prettier"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 8,
@@ -26,6 +23,12 @@
   },
   "rules": {
     "camelcase": "off",
+    "import/no-unresolved": [2, { "commonjs": true, "amd": true, "caseSensitive": false }],
+    "import/named": 2,
+    "import/extensions": 0,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2,
     "no-shadow": 0,
     "no-console": 0,
     "react/jsx-key": 1,
@@ -71,5 +74,13 @@
         "array": false
       }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["src", "node_modules"]
+      }
+    }
   }
 }

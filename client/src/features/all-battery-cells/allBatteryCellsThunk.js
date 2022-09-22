@@ -1,20 +1,37 @@
-import customFetch, { checkForUnauthorizedResponse } from 'utils/axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getAllBatteryCellsListUrl, getAllBatteryCellsStatsUrl } from 'constants/apiUrls';
+import customFetch from 'utils/axios';
+import { checkForUnauthorizedResponse } from 'utils/checkForUnauthorizedResponse';
 
-export const getAllBatteryCellsThunk = async (_, thunkAPI) => {
-  const { page, search, searchCathode, searchAnode, searchType, searchSource } = thunkAPI.getState().allBatteryCells;
-
-  // do not push query params on to separate lines or the query param functionality won't work properly
-  // also need to add slash after "/battery-cells" for url to work in prod (eg. `/battery-cells/?)
-  let url = `/api/battery-cells/?cathode=${searchCathode}&anode=${searchAnode}&type=${searchType}&source=${searchSource}&page=${page}`;
-
-  if (search) {
-    url += `&search=${search}`;
-  }
+export const getAllBatteryCells = createAsyncThunk('allBatteryCells/getBatteryCells', async (_, thunkAPI) => {
+  const { cathode, anode, type, source, cell_name_id, sort_by, sort_direction, offset_skip, limit } =
+    thunkAPI.getState().allBatteryCells;
 
   try {
-    const resp = await customFetch.get(url);
+    const resp = await customFetch.get(`${getAllBatteryCellsListUrl}`, {
+      params: {
+        cathode,
+        anode,
+        type,
+        source,
+        cell_name_id,
+        sort_by,
+        sort_direction,
+        offset_skip,
+        limit,
+      },
+    });
     return resp.data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
-};
+});
+
+export const getAllBatteryCellsStats = createAsyncThunk('allBatteryCells/getBatteryCellsStats', async (_, thunkAPI) => {
+  try {
+    const resp = await customFetch.get(`${getAllBatteryCellsStatsUrl}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+});

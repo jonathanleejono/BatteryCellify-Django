@@ -1,38 +1,40 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getAllBatteryCellsThunk } from 'allBatteryCellsThunk';
-import { toast } from 'react-toastify';
+import { createSlice } from '@reduxjs/toolkit';
+import { getAllBatteryCells, getAllBatteryCellsStats } from 'features/all-battery-cells/allBatteryCellsThunk';
 
 const initialFiltersState = {
-  search: '',
-  searchCathode: '',
-  searchAnode: '',
-  searchType: '',
-  searchSource: '',
+  cathode: '',
+  anode: '',
+  type: '',
+  source: '',
+};
+
+const initialQueryParamsState = {
+  cell_name_id: '',
+  offset_skip: 0,
+  limit: 20,
+  sort_by: '',
+  sort_direction: '',
+  ...initialFiltersState,
+};
+
+const batteryCellTableState = {
+  tableSelectedBatteryCells: [],
+};
+
+const batteryCellStatsState = {
+  avg_capacity_ah: 0,
+  avg_depth_of_discharge: 0,
+  avg_temperature_c: 0,
+  cell_stats_by_cathode: [],
 };
 
 const initialState = {
   isLoading: true,
-  battery_cells: [],
-  total_battery_cells: 0,
-  avg_capacity: 0,
-  avg_depth_of_discharge: 0,
-  avg_temperature_c: 0,
-  total_cathode_lco_cells: 0,
-  total_cathode_lfp_cells: 0,
-  total_cathode_nca_cells: 0,
-  total_cathode_nmc_cells: 0,
-  total_cathode_nmclco_cells: 0,
-  avg_cycles_lco_cells: 0,
-  avg_cycles_lfp_cells: 0,
-  avg_cycles_nca_cells: 0,
-  avg_cycles_nmc_cells: 0,
-  avg_cycles_nmclco_cells: 0,
-  page: 1,
-  monthlyApplications: [],
-  ...initialFiltersState,
+  all_battery_cells: [],
+  ...batteryCellStatsState,
+  ...initialQueryParamsState,
+  ...batteryCellTableState,
 };
-
-export const getAllBatteryCells = createAsyncThunk('allBatteryCells/getBatteryCells', getAllBatteryCellsThunk);
 
 const allBatteryCellsSlice = createSlice({
   name: 'allBatteryCells',
@@ -45,46 +47,41 @@ const allBatteryCellsSlice = createSlice({
       state.isLoading = false;
     },
     handleChangeAllBatteryCells: (state, { payload: { name, value } }) => {
-      state.page = 1;
       state[name] = value;
     },
-    clearFilters: (state) => {
-      return { ...state, ...initialFiltersState };
-    },
-    clearState: (state) => {
-      return { ...state, ...initialState };
-    },
+    clearFilters: (state) => ({ ...state, ...initialFiltersState }),
     changePage: (state, { payload }) => {
       state.page = payload;
     },
-    clearAllBatteryCellsState: (state) => initialState,
+    clearAllBatteryCellsState: (state) => ({ ...state, ...initialState }),
   },
-  extraReducers: {
-    [getAllBatteryCells.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getAllBatteryCells.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.battery_cells = payload.battery_cells;
-      state.total_battery_cells = payload.total_battery_cells;
-      state.avg_capacity = payload.avg_capacity;
-      state.avg_depth_of_discharge = payload.avg_depth_of_discharge;
-      state.avg_temperature_c = payload.avg_temperature_c;
-      state.total_cathode_lco_cells = payload.total_cathode_lco_cells;
-      state.total_cathode_lfp_cells = payload.total_cathode_lfp_cells;
-      state.total_cathode_nca_cells = payload.total_cathode_nca_cells;
-      state.total_cathode_nmc_cells = payload.total_cathode_nmc_cells;
-      state.total_cathode_nmclco_cells = payload.total_cathode_nmclco_cells;
-      state.avg_cycles_lco_cells = payload.avg_cycles_lco_cells;
-      state.avg_cycles_lfp_cells = payload.avg_cycles_lfp_cells;
-      state.avg_cycles_nca_cells = payload.avg_cycles_nca_cells;
-      state.avg_cycles_nmc_cells = payload.avg_cycles_nmc_cells;
-      state.avg_cycles_nmclco_cells = payload.avg_cycles_nmclco_cells;
-    },
-    [getAllBatteryCells.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllBatteryCells.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllBatteryCells.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        // make this only payload and not payload.all_battery_cells
+        // because there's no key to destructure
+        state.all_battery_cells = payload;
+      })
+      .addCase(getAllBatteryCells.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getAllBatteryCellsStats.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllBatteryCellsStats.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.avg_capacity_ah = payload.avg_capacity_ah;
+        state.avg_depth_of_discharge = payload.avg_depth_of_discharge;
+        state.avg_temperature_c = payload.avg_temperature_c;
+        state.cell_stats_by_cathode = payload.cell_stats_by_cathode;
+      })
+      .addCase(getAllBatteryCellsStats.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 

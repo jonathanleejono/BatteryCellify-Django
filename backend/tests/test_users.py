@@ -1,7 +1,6 @@
 import pytest
-from users.constants import COOKIE_TOKEN
-
 from mocks.mock_users import mock_user, mock_user2
+from users.constants import COOKIE_TOKEN
 
 user_payload = {"name": "bob", "email": "bob@gmail.com", "password": "password"}
 
@@ -111,7 +110,7 @@ def test_update_user_invalid(client, user2, user):
 def test_logout_user(client):
     print("Should logout user")
 
-    response = client.post("/api/auth/logout")
+    response = client.delete("/api/auth/logout")
 
     message = response.data["message"]
 

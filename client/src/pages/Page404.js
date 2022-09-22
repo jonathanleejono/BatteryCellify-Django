@@ -1,6 +1,7 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Page from 'components/Page';
+import { landingRoute } from 'constants/routes';
 import { Link as RouterLink } from 'react-router-dom';
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -32,7 +33,7 @@ export default function Page404() {
             sx={{ height: 260, mx: 'auto', my: { xs: 5, sm: 10 } }}
           />
 
-          <Button to="/" size="large" variant="contained" component={RouterLink}>
+          <Button to={landingRoute} size="large" variant="contained" component={RouterLink}>
             Go to Home
           </Button>
         </ContentStyle>

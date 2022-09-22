@@ -1,11 +1,11 @@
 import { CssBaseline } from '@mui/material';
 import { createTheme, StyledEngineProvider, ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
-import componentsOverride from 'overrides';
-import palette from 'palette';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
-import shadows, { customShadows } from 'shadows';
-import typography from 'typography';
+import componentsOverride from 'theme/overrides';
+import palette from 'theme/palette';
+import shadows, { customShadows } from 'theme/shadows';
+import typography from 'theme/typography';
 
 ThemeProvider.propTypes = {
   children: PropTypes.node,
