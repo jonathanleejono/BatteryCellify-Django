@@ -42,9 +42,6 @@ export default function AllBatteryCellsTable() {
 
   useEffect(() => {
     handleFetchBatteryCells();
-    // don't include handleFetchBatteryCells
-    // in dependencies because this changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const [filterName, setFilterName] = useState('');

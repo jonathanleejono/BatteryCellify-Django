@@ -2,10 +2,8 @@ import { Button, Card, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Logo from 'components/Logo';
 import Page from 'components/Page';
-import { dashboardRoute, loginRoute, registerRoute } from 'constants/routes';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { loginRoute, registerRoute } from 'constants/routes';
+import { Link as RouterLink } from 'react-router-dom';
 import useResponsive from 'utils/useResponsiveLayout';
 
 const HeaderStyle = styled('header')(({ theme }) => ({
@@ -52,16 +50,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Landing() {
   const mdUp = useResponsive('up', 'md');
-
-  const { userAuthenticated } = useSelector((store) => store.user);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (userAuthenticated) {
-      navigate(dashboardRoute, { replace: true });
-    }
-  }, [userAuthenticated, navigate]);
 
   const PROD_ENV = process.env.NODE_ENV === 'production';
 

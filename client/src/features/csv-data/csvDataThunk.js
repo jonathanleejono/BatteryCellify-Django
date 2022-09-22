@@ -48,7 +48,7 @@ export const getCycleData = createAsyncThunk('csvData/getCycleData', async (id, 
 
 export const uploadTimeSeriesData = createAsyncThunk('csvData/uploadTimeSeriesData', async ({ id, file }, thunkAPI) => {
   try {
-    const resp = await customFetch.post(`${timeSeriesDataUrl}${id}`, file);
+    const resp = await customFetch.post(`${timeSeriesDataUrl}/${id}`, file);
 
     return resp.data;
   } catch (err) {
@@ -63,7 +63,7 @@ export const uploadTimeSeriesData = createAsyncThunk('csvData/uploadTimeSeriesDa
 export const deleteTimeSeriesData = createAsyncThunk('csvData/deleteTimeSeriesData', async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`${timeSeriesDataUrl}${id}`);
+    const resp = await customFetch.delete(`${timeSeriesDataUrl}/${id}`);
     return resp.data;
   } catch (err) {
     thunkAPI.dispatch(hideLoading());
@@ -77,7 +77,7 @@ export const deleteTimeSeriesData = createAsyncThunk('csvData/deleteTimeSeriesDa
 
 export const getTimeSeriesData = createAsyncThunk('csvData/getTimeSeriesData', async (id, thunkAPI) => {
   try {
-    const resp = await customFetch.get(`${timeSeriesDataUrl}${id}`);
+    const resp = await customFetch.get(`${timeSeriesDataUrl}/${id}`);
     return resp.data;
   } catch (err) {
     const errorResponse = err.response.data;

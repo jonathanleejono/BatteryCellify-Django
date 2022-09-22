@@ -1,10 +1,10 @@
 import { Button, Container, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import Page from 'components/Page';
 import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
-import { clearCsvState, handleChange } from 'features/csv-data/csvDataSlice';
+import { clearCsvState } from 'features/csv-data/csvDataSlice';
 import { getCycleData, getTimeSeriesData } from 'features/csv-data/csvDataThunk';
 import { handleToastErrors } from 'notifications/toast';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CycleDecayGraph from 'sections/battery-cell-graphs/CycleDecayGraph';
@@ -18,7 +18,6 @@ export default function BatteryCellGraphs() {
 
   const {
     isLoading,
-    selectedBatteryCell,
     all_cycle_numbers,
     cycle_discharge_capacity_ah_list,
     cycle_discharge_energy_wh_list,
@@ -34,6 +33,8 @@ export default function BatteryCellGraphs() {
     discharge_capacity_cycles_steps,
   } = useSelector((store) => store.csvData);
 
+  const [selectedBatteryCell, setSelectedBatteryCell] = useState('');
+
   const handleFetchBatteryCells = useCallback(async () => {
     dispatch(clearCsvState());
 
@@ -44,11 +45,11 @@ export default function BatteryCellGraphs() {
 
   useEffect(() => {
     handleFetchBatteryCells();
-  }, [handleFetchBatteryCells, dispatch]);
+  }, [dispatch]);
 
   const handleSelect = (event) => {
-    const { name, value } = event.target;
-    dispatch(handleChange({ name, value }));
+    const { value } = event.target;
+    setSelectedBatteryCell(value);
   };
 
   const handleSubmit = async (e) => {

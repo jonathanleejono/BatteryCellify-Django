@@ -18,7 +18,7 @@ import {
 import { alpha, useTheme } from '@mui/material/styles';
 import Iconify from 'components/Iconify';
 import { getAllBatteryCells } from 'features/all-battery-cells/allBatteryCellsThunk';
-import { clearCsvState, handleChange } from 'features/csv-data/csvDataSlice';
+import { clearCsvState } from 'features/csv-data/csvDataSlice';
 import {
   deleteCycleData,
   deleteTimeSeriesData,
@@ -35,7 +35,7 @@ export default function ManageCsvForm() {
 
   const { all_battery_cells } = useSelector((store) => store.allBatteryCells);
 
-  const { selectedBatteryCell, isLoading } = useSelector((store) => store.csvData);
+  const { isLoading } = useSelector((store) => store.csvData);
 
   const handleFetchBatteryCells = useCallback(async () => {
     dispatch(clearCsvState());
@@ -47,8 +47,9 @@ export default function ManageCsvForm() {
 
   useEffect(() => {
     handleFetchBatteryCells();
-  }, [handleFetchBatteryCells, dispatch]);
+  }, [dispatch]);
 
+  const [selectedBatteryCell, setSelectedBatteryCell] = useState('');
   const [selectedCsvType, setSelectedCsvType] = useState('cycleData');
   const [csvFile, setCsvFile] = useState('');
 
@@ -61,8 +62,8 @@ export default function ManageCsvForm() {
   };
 
   const handleSelect = (event) => {
-    const { name, value } = event.target;
-    dispatch(handleChange({ name, value }));
+    const { value } = event.target;
+    setSelectedBatteryCell(value);
   };
 
   const handleFile = (e) => {
@@ -172,7 +173,7 @@ export default function ManageCsvForm() {
         )}
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} spacing={2}>
-          <Button fullWidth size="large" variant="contained" component="label" disabled={isLoading} padding={5}>
+          <Button fullWidth size="large" variant="contained" component="label" disabled={isLoading} padding={10}>
             Attach CSV
             <input type="file" hidden accept=".csv" onChange={handleFile} key="file" />
           </Button>
@@ -193,7 +194,7 @@ export default function ManageCsvForm() {
               setOpenDialog(true);
             }}
           >
-            Delete Stored CSV
+            Delete CSV
           </Button>
         </Stack>
       </Stack>

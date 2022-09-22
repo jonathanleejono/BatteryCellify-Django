@@ -65,7 +65,6 @@ const timeSeriesDataState = {
 
 const initialState = {
   isLoading: false,
-  selectedBatteryCell: '',
   ...cycleDataState,
   ...timeSeriesDataState,
 };
@@ -74,10 +73,7 @@ const csvDataSlice = createSlice({
   name: 'csvData',
   initialState,
   reducers: {
-    handleChange: (state, { payload: { name, value } }) => {
-      state[name] = value;
-    },
-    clearCsvState: () => initialState,
+    clearCsvState: (state) => ({ ...state, ...initialState }),
   },
   extraReducers: (builder) => {
     builder
@@ -151,6 +147,6 @@ const csvDataSlice = createSlice({
   },
 });
 
-export const { handleChange, clearCsvState } = csvDataSlice.actions;
+export const { clearCsvState } = csvDataSlice.actions;
 
 export default csvDataSlice.reducer;

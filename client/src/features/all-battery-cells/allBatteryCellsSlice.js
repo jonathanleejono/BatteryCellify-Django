@@ -50,11 +50,10 @@ const allBatteryCellsSlice = createSlice({
       state[name] = value;
     },
     clearFilters: (state) => ({ ...state, ...initialFiltersState }),
-    clearState: (state) => ({ ...state, ...initialState }),
     changePage: (state, { payload }) => {
       state.page = payload;
     },
-    clearAllBatteryCellsState: () => initialState,
+    clearAllBatteryCellsState: (state) => ({ ...state, ...initialState }),
   },
   extraReducers: (builder) => {
     builder

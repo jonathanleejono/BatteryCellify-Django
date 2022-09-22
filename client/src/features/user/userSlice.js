@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUser, loginUser, registerUser, updateUser } from 'features/user/userThunk';
+import { getUser, loginUser, logoutUser, registerUser, updateUser } from 'features/user/userThunk';
 import { getUserFromLocalStorage } from 'utils/localStorage';
 
 const initialState = {
@@ -16,7 +16,7 @@ const userSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    clearUserState: () => initialState,
+    clearUserState: (state) => ({ ...state, ...initialState }),
   },
   extraReducers: (builder) => {
     builder
@@ -63,6 +63,15 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.userAuthenticated = false;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.userAuthenticated = false;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        state.userAuthenticated = false;
       });
   },
 });

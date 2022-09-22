@@ -29,7 +29,7 @@ export default function DashboardApp() {
 
   useEffect(() => {
     handleFetchBatteryCells();
-  }, [handleFetchBatteryCells, dispatch]);
+  }, [dispatch]);
 
   let avg_cycles_lco_cells = 0;
   let avg_cycles_lfp_cells = 0;
