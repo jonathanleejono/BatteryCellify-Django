@@ -113,7 +113,9 @@ WSGI_APPLICATION = "battery_cellify_django.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "django_psdb_engine"
+        if PY_ENV == "production"
+        else "django.db.backends.mysql",
         "NAME": DB_NAME,
         "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,
