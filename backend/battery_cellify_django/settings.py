@@ -40,6 +40,7 @@ JWT_ACCESS_SECRET = env.str("JWT_ACCESS_SECRET", validate=[Length(min=1)])
 JWT_ALGORITHM = env.str("JWT_ALGORITHM", validate=[Length(min=1)])
 CORS_ORIGIN = env.str("CORS_ORIGIN", validate=[Length(min=1)])
 TESTING = env.str("TESTING", validate=[Length(min=1)])
+MYSQL_ATTR_SSL_CA = env.str("MYSQL_ATTR_SSL_CA", validate=[Length(min=1)])
 
 
 env.seal()
@@ -117,6 +118,11 @@ DATABASES = {
         "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,
         "HOST": DB_HOST,
+        "OPTIONS": {
+            "ssl": {
+                "ca": MYSQL_ATTR_SSL_CA,
+            },
+        },
     }
 }
 
