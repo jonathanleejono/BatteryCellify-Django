@@ -3,7 +3,9 @@ import { styled } from '@mui/material/styles';
 import Logo from 'components/Logo';
 import Page from 'components/Page';
 import { loginRoute, registerRoute } from 'constants/routes';
+import { useCallback, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import customFetch from 'utils/axios';
 import useResponsive from 'utils/useResponsiveLayout';
 
 const HeaderStyle = styled('header')(({ theme }) => ({
@@ -49,6 +51,14 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Landing() {
+  const wakeup = useCallback(async () => {
+    await customFetch.get('/api/ping');
+  }, []);
+
+  useEffect(() => {
+    wakeup();
+  }, []);
+
   const mdUp = useResponsive('up', 'md');
 
   const PROD_ENV = process.env.NODE_ENV === 'production';
