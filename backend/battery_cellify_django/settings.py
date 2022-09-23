@@ -56,8 +56,10 @@ SECRET_KEY = SECRET_KEY_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS = ["127.0.0.1"]
-ALLOWED_HOSTS = ["*"]
+if PY_ENV == "production":
+    ALLOWED_HOSTS = ["127.0.0.1:10000"]
+else:
+    ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
