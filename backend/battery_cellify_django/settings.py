@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import logging.config
+import os
 from pathlib import Path
 
 from environs import Env
@@ -56,10 +57,12 @@ SECRET_KEY = SECRET_KEY_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-if PY_ENV == "production":
-    ALLOWED_HOSTS = ["127.0.0.1:10000"]
-else:
-    ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1"]
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
